@@ -1,0 +1,31 @@
+clone:
+  path: github.com/webhippie/harbor-cli
+
+build:
+  test:
+    image: golang:1.5
+    commands:
+      - make deps
+      - make build
+      - make test
+
+  dist:
+    image: golang:1.5
+    commands:
+      - make release
+    when:
+      repo: harborapp/harbor-cli
+      branch: master
+
+notify:
+  email:
+    from: drone@webhippie.de
+    host: $$EMAIL_HOST
+    username: $$EMAIL_USERNAME
+    password: $$EMAIL_PASSWORD
+    recipients:
+      - thomas@webhippie.de
+    when:
+      success: false
+      failure: true
+      change: true
