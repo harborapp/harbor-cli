@@ -9,11 +9,11 @@ build:
       - make release
 
 publish:
-  coverage:
-    server: http://coverage.dronehippie.de
-    token: $$GITHUB_APIKEY
-    when:
-      branch: master
+  # coverage:
+  #   server: http://coverage.dronehippie.de
+  #   token: $$GITHUB_APIKEY
+  #   when:
+  #     branch: master
 
   rsync:
     user: deploy
