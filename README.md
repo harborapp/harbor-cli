@@ -22,11 +22,12 @@ this awesome project!
 
 
 You can download prebuilt binaries from the GitHub releases or from our
-[download site](http://dl.webhippie.de/harbor-cli). If you are missing an
-architecture just write us on the [Gitter](https://gitter.im/harborapp/harbor-api)
-chat. Take a look at the help output, you can enable auto updates to the binary
-to avoid bugs related to old versions. If you find a security issue please
-contact thomas@webhippie.de first.
+[download site](http://dl.webhippie.de/harbor-cli). You are a Mac user? Just take
+a look at our [homebrew formula](https://github.com/harborapp/homebrew-harbor).
+If you are missing an architecture just write us on our nice
+[Gitter](https://gitter.im/harborapp/harbor-api) chat. Take a look at the help
+output, you can enable auto updates to the binary to avoid bugs related to old
+versions. If you find a security issue please contact thomas@webhippie.de first.
 
 
 ## Development
