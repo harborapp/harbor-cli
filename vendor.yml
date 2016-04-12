@@ -1,0 +1,27 @@
+vendors:
+- path: github.com/codegangsta/cli
+  rev: 71f57d300dd6a780ac1856c005c4b518cfd498ec
+- path: github.com/golang/protobuf
+  rev: dda510ac0fd43b39770f22ac6260eb91d377bce3
+- path: github.com/harborapp/harbor-go
+  rev: 80cc1ec6f7824cd086987b89708f611659490c74
+- path: github.com/jackspirou/syscerts
+  rev: 5ecaea8f7ec96a0826ced1ff106d30083066bf35
+- path: github.com/kardianos/osext
+  rev: 29ae4ffbc9a6fe9fb2bc5029050ce6996ea1d3bc
+- path: github.com/kr/binarydist
+  rev: 9955b0ab8708602d411341e55fffd7e0700f86bd
+- path: github.com/mattn/go-runewidth
+  rev: d6bea18f789704b5f83375793155289da36a3c7f
+- path: github.com/olekukonko/tablewriter
+  rev: cca8bbc0798408af109aaaa239cbd2634846b340
+- path: github.com/sanbornm/go-selfupdate
+  rev: 333a93f08e13e4389fb21bfa530140fc0b884582
+- path: golang.org/x/net
+  rev: 0cc50bbd6557282724d0ce5fbe79edabbe81d873
+- path: golang.org/x/oauth2
+  rev: b0e2337fe6ec0c637fa4f123268b972f334504eb
+- path: google.golang.org/appengine
+  rev: b67c870a16a2d58b3afa024461dcc51805f52e9d
+- path: gopkg.in/inconshreveable/go-update.v0
+  rev: d8b0b1d421aa1cbf392c05869f8abbc669bb7066

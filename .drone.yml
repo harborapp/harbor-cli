@@ -1,31 +1,72 @@
-clone:
-  path: github.com/webhippie/harbor-cli
-
 build:
-  test:
-    image: golang:1.5
+  testing:
+    image: webhippie/golang:latest
     commands:
+      - make clean
       - make deps
       - make build
       - make test
-
-  dist:
-    image: golang:1.5
-    commands:
       - make release
+
+publish:
+  coverage:
+    server: http://coverage.dronehippie.de
+    token: $$GITHUB_APIKEY
     when:
-      repo: harborapp/harbor-cli
       branch: master
 
-notify:
-  email:
-    from: drone@webhippie.de
-    host: $$EMAIL_HOST
-    username: $$EMAIL_USERNAME
-    password: $$EMAIL_PASSWORD
-    recipients:
-      - thomas@webhippie.de
+  rsync:
+    user: dl
+    host: dl.webhippie.de
+    source: dist/master/
+    target: public_html/harbor-cli/master
+    recursive: true
+    delete: true
     when:
-      success: false
-      failure: true
-      change: true
+      branch: master
+
+  rsync:
+    user: dl
+    host: dl.webhippie.de
+    source: dist/latest/
+    target: public_html/harbor-cli/latest
+    recursive: true
+    delete: true
+    when:
+      event: tag
+
+  rsync:
+    user: dl
+    host: dl.webhippie.de
+    source: dist/release/
+    target: public_html/harbor-cli/$$TAG
+    recursive: true
+    delete: true
+    when:
+      event: tag
+
+  rsync:
+    user: dl
+    host: dl.webhippie.de
+    source: dist/publish/
+    target: public_html/harbor-cli/updates
+    recursive: true
+    delete: false
+    when:
+      event: tag
+
+  github_release:
+    api_key: $$GITHUB_APIKEY
+    files:
+      - dist/release/*
+    when:
+      event: tag
+
+notify:
+  gitter:
+    webhook:
+      - $$GITTER_WEBHOOK
+
+cache:
+  mount:
+    - vendor
