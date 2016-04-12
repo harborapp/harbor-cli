@@ -16,40 +16,40 @@ publish:
       branch: master
 
   rsync:
-    user: dl
+    user: deploy
     host: dl.webhippie.de
-    source: dist/master/
-    target: public_html/harbor-cli/master
+    source: dist/latest/
+    target: $$BASE_PATH/harbor-cli/master
     recursive: true
     delete: true
     when:
       branch: master
 
   rsync:
-    user: dl
-    host: dl.webhippie.de
-    source: dist/latest/
-    target: public_html/harbor-cli/latest
-    recursive: true
-    delete: true
-    when:
-      event: tag
-
-  rsync:
-    user: dl
+    user: deploy
     host: dl.webhippie.de
     source: dist/release/
-    target: public_html/harbor-cli/$$TAG
+    target: $$BASE_PATH/harbor-cli/$$TAG
     recursive: true
     delete: true
     when:
       event: tag
 
   rsync:
-    user: dl
+    user: deploy
+    host: dl.webhippie.de
+    source: dist/latest/
+    target: $$BASE_PATH/harbor-cli/latest
+    recursive: true
+    delete: true
+    when:
+      event: tag
+
+  rsync:
+    user: deploy
     host: dl.webhippie.de
     source: dist/publish/
-    target: public_html/harbor-cli/updates
+    target: $$BASE_PATH/harbor-cli/updates
     recursive: true
     delete: false
     when:
