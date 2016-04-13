@@ -16,9 +16,15 @@ RELEASES ?= $(BIN)/$(EXECUTABLE)-linux-amd64 \
 
 PACKAGES ?= $(shell go list ./... | grep -v /vendor/)
 
-VERSION ?= $(CI_TAG)
-VERSION ?= $(CI_BRANCH)
-VERSION ?= master
+ifneq ($(CI_TAG),)
+	VERSION ?= $(CI_TAG)
+else
+	ifneq ($(CI_BRANCH),)
+		VERSION ?= $(CI_BRANCH)
+	else
+		VERSION ?= master
+	endif
+endif
 
 all: clean deps build test
 
