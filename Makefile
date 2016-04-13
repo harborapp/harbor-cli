@@ -16,6 +16,10 @@ RELEASES ?= $(BIN)/$(EXECUTABLE)-linux-amd64 \
 
 PACKAGES ?= $(shell go list ./... | grep -v /vendor/)
 
+VERSION ?= $(CI_TAG)
+VERSION ?= $(CI_BRANCH)
+VERSION ?= master
+
 all: clean deps build test
 
 clean:
@@ -50,6 +54,8 @@ test:
 build: $(BIN)/$(EXECUTABLE)
 
 release: $(RELEASES)
+
+updater:
 	go get -u github.com/sanbornm/go-selfupdate
 	go-selfupdate -o $(DIST)/publish $(DIST)/updater $(VERSION)
 

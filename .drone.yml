@@ -1,5 +1,5 @@
 build:
-  testing:
+  general:
     image: webhippie/golang:latest
     commands:
       - make clean
@@ -7,6 +7,12 @@ build:
       - make build
       - make test
       - make release
+
+  updater:
+    image: webhippie/golang:latest
+      - make updater
+    when:
+      event: tag
 
 publish:
   # coverage:
@@ -18,12 +24,12 @@ publish:
   rsync:
     user: deploy
     host: dl.webhippie.de
-    source: dist/latest/
+    source: dist/release/
     target: $$BASE_PATH/harbor-cli/master
     recursive: true
     delete: true
-    when:
-      branch: master
+    # when:
+    #   branch: master
 
   rsync:
     user: deploy
