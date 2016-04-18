@@ -10,6 +10,7 @@ build:
 
   updater:
     image: webhippie/golang:latest
+    commands:
       - make updater
     when:
       event: tag
@@ -28,8 +29,8 @@ publish:
     target: $$BASE_PATH/harbor-cli/master
     recursive: true
     delete: true
-    # when:
-    #   branch: master
+    when:
+      branch: master
 
   rsync:
     user: deploy
