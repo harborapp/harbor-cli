@@ -40,11 +40,6 @@ deps:
 vendor:
 	govend -vtlu
 
-generate:
-	go get -u github.com/vektra/mockery/...
-	go get -u github.com/jteeuwen/go-bindata/...
-	go generate $(PACKAGES)
-
 fmt:
 	go fmt $(PACKAGES)
 
@@ -84,5 +79,5 @@ $(BIN)/$(EXECUTABLE)-%:
 	cp $@ $(DIST)/latest/$(EXECUTABLE)-latest-$(GOOS)-$(GOARCH)
 	cd $(DIST)/latest && sha256sum $(EXECUTABLE)-latest-$(GOOS)-$(GOARCH) > $(EXECUTABLE)-latest-$(GOOS)-$(GOARCH).sha256
 
-.PHONY: all clean deps vendor generate fmt vet lint test build
+.PHONY: all clean deps vendor fmt vet lint test build
 .PRECIOUS: $(BIN)/$(EXECUTABLE)-%
