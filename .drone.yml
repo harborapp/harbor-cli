@@ -69,6 +69,26 @@ publish:
     when:
       event: tag
 
+  docker:
+    username: $$DOCKER_USER
+    password: $$DOCKER_PASS
+    email: $$DOCKER_EMAIL
+    storage_driver: overlay
+    repo: harborapp/harbor-cli
+    tag: $$TAG
+    when:
+      event: tag
+
+  docker:
+    username: $$DOCKER_USER
+    password: $$DOCKER_PASS
+    email: $$DOCKER_EMAIL
+    storage_driver: overlay
+    repo: harborapp/harbor-cli
+    tag: latest
+    when:
+      branch: master
+
 notify:
   gitter:
     webhook:
