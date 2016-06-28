@@ -18,6 +18,13 @@ func Profile() cli.Command {
 		Usage: "Profile related sub-commands",
 		Subcommands: []cli.Command{
 			{
+				Name:  "token",
+				Usage: "Show your token",
+				Action: func(c *cli.Context) {
+					Handle(c, ProfileToken)
+				},
+			},
+			{
 				Name:  "show",
 				Usage: "Show profile details",
 				Action: func(c *cli.Context) {
@@ -55,6 +62,18 @@ func Profile() cli.Command {
 			},
 		},
 	}
+}
+
+// ProfileToken provides the sub-command to show your token.
+func ProfileToken(c *cli.Context, client harbor.ClientAPI) error {
+	record, err := client.ProfileToken()
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stdout, "%s\n", record.Token)
+	return nil
 }
 
 // ProfileShow provides the sub-command to show profile details.
