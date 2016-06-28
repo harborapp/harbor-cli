@@ -1,0 +1,11 @@
+vendors:
+- path: github.com/golang/protobuf
+  rev: dda510ac0fd43b39770f22ac6260eb91d377bce3
+- path: github.com/jackspirou/syscerts
+  rev: 5ecaea8f7ec96a0826ced1ff106d30083066bf35
+- path: golang.org/x/net
+  rev: 589fda73dd0faec3dc59e7d7dab5b069e3fce0f9
+- path: golang.org/x/oauth2
+  rev: b0e2337fe6ec0c637fa4f123268b972f334504eb
+- path: google.golang.org/appengine
+  rev: b67c870a16a2d58b3afa024461dcc51805f52e9d

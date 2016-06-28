@@ -1,0 +1,23 @@
+build:
+  testing:
+    image: webhippie/golang:latest
+    commands:
+      - make clean
+      - make deps
+      - make test
+
+publish:
+  coverage:
+    server: http://coverage.dronehippie.de
+    token: $$GITHUB_APIKEY
+    when:
+      branch: master
+
+notify:
+  gitter:
+    webhook:
+      - $$GITTER_WEBHOOK
+
+cache:
+  mount:
+    - vendor
