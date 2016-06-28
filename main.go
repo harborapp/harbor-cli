@@ -72,6 +72,8 @@ func main() {
 
 	app.Commands = []cli.Command{
 		cmd.Profile(),
+		cmd.User(),
+		cmd.Team(),
 	}
 
 	cli.HelpFlag = cli.BoolFlag{
