@@ -34,11 +34,13 @@ clean:
 
 deps:
 	go get -u github.com/golang/lint/golint
+
+vendor:
 	go get -u github.com/govend/govend
 	govend -v
 
-vendor:
-	govend -vtlu
+update:
+	govend -vtlu --prune
 
 fmt:
 	go fmt $(PACKAGES)
@@ -47,7 +49,7 @@ vet:
 	go vet $(PACKAGES)
 
 lint:
-	for PKG in $(PACKAGES); do golint $$PKG || exit 1; done;
+	for PKG in $(PACKAGES); do golint -set_exit_status $$PKG || exit 1; done;
 
 test:
 	for PKG in $(PACKAGES); do go test -cover -coverprofile $$GOPATH/src/$$PKG/coverage.out $$PKG || exit 1; done;
@@ -79,5 +81,5 @@ $(BIN)/$(EXECUTABLE)-%:
 	cp $@ $(DIST)/latest/$(EXECUTABLE)-latest-$(GOOS)-$(GOARCH)
 	cd $(DIST)/latest && sha256sum $(EXECUTABLE)-latest-$(GOOS)-$(GOARCH) > $(EXECUTABLE)-latest-$(GOOS)-$(GOARCH).sha256
 
-.PHONY: all clean deps vendor fmt vet lint test build
+.PHONY: all clean deps vendor update fmt vet lint test build
 .PRECIOUS: $(BIN)/$(EXECUTABLE)-%
