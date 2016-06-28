@@ -4,7 +4,7 @@ vendors:
 - path: github.com/golang/protobuf
   rev: 0c1f6d65b5a189c2250d10e71a5506f06f9fa0a0
 - path: github.com/harborapp/harbor-go
-  rev: 731d78295a7efa9f8be38a111e07606693568d5e
+  rev: d64f3980b972a666f4ae09f6b544ea24f8d8d030
 - path: github.com/jackspirou/syscerts
   rev: b68f5469dff16e102bd6a2d5b3e79341c938d736
 - path: github.com/kardianos/osext
