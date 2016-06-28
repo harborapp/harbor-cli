@@ -25,6 +25,7 @@ const (
 	pathTeamUser     = "%s/api/teams/%v/users"
 )
 
+// DefaultClient implements the client interface.
 type DefaultClient struct {
 	client *http.Client
 	base   string

@@ -2,7 +2,7 @@ vendors:
 - path: github.com/davecgh/go-spew
   rev: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
 - path: github.com/golang/protobuf
-  rev: 0c1f6d65b5a189c2250d10e71a5506f06f9fa0a0
+  rev: f6b4231c7fd7ac9df487f17759fc107fd61d98a0
 - path: github.com/jackspirou/syscerts
   rev: b68f5469dff16e102bd6a2d5b3e79341c938d736
 - path: github.com/pmezard/go-difflib

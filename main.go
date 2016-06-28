@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	updates string = "http://dl.webhippie.de/"
+	updates = "http://dl.webhippie.de/"
 )
 
 func main() {
