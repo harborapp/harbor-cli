@@ -3,7 +3,6 @@ build:
     image: webhippie/golang:latest
     commands:
       - make clean
-      - make deps
       - make test
 
 publish:
@@ -17,7 +16,3 @@ notify:
   gitter:
     webhook:
       - $$GITTER_WEBHOOK
-
-cache:
-  mount:
-    - vendor
