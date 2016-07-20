@@ -1,5 +1,5 @@
 workspace:
-  base: /app
+  base: /srv/app
   path: src/github.com/umschlag/umschlag-cli
 
 pipeline:
@@ -7,7 +7,7 @@ pipeline:
     image: webhippie/golang:latest
     pull: true
     environment:
-      - GOPATH=/app
+      - GOPATH=/srv/app
     commands:
       - make clean
       - make deps
@@ -19,7 +19,7 @@ pipeline:
   updater:
     image: webhippie/golang:latest
     environment:
-      - GOPATH=/app
+      - GOPATH=/srv/app
     commands:
       - make publish
     when:
