@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/codegangsta/cli"
-	"github.com/harborapp/harbor-go/harbor"
+	"github.com/umschlag/umschlag-go/umschlag"
+	"github.com/urfave/cli"
 )
 
 // HandleFunc is the real handle implementation.
-type HandleFunc func(c *cli.Context, client harbor.ClientAPI) error
+type HandleFunc func(c *cli.Context, client umschlag.ClientAPI) error
 
 // Handle wraps the command function handler.
 func Handle(c *cli.Context, fn HandleFunc) {
@@ -26,7 +26,7 @@ func Handle(c *cli.Context, fn HandleFunc) {
 		os.Exit(2)
 	}
 
-	client := harbor.NewClientToken(
+	client := umschlag.NewClientToken(
 		server,
 		token,
 	)

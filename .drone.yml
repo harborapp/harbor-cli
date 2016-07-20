@@ -1,16 +1,24 @@
-build:
-  general:
+workspace:
+  base: /usr/local
+  path: src/github.com/umschlag/umschlag-cli
+
+pipeline:
+  testing:
     image: webhippie/golang:latest
+    environment:
+      - GOPATH=/usr/local
     commands:
       - make clean
       - make deps
       - make vet
       - make lint
-      - make build
       - make test
+      - make build
 
   updater:
     image: webhippie/golang:latest
+    environment:
+      - GOPATH=/usr/local
     commands:
       - make release
       - make updater
@@ -18,81 +26,72 @@ build:
       event: [ push, tag ]
       branch: [ master, refs/tags/* ]
 
-publish:
-  coverage:
-    server: http://coverage.dronehippie.de
-    token: $$GITHUB_APIKEY
-    when:
-      branch: master
+  # cover:
+  #   image: plugins/coverage
 
-  rsync:
-    user: deploy
-    host: dl.webhippie.de
-    source: dist/release/
-    target: $$BASE_PATH/harbor-cli/master
-    recursive: true
-    delete: true
-    when:
-      branch: master
+  # rsync:
+  #   user: deploy
+  #   host: dl.webhippie.de
+  #   source: dist/release/
+  #   target: /usr/share/webapps/dl/public_html/umschlag-cli/master
+  #   recursive: true
+  #   delete: true
+  #   when:
+  #     event: push
+  #     branch: master
 
-  rsync:
-    user: deploy
-    host: dl.webhippie.de
-    source: dist/release/
-    target: $$BASE_PATH/harbor-cli/$$TAG
-    recursive: true
-    delete: true
-    when:
-      event: tag
+  # rsync:
+  #   user: deploy
+  #   host: dl.webhippie.de
+  #   source: dist/release/
+  #   target: /usr/share/webapps/dl/public_html/umschlag-cli/$$TAG
+  #   recursive: true
+  #   delete: true
+  #   when:
+  #     event: tag
 
-  rsync:
-    user: deploy
-    host: dl.webhippie.de
-    source: dist/latest/
-    target: $$BASE_PATH/harbor-cli/latest
-    recursive: true
-    delete: true
-    when:
-      event: tag
+  # rsync:
+  #   user: deploy
+  #   host: dl.webhippie.de
+  #   source: dist/latest/
+  #   target: /usr/share/webapps/dl/public_html/umschlag-cli/latest
+  #   recursive: true
+  #   delete: true
+  #   when:
+  #     event: tag
 
-  rsync:
-    user: deploy
-    host: dl.webhippie.de
-    source: dist/publish/
-    target: $$BASE_PATH/harbor-cli/updates
-    recursive: true
-    delete: false
-    when:
-      event: tag
+  # rsync:
+  #   user: deploy
+  #   host: dl.webhippie.de
+  #   source: dist/publish/
+  #   target: /usr/share/webapps/dl/public_html/umschlag-cli/updates
+  #   recursive: true
+  #   delete: false
+  #   when:
+  #     event: tag
 
-  github_release:
-    api_key: $$GITHUB_APIKEY
-    files:
-      - dist/release/*
+  # github_release:
+  #   files:
+  #     - dist/release/*
+  #   when:
+  #     event: tag
+
+  docker:
+    image: plugins/docker
+    storage_driver: overlay
+    repo: umschlag/umschlag-cli
+    tags: [ '${TAG}' ]
     when:
       event: tag
 
   docker:
-    username: $$DOCKER_USER
-    password: $$DOCKER_PASS
-    email: $$DOCKER_EMAIL
+    image: plugins/docker
     storage_driver: overlay
-    repo: harborapp/harbor-cli
-    tag: $$TAG
+    repo: umschlag/umschlag-cli
+    tags: [ 'latest' ]
     when:
-      event: tag
-
-  docker:
-    username: $$DOCKER_USER
-    password: $$DOCKER_PASS
-    email: $$DOCKER_EMAIL
-    storage_driver: overlay
-    repo: harborapp/harbor-cli
-    tag: latest
-    when:
+      event: push
       branch: master
 
-notify:
-  gitter:
-    webhook:
-      - $$GITTER_WEBHOOK
+  # gitter:
+  #   image: plugins/gitter

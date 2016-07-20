@@ -5,10 +5,10 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/codegangsta/cli"
-	"github.com/harborapp/harbor-cli/cmd"
-	"github.com/harborapp/harbor-cli/config"
 	"github.com/sanbornm/go-selfupdate/selfupdate"
+	"github.com/umschlag/umschlag-cli/cmd"
+	"github.com/umschlag/umschlag-cli/config"
+	"github.com/urfave/cli"
 )
 
 var (
@@ -19,7 +19,7 @@ func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	app := cli.NewApp()
-	app.Name = "harbor-cli"
+	app.Name = "umschlag-cli"
 	app.Version = config.Version
 	app.Author = "Thomas Boerger <thomas@webhippie.de>"
 	app.Usage = "A docker distribution management system"
@@ -28,19 +28,19 @@ func main() {
 		cli.StringFlag{
 			Name:   "server, s",
 			Value:  "",
-			Usage:  "Solder API server",
-			EnvVar: "HARBOR_SERVER",
+			Usage:  "Umschlag API server",
+			EnvVar: "UMSCHLAG_SERVER",
 		},
 		cli.StringFlag{
 			Name:   "token, t",
 			Value:  "",
-			Usage:  "Solder API token",
-			EnvVar: "HARBOR_TOKEN",
+			Usage:  "Umschlag API token",
+			EnvVar: "UMSCHLAG_TOKEN",
 		},
 		cli.BoolTFlag{
 			Name:   "update, u",
 			Usage:  "Enable auto update",
-			EnvVar: "HARBOR_UPDATE",
+			EnvVar: "UMSCHLAG_UPDATE",
 		},
 	}
 

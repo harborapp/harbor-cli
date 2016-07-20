@@ -6,6 +6,6 @@ RUN apk update && \
   rm -rf \
     /var/cache/apk/*
 
-ADD bin/harbor-cli /usr/bin/
-ENTRYPOINT ["/usr/bin/harbor-cli"]
+ADD bin/umschlag-cli /usr/bin/
+ENTRYPOINT ["/usr/bin/umschlag-cli"]
 CMD ["help"]

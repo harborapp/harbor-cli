@@ -1,10 +1,6 @@
 vendors:
-- path: github.com/codegangsta/cli
-  rev: 1efa31f08b9333f1bd4882d61f9d668a70cd902e
 - path: github.com/golang/protobuf
-  rev: 78b168c14fc28c8c711844d210f7ab845083e3b1
-- path: github.com/harborapp/harbor-go
-  rev: c328af26fb309c1815573934daeb74569e431444
+  rev: 874264fbbb43f4d91e999fecb4b40143ed611400
 - path: github.com/jackspirou/syscerts
   rev: b68f5469dff16e102bd6a2d5b3e79341c938d736
 - path: github.com/kardianos/osext
@@ -17,10 +13,14 @@ vendors:
   rev: daf2955e742cf123959884fdff4685aa79b63135
 - path: github.com/sanbornm/go-selfupdate
   rev: 8d409ca53a740932c8e3a6cd1d8ea4c111f5e539
+- path: github.com/umschlag/umschlag-go
+  rev: 939abea666563867d378df0bce04176b6096165f
+- path: github.com/urfave/cli
+  rev: 11c134509d89c2018675f369955218a180dc7428
 - path: golang.org/x/net
-  rev: 04557861f124410b768b1ba5bb3a91b705afbfc6
+  rev: 3797cd8864994d713d909eda5e61ede8683fdc12
 - path: golang.org/x/oauth2
-  rev: 65a8d08c6292395d47053be10b3c5e91960def76
+  rev: 12e1e986157ec46fb273824565d9937bd4235105
 - path: google.golang.org/appengine
   rev: 267c27e7492265b84fc6719503b14a1e17975d79
 - path: gopkg.in/inconshreveable/go-update.v0

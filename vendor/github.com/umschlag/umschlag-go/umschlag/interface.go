@@ -1,4 +1,4 @@
-package harbor
+package umschlag
 
 //go:generate mockery -all -case=underscore
 

@@ -1,4 +1,4 @@
-package harbor
+package umschlag
 
 import (
 	"bytes"
@@ -65,7 +65,7 @@ func NewClientToken(uri, token string) ClientAPI {
 
 // SetClient sets the default http client. This should
 // be used in conjunction with golang.org/x/oauth2 to
-// authenticate requests to the Harbor API.
+// authenticate requests to the Umschlag API.
 func (c *DefaultClient) SetClient(client *http.Client) {
 	c.client = client
 }
@@ -322,7 +322,7 @@ func (c *DefaultClient) stream(rawurl, method string, in, out interface{}) (io.R
 
 	req.Header.Set(
 		"User-Agent",
-		"Harbor CLI",
+		"Umschlag CLI",
 	)
 
 	if in != nil {

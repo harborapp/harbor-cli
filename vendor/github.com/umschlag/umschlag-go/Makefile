@@ -1,5 +1,5 @@
 PACKAGES ?= $(shell go list ./... | grep -v /vendor/)
-GENERATE ?= github.com/harborapp/harbor-go/harbor
+GENERATE ?= github.com/umschlag/umschlag-go/umschlag
 
 all: clean deps test
 

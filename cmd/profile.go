@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/codegangsta/cli"
-	"github.com/harborapp/harbor-go/harbor"
 	"github.com/olekukonko/tablewriter"
+	"github.com/umschlag/umschlag-go/umschlag"
+	"github.com/urfave/cli"
 )
 
 // Profile provides the sub-command for the profile API.
@@ -65,7 +65,7 @@ func Profile() cli.Command {
 }
 
 // ProfileToken provides the sub-command to show your token.
-func ProfileToken(c *cli.Context, client harbor.ClientAPI) error {
+func ProfileToken(c *cli.Context, client umschlag.ClientAPI) error {
 	record, err := client.ProfileToken()
 
 	if err != nil {
@@ -77,7 +77,7 @@ func ProfileToken(c *cli.Context, client harbor.ClientAPI) error {
 }
 
 // ProfileShow provides the sub-command to show profile details.
-func ProfileShow(c *cli.Context, client harbor.ClientAPI) error {
+func ProfileShow(c *cli.Context, client umschlag.ClientAPI) error {
 	record, err := client.ProfileGet()
 
 	if err != nil {
@@ -135,7 +135,7 @@ func ProfileShow(c *cli.Context, client harbor.ClientAPI) error {
 }
 
 // ProfileUpdate provides the sub-command to update the profile.
-func ProfileUpdate(c *cli.Context, client harbor.ClientAPI) error {
+func ProfileUpdate(c *cli.Context, client umschlag.ClientAPI) error {
 	record, err := client.ProfileGet()
 
 	if err != nil {

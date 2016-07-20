@@ -1,9 +1,9 @@
 DIST := dist
 BIN := bin
-EXECUTABLE := harbor-cli
+EXECUTABLE := umschlag-cli
 SHA := $(shell git rev-parse --short HEAD)
 
-LDFLAGS += -X "github.com/harborapp/harbor-cli/config.VersionDev=$(SHA)"
+LDFLAGS += -X "github.com/umschlag/umschlag-cli/config.VersionDev=$(SHA)"
 
 RELEASES ?= $(BIN)/$(EXECUTABLE)-linux-amd64 \
 	$(BIN)/$(EXECUTABLE)-linux-386 \

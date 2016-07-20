@@ -1,4 +1,4 @@
-package harbor
+package umschlag
 
 // TeamUserParams is used to assign users to a team.
 type TeamUserParams struct {

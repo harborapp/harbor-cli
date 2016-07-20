@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/codegangsta/cli"
-	"github.com/harborapp/harbor-go/harbor"
 	"github.com/olekukonko/tablewriter"
+	"github.com/umschlag/umschlag-go/umschlag"
+	"github.com/urfave/cli"
 )
 
 // Team provides the sub-command for the team API.
@@ -167,7 +167,7 @@ func Team() cli.Command {
 }
 
 // TeamList provides the sub-command to list all teams.
-func TeamList(c *cli.Context, client harbor.ClientAPI) error {
+func TeamList(c *cli.Context, client umschlag.ClientAPI) error {
 	records, err := client.TeamList()
 
 	if err != nil {
@@ -197,7 +197,7 @@ func TeamList(c *cli.Context, client harbor.ClientAPI) error {
 }
 
 // TeamShow provides the sub-command to show team details.
-func TeamShow(c *cli.Context, client harbor.ClientAPI) error {
+func TeamShow(c *cli.Context, client umschlag.ClientAPI) error {
 	record, err := client.TeamGet(
 		GetIdentifierParam(c),
 	)
@@ -250,7 +250,7 @@ func TeamShow(c *cli.Context, client harbor.ClientAPI) error {
 }
 
 // TeamDelete provides the sub-command to delete a team.
-func TeamDelete(c *cli.Context, client harbor.ClientAPI) error {
+func TeamDelete(c *cli.Context, client umschlag.ClientAPI) error {
 	err := client.TeamDelete(
 		GetIdentifierParam(c),
 	)
@@ -264,7 +264,7 @@ func TeamDelete(c *cli.Context, client harbor.ClientAPI) error {
 }
 
 // TeamUpdate provides the sub-command to update a team.
-func TeamUpdate(c *cli.Context, client harbor.ClientAPI) error {
+func TeamUpdate(c *cli.Context, client umschlag.ClientAPI) error {
 	record, err := client.TeamGet(
 		GetIdentifierParam(c),
 	)
@@ -303,8 +303,8 @@ func TeamUpdate(c *cli.Context, client harbor.ClientAPI) error {
 }
 
 // TeamCreate provides the sub-command to create a team.
-func TeamCreate(c *cli.Context, client harbor.ClientAPI) error {
-	record := &harbor.Team{}
+func TeamCreate(c *cli.Context, client umschlag.ClientAPI) error {
+	record := &umschlag.Team{}
 
 	if val := c.String("slug"); c.IsSet("slug") && val != "" {
 		record.Slug = val
@@ -329,9 +329,9 @@ func TeamCreate(c *cli.Context, client harbor.ClientAPI) error {
 }
 
 // TeamUserList provides the sub-command to list users of the team.
-func TeamUserList(c *cli.Context, client harbor.ClientAPI) error {
+func TeamUserList(c *cli.Context, client umschlag.ClientAPI) error {
 	records, err := client.TeamUserList(
-		harbor.TeamUserParams{
+		umschlag.TeamUserParams{
 			Team: GetIdentifierParam(c),
 		},
 	)
@@ -362,9 +362,9 @@ func TeamUserList(c *cli.Context, client harbor.ClientAPI) error {
 }
 
 // TeamUserAppend provides the sub-command to append a user to the team.
-func TeamUserAppend(c *cli.Context, client harbor.ClientAPI) error {
+func TeamUserAppend(c *cli.Context, client umschlag.ClientAPI) error {
 	err := client.TeamUserAppend(
-		harbor.TeamUserParams{
+		umschlag.TeamUserParams{
 			Team: GetIdentifierParam(c),
 			User: GetUserParam(c),
 		},
@@ -379,9 +379,9 @@ func TeamUserAppend(c *cli.Context, client harbor.ClientAPI) error {
 }
 
 // TeamUserRemove provides the sub-command to remove a user from the team.
-func TeamUserRemove(c *cli.Context, client harbor.ClientAPI) error {
+func TeamUserRemove(c *cli.Context, client umschlag.ClientAPI) error {
 	err := client.TeamUserDelete(
-		harbor.TeamUserParams{
+		umschlag.TeamUserParams{
 			Team: GetIdentifierParam(c),
 			User: GetUserParam(c),
 		},
