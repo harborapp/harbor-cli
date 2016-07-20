@@ -5,6 +5,7 @@ workspace:
 pipeline:
   testing:
     image: webhippie/golang:latest
+    pull: true
     environment:
       - GOPATH=/app
     commands:
