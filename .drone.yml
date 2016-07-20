@@ -21,16 +21,16 @@ pipeline:
     environment:
       - GOPATH=/app
     commands:
-      - make release
-      - make updater
+      - make publish
     when:
       event: [ push, tag ]
       branch: [ master, refs/tags/* ]
 
-  # cover:
+  # coverage:
   #   image: plugins/coverage
 
   # rsync:
+  #   image: plugins/rsync
   #   user: deploy
   #   host: dl.webhippie.de
   #   source: dist/release/
@@ -42,6 +42,7 @@ pipeline:
   #     branch: master
 
   # rsync:
+  #   image: plugins/rsync
   #   user: deploy
   #   host: dl.webhippie.de
   #   source: dist/release/
@@ -53,6 +54,7 @@ pipeline:
   #     branch: refs/tags/*
 
   # rsync:
+  #   image: plugins/rsync
   #   user: deploy
   #   host: dl.webhippie.de
   #   source: dist/latest/
@@ -64,6 +66,7 @@ pipeline:
   #     branch: refs/tags/*
 
   # rsync:
+  #   image: plugins/rsync
   #   user: deploy
   #   host: dl.webhippie.de
   #   source: dist/publish/
@@ -75,6 +78,7 @@ pipeline:
   #     branch: refs/tags/*
 
   # github_release:
+  #   image: plugins/github-release
   #   files:
   #     - dist/release/*
   #   when:
