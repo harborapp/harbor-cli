@@ -3,7 +3,7 @@ BIN := bin
 EXECUTABLE := umschlag-cli
 SHA := $(shell git rev-parse --short HEAD)
 
-LDFLAGS += -X "github.com/umschlag/umschlag-cli/config.VersionDev=$(SHA)"
+LDFLAGS += -extldflags "-static" -X "github.com/umschlag/umschlag-cli/config.VersionDev=$(SHA)"
 
 RELEASES ?= windows/386 windows/amd64 darwin/386 darwin/amd64 linux/386 linux/amd64 linux/arm
 PACKAGES ?= $(shell go list ./... | grep -v /vendor/)
@@ -59,7 +59,7 @@ $(BIN)/$(EXECUTABLE): $(wildcard *.go)
 release: release-build release-copy release-check
 
 release-build:
-	gox -osarch="$(RELEASES)" -ldflags="-s -w $(LDFLAGS)" -output="$(BIN)/$(EXECUTABLE)-{{.OS}}-{{.Arch}}"
+	gox -osarch='$(RELEASES)' -ldflags='-s -w $(LDFLAGS)' -output='$(BIN)/$(EXECUTABLE)-{{.OS}}-{{.Arch}}'
 
 release-copy:
 	mkdir -p $(DIST)/release
