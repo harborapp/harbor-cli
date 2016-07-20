@@ -1,12 +1,12 @@
 workspace:
-  base: /usr/local
+  base: /app
   path: src/github.com/umschlag/umschlag-cli
 
 pipeline:
   testing:
     image: webhippie/golang:latest
     environment:
-      - GOPATH=/usr/local
+      - GOPATH=/app
     commands:
       - make clean
       - make deps
@@ -18,7 +18,7 @@ pipeline:
   updater:
     image: webhippie/golang:latest
     environment:
-      - GOPATH=/usr/local
+      - GOPATH=/app
     commands:
       - make release
       - make updater
@@ -49,6 +49,7 @@ pipeline:
   #   delete: true
   #   when:
   #     event: tag
+  #     branch: refs/tags/*
 
   # rsync:
   #   user: deploy
@@ -59,6 +60,7 @@ pipeline:
   #   delete: true
   #   when:
   #     event: tag
+  #     branch: refs/tags/*
 
   # rsync:
   #   user: deploy
@@ -69,24 +71,29 @@ pipeline:
   #   delete: false
   #   when:
   #     event: tag
+  #     branch: refs/tags/*
 
   # github_release:
   #   files:
   #     - dist/release/*
   #   when:
   #     event: tag
+  #     branch: refs/tags/*
 
   docker:
     image: plugins/docker
     storage_driver: overlay
+    debug: true
     repo: umschlag/umschlag-cli
     tags: [ '${TAG}' ]
     when:
       event: tag
+      branch: refs/tags/*
 
   docker:
     image: plugins/docker
     storage_driver: overlay
+    debug: true
     repo: umschlag/umschlag-cli
     tags: [ 'latest' ]
     when:
