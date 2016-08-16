@@ -23,8 +23,8 @@ func Team() cli.Command {
 				Aliases:   []string{"ls"},
 				Usage:     "List all teams",
 				ArgsUsage: " ",
-				Action: func(c *cli.Context) {
-					Handle(c, TeamList)
+				Action: func(c *cli.Context) error {
+					return Handle(c, TeamList)
 				},
 			},
 			{
@@ -38,8 +38,8 @@ func Team() cli.Command {
 						Usage: "Team ID or slug to show",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, TeamShow)
+				Action: func(c *cli.Context) error {
+					return Handle(c, TeamShow)
 				},
 			},
 			{
@@ -65,8 +65,8 @@ func Team() cli.Command {
 						},
 					},
 				),
-				Action: func(c *cli.Context) {
-					Handle(c, TeamUpdate)
+				Action: func(c *cli.Context) error {
+					return Handle(c, TeamUpdate)
 				},
 			},
 			{
@@ -81,8 +81,8 @@ func Team() cli.Command {
 						Usage: "Team ID or slug to show",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, TeamDelete)
+				Action: func(c *cli.Context) error {
+					return Handle(c, TeamDelete)
 				},
 			},
 			{
@@ -103,8 +103,8 @@ func Team() cli.Command {
 						},
 					},
 				),
-				Action: func(c *cli.Context) {
-					Handle(c, TeamCreate)
+				Action: func(c *cli.Context) error {
+					return Handle(c, TeamCreate)
 				},
 			},
 			{
@@ -118,8 +118,8 @@ func Team() cli.Command {
 						Usage: "Team ID or slug to list users",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, TeamUserList)
+				Action: func(c *cli.Context) error {
+					return Handle(c, TeamUserList)
 				},
 			},
 			{
@@ -138,8 +138,8 @@ func Team() cli.Command {
 						Usage: "User ID or slug to append",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, TeamUserAppend)
+				Action: func(c *cli.Context) error {
+					return Handle(c, TeamUserAppend)
 				},
 			},
 			{
@@ -158,8 +158,8 @@ func Team() cli.Command {
 						Usage: "User ID or slug to remove",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, TeamUserRemove)
+				Action: func(c *cli.Context) error {
+					return Handle(c, TeamUserRemove)
 				},
 			},
 		},
