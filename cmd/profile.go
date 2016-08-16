@@ -20,15 +20,27 @@ func Profile() cli.Command {
 			{
 				Name:  "token",
 				Usage: "Show your token",
-				Action: func(c *cli.Context) {
-					Handle(c, ProfileToken)
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "username",
+						Value: "",
+						Usage: "Username for authentication",
+					},
+					cli.StringFlag{
+						Name:  "password",
+						Value: "",
+						Usage: "Password for authentication",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					return Handle(c, ProfileToken)
 				},
 			},
 			{
 				Name:  "show",
 				Usage: "Show profile details",
-				Action: func(c *cli.Context) {
-					Handle(c, ProfileShow)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ProfileShow)
 				},
 			},
 			{
@@ -56,8 +68,8 @@ func Profile() cli.Command {
 						Usage: "Provide a password",
 					},
 				},
-				Action: func(c *cli.Context) {
-					Handle(c, ProfileUpdate)
+				Action: func(c *cli.Context) error {
+					return Handle(c, ProfileUpdate)
 				},
 			},
 		},
@@ -66,6 +78,30 @@ func Profile() cli.Command {
 
 // ProfileToken provides the sub-command to show your token.
 func ProfileToken(c *cli.Context, client umschlag.ClientAPI) error {
+	if !client.IsAuthenticated() {
+		if !c.IsSet("username") {
+			return fmt.Errorf("Please provide a username")
+		}
+
+		if !c.IsSet("password") {
+			return fmt.Errorf("Please provide a password")
+		}
+
+		login, err := client.AuthLogin(
+			c.String("username"),
+			c.String("password"),
+		)
+
+		if err != nil {
+			return err
+		}
+
+		client = umschlag.NewClientToken(
+			c.GlobalString("server"),
+			login.Token,
+		)
+	}
+
 	record, err := client.ProfileToken()
 
 	if err != nil {
