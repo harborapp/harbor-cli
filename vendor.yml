@@ -1,27 +1,27 @@
 vendors:
 - path: github.com/golang/protobuf
-  rev: 874264fbbb43f4d91e999fecb4b40143ed611400
+  rev: 7390af9dcd3c33042ebaf2474a1724a83cf1a7e6
 - path: github.com/jackspirou/syscerts
   rev: b68f5469dff16e102bd6a2d5b3e79341c938d736
 - path: github.com/kardianos/osext
-  rev: 29ae4ffbc9a6fe9fb2bc5029050ce6996ea1d3bc
+  rev: c2c54e542fb797ad986b31721e1baedf214ca413
 - path: github.com/kr/binarydist
-  rev: 9955b0ab8708602d411341e55fffd7e0700f86bd
+  rev: 3035450ff8b987ec4373f65c40767f096b35f2d2
 - path: github.com/mattn/go-runewidth
   rev: d6bea18f789704b5f83375793155289da36a3c7f
 - path: github.com/olekukonko/tablewriter
   rev: daf2955e742cf123959884fdff4685aa79b63135
 - path: github.com/sanbornm/go-selfupdate
-  rev: 8d409ca53a740932c8e3a6cd1d8ea4c111f5e539
+  rev: 83c3c7d653a71718e36191c7c0dc6773e65629f2
 - path: github.com/umschlag/umschlag-go
-  rev: 939abea666563867d378df0bce04176b6096165f
+  rev: 3e852e9440ec570d19ef12523947cd662b0ac344
 - path: github.com/urfave/cli
-  rev: 11c134509d89c2018675f369955218a180dc7428
+  rev: 168c95418e66e019fe17b8f4f5c45aa62ff80e23
 - path: golang.org/x/net
-  rev: 3797cd8864994d713d909eda5e61ede8683fdc12
+  rev: 07b51741c1d6423d4a6abab1c49940ec09cb1aaf
 - path: golang.org/x/oauth2
-  rev: 12e1e986157ec46fb273824565d9937bd4235105
+  rev: 4784bb855e56a530f1ce5d788959359ed6cb4a16
 - path: google.golang.org/appengine
-  rev: 267c27e7492265b84fc6719503b14a1e17975d79
+  rev: e951d3868b377b14f4e60efa3a301532ee3c1ebf
 - path: gopkg.in/inconshreveable/go-update.v0
   rev: d8b0b1d421aa1cbf392c05869f8abbc669bb7066

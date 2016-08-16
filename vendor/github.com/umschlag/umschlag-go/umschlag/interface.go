@@ -1,9 +1,26 @@
 package umschlag
 
+import (
+	"net/http"
+)
+
 //go:generate mockery -all -case=underscore
 
 // ClientAPI describes a client API.
 type ClientAPI interface {
+	// SetClient sets the default http client. This should
+	// be used in conjunction with golang.org/x/oauth2 to
+	// authenticate requests to the Umschlag API.
+	SetClient(client *http.Client)
+
+	// IsAuthenticated checks if we already provided an authentication
+	// token for our client requests. If it returns false you can update
+	// the client after fetching a valid token.
+	IsAuthenticated() bool
+
+	// AuthLogin signs in based on credentials and returns a token.
+	AuthLogin(string, string) (*Token, error)
+
 	// ProfileToken returns a token.
 	ProfileToken() (*Token, error)
 

@@ -1,12 +1,8 @@
 package umschlag
 
 import (
-	"bytes"
 	"crypto/tls"
-	"encoding/json"
 	"fmt"
-	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 
@@ -15,6 +11,7 @@ import (
 )
 
 const (
+	pathAuthLogin    = "%s/api/auth/login"
 	pathProfile      = "%s/api/profile/self"
 	pathProfileToken = "%s/api/profile/token"
 	pathUsers        = "%s/api/users"
@@ -29,13 +26,14 @@ const (
 type DefaultClient struct {
 	client *http.Client
 	base   string
+	token  string
 }
 
 // NewClient returns a client for the specified URL.
 func NewClient(uri string) ClientAPI {
 	return &DefaultClient{
-		http.DefaultClient,
-		uri,
+		client: http.DefaultClient,
+		base:   uri,
 	}
 }
 
@@ -51,16 +49,60 @@ func NewClientToken(uri, token string) ClientAPI {
 		},
 	)
 
-	auther.Transport = &http.Transport{
-		TLSClientConfig: &tls.Config{
-			RootCAs: syscerts.SystemRootsPool(),
-		},
+	if trans, ok := auther.Transport.(*oauth2.Transport); ok {
+		trans.Base = &http.Transport{
+			Proxy: http.ProxyFromEnvironment,
+			TLSClientConfig: &tls.Config{
+				RootCAs: syscerts.SystemRootsPool(),
+			},
+		}
 	}
 
 	return &DefaultClient{
-		auther,
-		uri,
+		client: auther,
+		base:   uri,
+		token:  token,
 	}
+}
+
+// IsAuthenticated checks if we already provided an authentication
+// token for our client requests. If it returns false you can update
+// the client after fetching a valid token.
+func (c *DefaultClient) IsAuthenticated() bool {
+	if c.token == "" {
+		return false
+	}
+
+	uri, err := url.Parse(fmt.Sprintf(pathProfileToken, c.base))
+
+	if err != nil {
+		return false
+	}
+
+	req, err := http.NewRequest("GET", uri.String(), nil)
+
+	if err != nil {
+		return false
+	}
+
+	req.Header.Set(
+		"User-Agent",
+		"Kleister CLI",
+	)
+
+	resp, err := c.client.Do(req)
+
+	if err != nil {
+		return false
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusUnauthorized {
+		return false
+	}
+
+	return true
 }
 
 // SetClient sets the default http client. This should
@@ -68,6 +110,24 @@ func NewClientToken(uri, token string) ClientAPI {
 // authenticate requests to the Umschlag API.
 func (c *DefaultClient) SetClient(client *http.Client) {
 	c.client = client
+}
+
+// AuthLogin signs in based on credentials and returns a token.
+func (c *DefaultClient) AuthLogin(username, password string) (*Token, error) {
+	out := &Token{}
+
+	in := struct {
+		Username string
+		Password string
+	}{
+		username,
+		password,
+	}
+
+	uri := fmt.Sprintf(pathAuthLogin, c.base)
+	err := c.post(uri, in, out)
+
+	return out, err
 }
 
 // ProfileToken returns a profile.
@@ -246,111 +306,4 @@ func (c *DefaultClient) TeamUserDelete(opts TeamUserParams) error {
 	err := c.delete(uri, opts)
 
 	return err
-}
-
-// Helper function for making an GET request.
-func (c *DefaultClient) get(rawurl string, out interface{}) error {
-	return c.do(rawurl, "GET", nil, out)
-}
-
-// Helper function for making an POST request.
-func (c *DefaultClient) post(rawurl string, in, out interface{}) error {
-	return c.do(rawurl, "POST", in, out)
-}
-
-// Helper function for making an PUT request.
-func (c *DefaultClient) put(rawurl string, in, out interface{}) error {
-	return c.do(rawurl, "PUT", in, out)
-}
-
-// Helper function for making an PATCH request.
-func (c *DefaultClient) patch(rawurl string, in, out interface{}) error {
-	return c.do(rawurl, "PATCH", in, out)
-}
-
-// Helper function for making an DELETE request.
-func (c *DefaultClient) delete(rawurl string, in interface{}) error {
-	return c.do(rawurl, "DELETE", in, nil)
-}
-
-// Helper function to make an HTTP request
-func (c *DefaultClient) do(rawurl, method string, in, out interface{}) error {
-	body, err := c.stream(
-		rawurl,
-		method,
-		in,
-		out,
-	)
-
-	if err != nil {
-		return err
-	}
-
-	defer body.Close()
-
-	if out != nil {
-		return json.NewDecoder(body).Decode(out)
-	}
-
-	return nil
-}
-
-// Helper function to stream an HTTP request
-func (c *DefaultClient) stream(rawurl, method string, in, out interface{}) (io.ReadCloser, error) {
-	uri, err := url.Parse(rawurl)
-
-	if err != nil {
-		return nil, err
-	}
-
-	var buf io.ReadWriter
-
-	if in != nil {
-		buf = new(bytes.Buffer)
-		err := json.NewEncoder(buf).Encode(in)
-
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	req, err := http.NewRequest(method, uri.String(), buf)
-
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Set(
-		"User-Agent",
-		"Umschlag CLI",
-	)
-
-	if in != nil {
-		req.Header.Set(
-			"Content-Type",
-			"application/json",
-		)
-	}
-
-	resp, err := c.client.Do(req)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode > http.StatusPartialContent {
-		defer resp.Body.Close()
-		out, _ := ioutil.ReadAll(resp.Body)
-
-		msg := &Message{}
-		parse := json.Unmarshal(out, msg)
-
-		if parse != nil {
-			return nil, fmt.Errorf(string(out))
-		}
-
-		return nil, fmt.Errorf(msg.Message)
-	}
-
-	return resp.Body, nil
 }
