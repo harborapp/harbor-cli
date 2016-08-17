@@ -201,14 +201,14 @@ func UserList(c *cli.Context, client umschlag.ClientAPI) error {
 
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"ID", "Username", "Email"})
+	table.SetHeader([]string{"ID", "Slug", "Username"})
 
 	for _, record := range records {
 		table.Append(
 			[]string{
 				strconv.FormatInt(record.ID, 10),
+				record.Slug,
 				record.Username,
-				record.Email,
 			},
 		)
 	}
