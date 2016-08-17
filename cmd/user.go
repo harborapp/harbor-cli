@@ -182,6 +182,61 @@ func User() cli.Command {
 					return Handle(c, UserTeamRemove)
 				},
 			},
+			{
+				Name:      "namespace-list",
+				Usage:     "List assigned namespaces",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "User ID or slug to list namespaces",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					return Handle(c, UserNamespaceList)
+				},
+			},
+			{
+				Name:      "namespace-append",
+				Usage:     "Append a namespace to user",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "User ID or slug to append to",
+					},
+					cli.StringFlag{
+						Name:  "namespace, t",
+						Value: "",
+						Usage: "Namespace ID or slug to append",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					return Handle(c, UserNamespaceAppend)
+				},
+			},
+			{
+				Name:      "namespace-remove",
+				Usage:     "Remove a namespace from user",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "User ID or slug to remove from",
+					},
+					cli.StringFlag{
+						Name:  "namespace, t",
+						Value: "",
+						Usage: "Namespace ID or slug to remove",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					return Handle(c, UserNamespaceRemove)
+				},
+			},
 		},
 	}
 }
@@ -434,6 +489,73 @@ func UserTeamRemove(c *cli.Context, client umschlag.ClientAPI) error {
 		umschlag.UserTeamParams{
 			User: GetIdentifierParam(c),
 			Team: GetTeamParam(c),
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully removed from user\n")
+	return nil
+}
+
+// UserNamespaceList provides the sub-command to list namespaces of the user.
+func UserNamespaceList(c *cli.Context, client umschlag.ClientAPI) error {
+	records, err := client.UserNamespaceList(
+		umschlag.UserNamespaceParams{
+			User: GetIdentifierParam(c),
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	if len(records) == 0 {
+		fmt.Fprintf(os.Stderr, "Empty result\n")
+		return nil
+	}
+
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetHeader([]string{"Namespace"})
+
+	for _, record := range records {
+		table.Append(
+			[]string{
+				record.Slug,
+			},
+		)
+	}
+
+	table.Render()
+	return nil
+}
+
+// UserNamespaceAppend provides the sub-command to append a namespace to the user.
+func UserNamespaceAppend(c *cli.Context, client umschlag.ClientAPI) error {
+	err := client.UserNamespaceAppend(
+		umschlag.UserNamespaceParams{
+			User:      GetIdentifierParam(c),
+			Namespace: GetNamespaceParam(c),
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully appended to user\n")
+	return nil
+}
+
+// UserNamespaceRemove provides the sub-command to remove a namespace from the user.
+func UserNamespaceRemove(c *cli.Context, client umschlag.ClientAPI) error {
+	err := client.UserNamespaceDelete(
+		umschlag.UserNamespaceParams{
+			User:      GetIdentifierParam(c),
+			Namespace: GetNamespaceParam(c),
 		},
 	)
 

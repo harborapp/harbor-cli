@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"strconv"
 	"time"
 
@@ -11,47 +12,47 @@ import (
 	"github.com/urfave/cli"
 )
 
-// Team provides the sub-command for the team API.
-func Team() cli.Command {
+// Namespace provides the sub-command for the namespace API.
+func Namespace() cli.Command {
 	return cli.Command{
-		Name:    "team",
-		Aliases: []string{"t"},
-		Usage:   "Team related sub-commands",
+		Name:    "namespace",
+		Aliases: []string{"n"},
+		Usage:   "Namespace related sub-commands",
 		Subcommands: []cli.Command{
 			{
 				Name:      "list",
 				Aliases:   []string{"ls"},
-				Usage:     "List all teams",
+				Usage:     "List all namespaces",
 				ArgsUsage: " ",
 				Action: func(c *cli.Context) error {
-					return Handle(c, TeamList)
+					return Handle(c, NamespaceList)
 				},
 			},
 			{
 				Name:      "show",
-				Usage:     "Display a team",
+				Usage:     "Display a namespace",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
-						Usage: "Team ID or slug to show",
+						Usage: "Namespace ID or slug to show",
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, TeamShow)
+					return Handle(c, NamespaceShow)
 				},
 			},
 			{
 				Name:      "update",
-				Usage:     "Update a team",
+				Usage:     "Update a namespace",
 				ArgsUsage: " ",
 				Flags: append(
 					[]cli.Flag{
 						cli.StringFlag{
 							Name:  "id, i",
 							Value: "",
-							Usage: "Team ID or slug to update",
+							Usage: "Namespace ID or slug to update",
 						},
 						cli.StringFlag{
 							Name:  "slug",
@@ -66,31 +67,36 @@ func Team() cli.Command {
 					},
 				),
 				Action: func(c *cli.Context) error {
-					return Handle(c, TeamUpdate)
+					return Handle(c, NamespaceUpdate)
 				},
 			},
 			{
 				Name:      "delete",
 				Aliases:   []string{"rm"},
-				Usage:     "Delete a team",
+				Usage:     "Delete a namespace",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
-						Usage: "Team ID or slug to show",
+						Usage: "Namespace ID or slug to show",
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, TeamDelete)
+					return Handle(c, NamespaceDelete)
 				},
 			},
 			{
 				Name:      "create",
-				Usage:     "Create a team",
+				Usage:     "Create a namespace",
 				ArgsUsage: " ",
 				Flags: append(
 					[]cli.Flag{
+						cli.StringFlag{
+							Name:  "registry",
+							Value: "",
+							Usage: "Registry ID or slug",
+						},
 						cli.StringFlag{
 							Name:  "slug",
 							Value: "",
@@ -104,7 +110,7 @@ func Team() cli.Command {
 					},
 				),
 				Action: func(c *cli.Context) error {
-					return Handle(c, TeamCreate)
+					return Handle(c, NamespaceCreate)
 				},
 			},
 			{
@@ -115,22 +121,22 @@ func Team() cli.Command {
 					cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
-						Usage: "Team ID or slug to list users",
+						Usage: "Namespace ID or slug to list users",
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, TeamUserList)
+					return Handle(c, NamespaceUserList)
 				},
 			},
 			{
 				Name:      "user-append",
-				Usage:     "Append a user to team",
+				Usage:     "Append a user to namespace",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
-						Usage: "Team ID or slug to append to",
+						Usage: "Namespace ID or slug to append to",
 					},
 					cli.StringFlag{
 						Name:  "user, u",
@@ -139,18 +145,18 @@ func Team() cli.Command {
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, TeamUserAppend)
+					return Handle(c, NamespaceUserAppend)
 				},
 			},
 			{
 				Name:      "user-remove",
-				Usage:     "Remove a user from team",
+				Usage:     "Remove a user from namespace",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
-						Usage: "Team ID or slug to remove from",
+						Usage: "Namespace ID or slug to remove from",
 					},
 					cli.StringFlag{
 						Name:  "user, u",
@@ -159,71 +165,71 @@ func Team() cli.Command {
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, TeamUserRemove)
+					return Handle(c, NamespaceUserRemove)
 				},
 			},
 			{
-				Name:      "namespace-list",
-				Usage:     "List assigned namespaces",
+				Name:      "team-list",
+				Usage:     "List assigned teams",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
-						Usage: "Team ID or slug to list namespaces",
+						Usage: "Namespace ID or slug to list teams",
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, TeamNamespaceList)
+					return Handle(c, NamespaceTeamList)
 				},
 			},
 			{
-				Name:      "namespace-append",
-				Usage:     "Append a namespace to team",
+				Name:      "team-append",
+				Usage:     "Append a team to namespace",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
-						Usage: "Team ID or slug to append to",
+						Usage: "Namespace ID or slug to append to",
 					},
 					cli.StringFlag{
-						Name:  "namespace, u",
+						Name:  "team, t",
 						Value: "",
-						Usage: "Namespace ID or slug to append",
+						Usage: "Team ID or slug to append",
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, TeamNamespaceAppend)
+					return Handle(c, NamespaceTeamAppend)
 				},
 			},
 			{
-				Name:      "namespace-remove",
-				Usage:     "Remove a namespace from team",
+				Name:      "team-remove",
+				Usage:     "Remove a team from namespace",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
-						Usage: "Team ID or slug to remove from",
+						Usage: "Namespace ID or slug to remove from",
 					},
 					cli.StringFlag{
-						Name:  "namespace, u",
+						Name:  "team, t",
 						Value: "",
-						Usage: "Namespace ID or slug to remove",
+						Usage: "Team ID or slug to remove",
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, TeamNamespaceRemove)
+					return Handle(c, NamespaceTeamRemove)
 				},
 			},
 		},
 	}
 }
 
-// TeamList provides the sub-command to list all teams.
-func TeamList(c *cli.Context, client umschlag.ClientAPI) error {
-	records, err := client.TeamList()
+// NamespaceList provides the sub-command to list all namespaces.
+func NamespaceList(c *cli.Context, client umschlag.ClientAPI) error {
+	records, err := client.NamespaceList()
 
 	if err != nil {
 		return err
@@ -252,9 +258,9 @@ func TeamList(c *cli.Context, client umschlag.ClientAPI) error {
 	return nil
 }
 
-// TeamShow provides the sub-command to show team details.
-func TeamShow(c *cli.Context, client umschlag.ClientAPI) error {
-	record, err := client.TeamGet(
+// NamespaceShow provides the sub-command to show namespace details.
+func NamespaceShow(c *cli.Context, client umschlag.ClientAPI) error {
+	record, err := client.NamespaceGet(
 		GetIdentifierParam(c),
 	)
 
@@ -287,6 +293,15 @@ func TeamShow(c *cli.Context, client umschlag.ClientAPI) error {
 		},
 	)
 
+	if record.Registry != nil {
+		table.Append(
+			[]string{
+				"Registry",
+				record.Registry.String(),
+			},
+		)
+	}
+
 	table.Append(
 		[]string{
 			"Created",
@@ -305,9 +320,9 @@ func TeamShow(c *cli.Context, client umschlag.ClientAPI) error {
 	return nil
 }
 
-// TeamDelete provides the sub-command to delete a team.
-func TeamDelete(c *cli.Context, client umschlag.ClientAPI) error {
-	err := client.TeamDelete(
+// NamespaceDelete provides the sub-command to delete a namespace.
+func NamespaceDelete(c *cli.Context, client umschlag.ClientAPI) error {
+	err := client.NamespaceDelete(
 		GetIdentifierParam(c),
 	)
 
@@ -319,9 +334,9 @@ func TeamDelete(c *cli.Context, client umschlag.ClientAPI) error {
 	return nil
 }
 
-// TeamUpdate provides the sub-command to update a team.
-func TeamUpdate(c *cli.Context, client umschlag.ClientAPI) error {
-	record, err := client.TeamGet(
+// NamespaceUpdate provides the sub-command to update a namespace.
+func NamespaceUpdate(c *cli.Context, client umschlag.ClientAPI) error {
+	record, err := client.NamespaceGet(
 		GetIdentifierParam(c),
 	)
 
@@ -342,7 +357,7 @@ func TeamUpdate(c *cli.Context, client umschlag.ClientAPI) error {
 	}
 
 	if changed {
-		_, patch := client.TeamPatch(
+		_, patch := client.NamespacePatch(
 			record,
 		)
 
@@ -358,9 +373,35 @@ func TeamUpdate(c *cli.Context, client umschlag.ClientAPI) error {
 	return nil
 }
 
-// TeamCreate provides the sub-command to create a team.
-func TeamCreate(c *cli.Context, client umschlag.ClientAPI) error {
-	record := &umschlag.Team{}
+// NamespaceCreate provides the sub-command to create a namespace.
+func NamespaceCreate(c *cli.Context, client umschlag.ClientAPI) error {
+	record := &umschlag.Namespace{}
+
+	if c.String("registry") == "" {
+		return fmt.Errorf("You must provide a registry ID or slug.")
+	}
+
+	if c.IsSet("registry") {
+		if match, _ := regexp.MatchString("^([0-9]+)$", c.String("registry")); match {
+			if val, err := strconv.ParseInt(c.String("registry"), 10, 64); err == nil && val != 0 {
+				record.RegistryID = val
+			}
+		} else {
+			if c.String("registry") != "" {
+				related, err := client.RegistryGet(
+					c.String("registry"),
+				)
+
+				if err != nil {
+					return err
+				}
+
+				if related.ID != record.RegistryID {
+					record.RegistryID = related.ID
+				}
+			}
+		}
+	}
 
 	if val := c.String("slug"); c.IsSet("slug") && val != "" {
 		record.Slug = val
@@ -372,7 +413,7 @@ func TeamCreate(c *cli.Context, client umschlag.ClientAPI) error {
 		return fmt.Errorf("You must provide a name.")
 	}
 
-	_, err := client.TeamPost(
+	_, err := client.NamespacePost(
 		record,
 	)
 
@@ -384,11 +425,11 @@ func TeamCreate(c *cli.Context, client umschlag.ClientAPI) error {
 	return nil
 }
 
-// TeamUserList provides the sub-command to list users of the team.
-func TeamUserList(c *cli.Context, client umschlag.ClientAPI) error {
-	records, err := client.TeamUserList(
-		umschlag.TeamUserParams{
-			Team: GetIdentifierParam(c),
+// NamespaceUserList provides the sub-command to list users of the namespace.
+func NamespaceUserList(c *cli.Context, client umschlag.ClientAPI) error {
+	records, err := client.NamespaceUserList(
+		umschlag.NamespaceUserParams{
+			Namespace: GetIdentifierParam(c),
 		},
 	)
 
@@ -417,12 +458,12 @@ func TeamUserList(c *cli.Context, client umschlag.ClientAPI) error {
 	return nil
 }
 
-// TeamUserAppend provides the sub-command to append a user to the team.
-func TeamUserAppend(c *cli.Context, client umschlag.ClientAPI) error {
-	err := client.TeamUserAppend(
-		umschlag.TeamUserParams{
-			Team: GetIdentifierParam(c),
-			User: GetUserParam(c),
+// NamespaceUserAppend provides the sub-command to append a user to the namespace.
+func NamespaceUserAppend(c *cli.Context, client umschlag.ClientAPI) error {
+	err := client.NamespaceUserAppend(
+		umschlag.NamespaceUserParams{
+			Namespace: GetIdentifierParam(c),
+			User:      GetUserParam(c),
 		},
 	)
 
@@ -430,16 +471,16 @@ func TeamUserAppend(c *cli.Context, client umschlag.ClientAPI) error {
 		return err
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully appended to team\n")
+	fmt.Fprintf(os.Stderr, "Successfully appended to namespace\n")
 	return nil
 }
 
-// TeamUserRemove provides the sub-command to remove a user from the team.
-func TeamUserRemove(c *cli.Context, client umschlag.ClientAPI) error {
-	err := client.TeamUserDelete(
-		umschlag.TeamUserParams{
-			Team: GetIdentifierParam(c),
-			User: GetUserParam(c),
+// NamespaceUserRemove provides the sub-command to remove a user from the namespace.
+func NamespaceUserRemove(c *cli.Context, client umschlag.ClientAPI) error {
+	err := client.NamespaceUserDelete(
+		umschlag.NamespaceUserParams{
+			Namespace: GetIdentifierParam(c),
+			User:      GetUserParam(c),
 		},
 	)
 
@@ -447,15 +488,15 @@ func TeamUserRemove(c *cli.Context, client umschlag.ClientAPI) error {
 		return err
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully removed from team\n")
+	fmt.Fprintf(os.Stderr, "Successfully removed from namespace\n")
 	return nil
 }
 
-// TeamNamespaceList provides the sub-command to list namespaces of the team.
-func TeamNamespaceList(c *cli.Context, client umschlag.ClientAPI) error {
-	records, err := client.TeamNamespaceList(
-		umschlag.TeamNamespaceParams{
-			Team: GetIdentifierParam(c),
+// NamespaceTeamList provides the sub-command to list teams of the namespace.
+func NamespaceTeamList(c *cli.Context, client umschlag.ClientAPI) error {
+	records, err := client.NamespaceTeamList(
+		umschlag.NamespaceTeamParams{
+			Namespace: GetIdentifierParam(c),
 		},
 	)
 
@@ -470,7 +511,7 @@ func TeamNamespaceList(c *cli.Context, client umschlag.ClientAPI) error {
 
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"Namespace"})
+	table.SetHeader([]string{"Team"})
 
 	for _, record := range records {
 		table.Append(
@@ -484,12 +525,12 @@ func TeamNamespaceList(c *cli.Context, client umschlag.ClientAPI) error {
 	return nil
 }
 
-// TeamNamespaceAppend provides the sub-command to append a namespace to the team.
-func TeamNamespaceAppend(c *cli.Context, client umschlag.ClientAPI) error {
-	err := client.TeamNamespaceAppend(
-		umschlag.TeamNamespaceParams{
-			Team:      GetIdentifierParam(c),
-			Namespace: GetNamespaceParam(c),
+// NamespaceTeamAppend provides the sub-command to append a team to the namespace.
+func NamespaceTeamAppend(c *cli.Context, client umschlag.ClientAPI) error {
+	err := client.NamespaceTeamAppend(
+		umschlag.NamespaceTeamParams{
+			Namespace: GetIdentifierParam(c),
+			Team:      GetTeamParam(c),
 		},
 	)
 
@@ -497,16 +538,16 @@ func TeamNamespaceAppend(c *cli.Context, client umschlag.ClientAPI) error {
 		return err
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully appended to team\n")
+	fmt.Fprintf(os.Stderr, "Successfully appended to namespace\n")
 	return nil
 }
 
-// TeamNamespaceRemove provides the sub-command to remove a namespace from the team.
-func TeamNamespaceRemove(c *cli.Context, client umschlag.ClientAPI) error {
-	err := client.TeamNamespaceDelete(
-		umschlag.TeamNamespaceParams{
-			Team:      GetIdentifierParam(c),
-			Namespace: GetNamespaceParam(c),
+// NamespaceTeamRemove provides the sub-command to remove a team from the namespace.
+func NamespaceTeamRemove(c *cli.Context, client umschlag.ClientAPI) error {
+	err := client.NamespaceTeamDelete(
+		umschlag.NamespaceTeamParams{
+			Namespace: GetIdentifierParam(c),
+			Team:      GetTeamParam(c),
 		},
 	)
 
@@ -514,6 +555,6 @@ func TeamNamespaceRemove(c *cli.Context, client umschlag.ClientAPI) error {
 		return err
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully removed from team\n")
+	fmt.Fprintf(os.Stderr, "Successfully removed from namespace\n")
 	return nil
 }
