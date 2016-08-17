@@ -16,6 +16,22 @@ type Token struct {
 	Expire string `json:"expire,omitempty"`
 }
 
+// Registry represents a registry API response.
+type Registry struct {
+	ID         int64        `json:"id"`
+	Slug       string       `json:"slug"`
+	Name       string       `json:"name"`
+	Host       string       `json:"host"`
+	UseSSL     bool         `json:"use_ssl"`
+	CreatedAt  time.Time    `json:"created_at"`
+	UpdatedAt  time.Time    `json:"updated_at"`
+	Namespaces []*Namespace `json:"namespaces,omitempty"`
+}
+
+func (s *Registry) String() string {
+	return s.Name
+}
+
 // User represents a user API response.
 type User struct {
 	ID         int64        `json:"id"`
@@ -50,13 +66,15 @@ func (s *Team) String() string {
 
 // Namespace represents a namespace API response.
 type Namespace struct {
-	ID        int64     `json:"id"`
-	Slug      string    `json:"slug"`
-	Name      string    `json:"name"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	Users     []*User   `json:"users,omitempty"`
-	Teams     []*Team   `json:"teams,omitempty"`
+	ID         int64     `json:"id"`
+	Registry   *Registry `json:"registry,omitempty"`
+	RegistryID int64     `json:"registry_id"`
+	Slug       string    `json:"slug"`
+	Name       string    `json:"name"`
+	CreatedAt  time.Time `json:"created_at"`
+	UpdatedAt  time.Time `json:"updated_at"`
+	Users      []*User   `json:"users,omitempty"`
+	Teams      []*Team   `json:"teams,omitempty"`
 }
 
 func (s *Namespace) String() string {

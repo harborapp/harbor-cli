@@ -30,6 +30,21 @@ type ClientAPI interface {
 	// ProfilePatch updates a profile.
 	ProfilePatch(*Profile) (*Profile, error)
 
+	// RegistryList returns a list of all registries.
+	RegistryList() ([]*Registry, error)
+
+	// RegistryGet returns a registry.
+	RegistryGet(string) (*Registry, error)
+
+	// RegistryPost creates a registry.
+	RegistryPost(*Registry) (*Registry, error)
+
+	// RegistryPatch updates a registry.
+	RegistryPatch(*Registry) (*Registry, error)
+
+	// RegistryDelete deletes a registry.
+	RegistryDelete(string) error
+
 	// UserList returns a list of all users.
 	UserList() ([]*User, error)
 

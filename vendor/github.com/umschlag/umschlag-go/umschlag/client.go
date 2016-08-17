@@ -14,6 +14,8 @@ const (
 	pathAuthLogin     = "%s/api/auth/login"
 	pathProfile       = "%s/api/profile/self"
 	pathProfileToken  = "%s/api/profile/token"
+	pathRegistries    = "%s/api/registries"
+	pathRegistry      = "%s/api/registries/%v"
 	pathUsers         = "%s/api/users"
 	pathUser          = "%s/api/users/%v"
 	pathUserTeam      = "%s/api/users/%v/teams"
@@ -164,6 +166,54 @@ func (c *DefaultClient) ProfilePatch(in *Profile) (*Profile, error) {
 	err := c.patch(uri, in, out)
 
 	return out, err
+}
+
+// RegistryList returns a list of all registries.
+func (c *DefaultClient) RegistryList() ([]*Registry, error) {
+	var out []*Registry
+
+	uri := fmt.Sprintf(pathRegistries, c.base)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// RegistryGet returns a registry.
+func (c *DefaultClient) RegistryGet(id string) (*Registry, error) {
+	out := &Registry{}
+
+	uri := fmt.Sprintf(pathRegistry, c.base, id)
+	err := c.get(uri, out)
+
+	return out, err
+}
+
+// RegistryPost creates a registry.
+func (c *DefaultClient) RegistryPost(in *Registry) (*Registry, error) {
+	out := &Registry{}
+
+	uri := fmt.Sprintf(pathRegistries, c.base)
+	err := c.post(uri, in, out)
+
+	return out, err
+}
+
+// RegistryPatch updates a registry.
+func (c *DefaultClient) RegistryPatch(in *Registry) (*Registry, error) {
+	out := &Registry{}
+
+	uri := fmt.Sprintf(pathRegistry, c.base, in.ID)
+	err := c.patch(uri, in, out)
+
+	return out, err
+}
+
+// RegistryDelete deletes a registry.
+func (c *DefaultClient) RegistryDelete(id string) error {
+	uri := fmt.Sprintf(pathRegistry, c.base, id)
+	err := c.delete(uri, nil)
+
+	return err
 }
 
 // UserList returns a list of all users.
