@@ -11,15 +11,21 @@ import (
 )
 
 const (
-	pathAuthLogin    = "%s/api/auth/login"
-	pathProfile      = "%s/api/profile/self"
-	pathProfileToken = "%s/api/profile/token"
-	pathUsers        = "%s/api/users"
-	pathUser         = "%s/api/users/%v"
-	pathUserTeam     = "%s/api/users/%v/teams"
-	pathTeams        = "%s/api/teams"
-	pathTeam         = "%s/api/teams/%v"
-	pathTeamUser     = "%s/api/teams/%v/users"
+	pathAuthLogin     = "%s/api/auth/login"
+	pathProfile       = "%s/api/profile/self"
+	pathProfileToken  = "%s/api/profile/token"
+	pathUsers         = "%s/api/users"
+	pathUser          = "%s/api/users/%v"
+	pathUserTeam      = "%s/api/users/%v/teams"
+	pathUserNamespace = "%s/api/users/%v/namespaces"
+	pathTeams         = "%s/api/teams"
+	pathTeam          = "%s/api/teams/%v"
+	pathTeamUser      = "%s/api/teams/%v/users"
+	pathTeamNamespace = "%s/api/teams/%v/namespaces"
+	pathNamespaces    = "%s/api/namespaces"
+	pathNamespace     = "%s/api/namespaces/%v"
+	pathNamespaceUser = "%s/api/namespaces/%v/users"
+	pathNamespaceTeam = "%s/api/namespaces/%v/teams"
 )
 
 // DefaultClient implements the client interface.
@@ -87,7 +93,7 @@ func (c *DefaultClient) IsAuthenticated() bool {
 
 	req.Header.Set(
 		"User-Agent",
-		"Kleister CLI",
+		"Umschlag CLI",
 	)
 
 	resp, err := c.client.Do(req)
@@ -234,6 +240,32 @@ func (c *DefaultClient) UserTeamDelete(opts UserTeamParams) error {
 	return err
 }
 
+// UserNamespaceList returns a list of related namespaces for a user.
+func (c *DefaultClient) UserNamespaceList(opts UserNamespaceParams) ([]*Namespace, error) {
+	var out []*Namespace
+
+	uri := fmt.Sprintf(pathUserNamespace, c.base, opts.User)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// UserNamespaceAppend appends a namespace to a user.
+func (c *DefaultClient) UserNamespaceAppend(opts UserNamespaceParams) error {
+	uri := fmt.Sprintf(pathUserNamespace, c.base, opts.User)
+	err := c.patch(uri, opts, nil)
+
+	return err
+}
+
+// UserNamespaceDelete remove a namespace from a user.
+func (c *DefaultClient) UserNamespaceDelete(opts UserNamespaceParams) error {
+	uri := fmt.Sprintf(pathUserNamespace, c.base, opts.User)
+	err := c.delete(uri, opts)
+
+	return err
+}
+
 // TeamList returns a list of all teams.
 func (c *DefaultClient) TeamList() ([]*Team, error) {
 	var out []*Team
@@ -303,6 +335,132 @@ func (c *DefaultClient) TeamUserAppend(opts TeamUserParams) error {
 // TeamUserDelete remove a user from a team.
 func (c *DefaultClient) TeamUserDelete(opts TeamUserParams) error {
 	uri := fmt.Sprintf(pathTeamUser, c.base, opts.Team)
+	err := c.delete(uri, opts)
+
+	return err
+}
+
+// TeamNamespaceList returns a list of related namespaces for a team.
+func (c *DefaultClient) TeamNamespaceList(opts TeamNamespaceParams) ([]*Namespace, error) {
+	var out []*Namespace
+
+	uri := fmt.Sprintf(pathTeamNamespace, c.base, opts.Team)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// TeamNamespaceAppend appends a namespace to a team.
+func (c *DefaultClient) TeamNamespaceAppend(opts TeamNamespaceParams) error {
+	uri := fmt.Sprintf(pathTeamNamespace, c.base, opts.Team)
+	err := c.patch(uri, opts, nil)
+
+	return err
+}
+
+// TeamNamespaceDelete remove a namespace from a team.
+func (c *DefaultClient) TeamNamespaceDelete(opts TeamNamespaceParams) error {
+	uri := fmt.Sprintf(pathTeamNamespace, c.base, opts.Team)
+	err := c.delete(uri, opts)
+
+	return err
+}
+
+// NamespaceList returns a list of all namespaces.
+func (c *DefaultClient) NamespaceList() ([]*Namespace, error) {
+	var out []*Namespace
+
+	uri := fmt.Sprintf(pathNamespaces, c.base)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// NamespaceGet returns a namespace.
+func (c *DefaultClient) NamespaceGet(id string) (*Namespace, error) {
+	out := &Namespace{}
+
+	uri := fmt.Sprintf(pathNamespace, c.base, id)
+	err := c.get(uri, out)
+
+	return out, err
+}
+
+// NamespacePost creates a namespace.
+func (c *DefaultClient) NamespacePost(in *Namespace) (*Namespace, error) {
+	out := &Namespace{}
+
+	uri := fmt.Sprintf(pathNamespaces, c.base)
+	err := c.post(uri, in, out)
+
+	return out, err
+}
+
+// NamespacePatch updates a namespace.
+func (c *DefaultClient) NamespacePatch(in *Namespace) (*Namespace, error) {
+	out := &Namespace{}
+
+	uri := fmt.Sprintf(pathNamespace, c.base, in.ID)
+	err := c.patch(uri, in, out)
+
+	return out, err
+}
+
+// NamespaceDelete deletes a namespace.
+func (c *DefaultClient) NamespaceDelete(id string) error {
+	uri := fmt.Sprintf(pathNamespace, c.base, id)
+	err := c.delete(uri, nil)
+
+	return err
+}
+
+// NamespaceUserList returns a list of related users for a namespace.
+func (c *DefaultClient) NamespaceUserList(opts NamespaceUserParams) ([]*User, error) {
+	var out []*User
+
+	uri := fmt.Sprintf(pathNamespaceUser, c.base, opts.Namespace)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// NamespaceUserAppend appends a user to a namespace.
+func (c *DefaultClient) NamespaceUserAppend(opts NamespaceUserParams) error {
+	uri := fmt.Sprintf(pathNamespaceUser, c.base, opts.Namespace)
+	err := c.patch(uri, opts, nil)
+
+	return err
+}
+
+// NamespaceUserDelete remove a user from a namespace.
+func (c *DefaultClient) NamespaceUserDelete(opts NamespaceUserParams) error {
+	uri := fmt.Sprintf(pathNamespaceUser, c.base, opts.Namespace)
+	err := c.delete(uri, opts)
+
+	return err
+}
+
+// NamespaceTeamList returns a list of related teams for a namespace.
+func (c *DefaultClient) NamespaceTeamList(opts NamespaceTeamParams) ([]*Team, error) {
+	var out []*Team
+
+	uri := fmt.Sprintf(pathNamespaceTeam, c.base, opts.Namespace)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// NamespaceTeamAppend appends a team to a namespace.
+func (c *DefaultClient) NamespaceTeamAppend(opts NamespaceTeamParams) error {
+	uri := fmt.Sprintf(pathNamespaceTeam, c.base, opts.Namespace)
+	err := c.patch(uri, opts, nil)
+
+	return err
+}
+
+// NamespaceTeamDelete remove a team from a namespace.
+func (c *DefaultClient) NamespaceTeamDelete(opts NamespaceTeamParams) error {
+	uri := fmt.Sprintf(pathNamespaceTeam, c.base, opts.Namespace)
 	err := c.delete(uri, opts)
 
 	return err

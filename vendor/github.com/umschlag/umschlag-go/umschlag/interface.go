@@ -54,6 +54,15 @@ type ClientAPI interface {
 	// UserTeamDelete remove a team from a user.
 	UserTeamDelete(UserTeamParams) error
 
+	// UserNamespaceList returns a list of related namespaces for a user.
+	UserNamespaceList(UserNamespaceParams) ([]*Namespace, error)
+
+	// UserNamespaceAppend appends a namespace to a user.
+	UserNamespaceAppend(UserNamespaceParams) error
+
+	// UserNamespaceDelete remove a namespace from a user.
+	UserNamespaceDelete(UserNamespaceParams) error
+
 	// TeamList returns a list of all teams.
 	TeamList() ([]*Team, error)
 
@@ -77,4 +86,46 @@ type ClientAPI interface {
 
 	// TeamUserDelete remove a user from a team.
 	TeamUserDelete(TeamUserParams) error
+
+	// TeamNamespaceList returns a list of related namespaces for a team.
+	TeamNamespaceList(TeamNamespaceParams) ([]*Namespace, error)
+
+	// TeamNamespaceAppend appends a namespace to a team.
+	TeamNamespaceAppend(TeamNamespaceParams) error
+
+	// TeamNamespaceDelete remove a namespace from a team.
+	TeamNamespaceDelete(TeamNamespaceParams) error
+
+	// NamespaceList returns a list of all namespaces.
+	NamespaceList() ([]*Namespace, error)
+
+	// NamespaceGet returns a namespace.
+	NamespaceGet(string) (*Namespace, error)
+
+	// NamespacePost creates a namespace.
+	NamespacePost(*Namespace) (*Namespace, error)
+
+	// NamespacePatch updates a namespace.
+	NamespacePatch(*Namespace) (*Namespace, error)
+
+	// NamespaceDelete deletes a namespace.
+	NamespaceDelete(string) error
+
+	// NamespaceUserList returns a list of related users for a namespace.
+	NamespaceUserList(NamespaceUserParams) ([]*User, error)
+
+	// NamespaceUserAppend appends a user to a namespace.
+	NamespaceUserAppend(NamespaceUserParams) error
+
+	// NamespaceUserDelete remove a user from a namespace.
+	NamespaceUserDelete(NamespaceUserParams) error
+
+	// NamespaceTeamList returns a list of related teams for a namespace.
+	NamespaceTeamList(NamespaceTeamParams) ([]*Team, error)
+
+	// NamespaceTeamAppend appends a team to a namespace.
+	NamespaceTeamAppend(NamespaceTeamParams) error
+
+	// NamespaceTeamDelete remove a team from a namespace.
+	NamespaceTeamDelete(NamespaceTeamParams) error
 }

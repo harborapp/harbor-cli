@@ -13,36 +13,53 @@ type Message struct {
 // Token represents a session token.
 type Token struct {
 	Token  string `json:"token"`
-	Expite string `json:"expire,omitempty"`
+	Expire string `json:"expire,omitempty"`
 }
 
 // User represents a user API response.
 type User struct {
-	ID        int64     `json:"id"`
-	Slug      string    `json:"slug"`
-	Username  string    `json:"username"`
-	Password  string    `json:"password"`
-	Email     string    `json:"email"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	Teams     []*Team   `json:"teams,omitempty"`
+	ID         int64        `json:"id"`
+	Slug       string       `json:"slug"`
+	Username   string       `json:"username"`
+	Password   string       `json:"password"`
+	Email      string       `json:"email"`
+	CreatedAt  time.Time    `json:"created_at"`
+	UpdatedAt  time.Time    `json:"updated_at"`
+	Teams      []*Team      `json:"teams,omitempty"`
+	Namespaces []*Namespace `json:"namespaces,omitempty"`
 }
 
 func (s *User) String() string {
 	return s.Username
 }
 
-// Team represents a user API response.
+// Team represents a team API response.
 type Team struct {
+	ID         int64        `json:"id"`
+	Slug       string       `json:"slug"`
+	Name       string       `json:"name"`
+	CreatedAt  time.Time    `json:"created_at"`
+	UpdatedAt  time.Time    `json:"updated_at"`
+	Users      []*User      `json:"users,omitempty"`
+	Namespaces []*Namespace `json:"namespaces,omitempty"`
+}
+
+func (s *Team) String() string {
+	return s.Name
+}
+
+// Namespace represents a namespace API response.
+type Namespace struct {
 	ID        int64     `json:"id"`
 	Slug      string    `json:"slug"`
 	Name      string    `json:"name"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	Users     []*User   `json:"users,omitempty"`
+	Teams     []*Team   `json:"teams,omitempty"`
 }
 
-func (s *Team) String() string {
+func (s *Namespace) String() string {
 	return s.Name
 }
 
