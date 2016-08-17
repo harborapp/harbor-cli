@@ -29,7 +29,7 @@ You can download prebuilt binaries from the GitHub releases or from our
 [download site](http://dl.webhippie.de/umschlag-cli). You are a Mac user? Just take
 a look at our [homebrew formula](https://github.com/umschlag/homebrew-umschlag).
 If you are missing an architecture just write us on our nice
-[Gitter](https://gitter.im/umschlag/umschlag-api) chat. Take a look at the help
+[Gitter](https://gitter.im/umschlag/umschlag) chat. Take a look at the help
 output, you can enable auto updates to the binary to avoid bugs related to old
 versions. If you find a security issue please contact thomas@webhippie.de first.
 
