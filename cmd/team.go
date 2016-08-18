@@ -488,8 +488,8 @@ func TeamOrgList(c *cli.Context, client umschlag.ClientAPI) error {
 func TeamOrgAppend(c *cli.Context, client umschlag.ClientAPI) error {
 	err := client.TeamOrgAppend(
 		umschlag.TeamOrgParams{
-			Team:      GetIdentifierParam(c),
-			Org: GetOrgParam(c),
+			Team: GetIdentifierParam(c),
+			Org:  GetOrgParam(c),
 		},
 	)
 
@@ -505,8 +505,8 @@ func TeamOrgAppend(c *cli.Context, client umschlag.ClientAPI) error {
 func TeamOrgRemove(c *cli.Context, client umschlag.ClientAPI) error {
 	err := client.TeamOrgDelete(
 		umschlag.TeamOrgParams{
-			Team:      GetIdentifierParam(c),
-			Org: GetOrgParam(c),
+			Team: GetIdentifierParam(c),
+			Org:  GetOrgParam(c),
 		},
 	)
 

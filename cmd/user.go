@@ -537,8 +537,8 @@ func UserOrgList(c *cli.Context, client umschlag.ClientAPI) error {
 func UserOrgAppend(c *cli.Context, client umschlag.ClientAPI) error {
 	err := client.UserOrgAppend(
 		umschlag.UserOrgParams{
-			User:      GetIdentifierParam(c),
-			Org: GetOrgParam(c),
+			User: GetIdentifierParam(c),
+			Org:  GetOrgParam(c),
 		},
 	)
 
@@ -554,8 +554,8 @@ func UserOrgAppend(c *cli.Context, client umschlag.ClientAPI) error {
 func UserOrgRemove(c *cli.Context, client umschlag.ClientAPI) error {
 	err := client.UserOrgDelete(
 		umschlag.UserOrgParams{
-			User:      GetIdentifierParam(c),
-			Org: GetOrgParam(c),
+			User: GetIdentifierParam(c),
+			Org:  GetOrgParam(c),
 		},
 	)
 

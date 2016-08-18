@@ -462,8 +462,8 @@ func OrgUserList(c *cli.Context, client umschlag.ClientAPI) error {
 func OrgUserAppend(c *cli.Context, client umschlag.ClientAPI) error {
 	err := client.OrgUserAppend(
 		umschlag.OrgUserParams{
-			Org: GetIdentifierParam(c),
-			User:      GetUserParam(c),
+			Org:  GetIdentifierParam(c),
+			User: GetUserParam(c),
 		},
 	)
 
@@ -479,8 +479,8 @@ func OrgUserAppend(c *cli.Context, client umschlag.ClientAPI) error {
 func OrgUserRemove(c *cli.Context, client umschlag.ClientAPI) error {
 	err := client.OrgUserDelete(
 		umschlag.OrgUserParams{
-			Org: GetIdentifierParam(c),
-			User:      GetUserParam(c),
+			Org:  GetIdentifierParam(c),
+			User: GetUserParam(c),
 		},
 	)
 
@@ -529,8 +529,8 @@ func OrgTeamList(c *cli.Context, client umschlag.ClientAPI) error {
 func OrgTeamAppend(c *cli.Context, client umschlag.ClientAPI) error {
 	err := client.OrgTeamAppend(
 		umschlag.OrgTeamParams{
-			Org: GetIdentifierParam(c),
-			Team:      GetTeamParam(c),
+			Org:  GetIdentifierParam(c),
+			Team: GetTeamParam(c),
 		},
 	)
 
@@ -546,8 +546,8 @@ func OrgTeamAppend(c *cli.Context, client umschlag.ClientAPI) error {
 func OrgTeamRemove(c *cli.Context, client umschlag.ClientAPI) error {
 	err := client.OrgTeamDelete(
 		umschlag.OrgTeamParams{
-			Org: GetIdentifierParam(c),
-			Team:      GetTeamParam(c),
+			Org:  GetIdentifierParam(c),
+			Team: GetTeamParam(c),
 		},
 	)
 
