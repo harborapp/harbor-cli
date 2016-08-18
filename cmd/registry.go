@@ -45,9 +45,8 @@ Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 // Registry provides the sub-command for the registry API.
 func Registry() cli.Command {
 	return cli.Command{
-		Name:    "registry",
-		Aliases: []string{"r"},
-		Usage:   "Registry related sub-commands",
+		Name:  "registry",
+		Usage: "Registry related sub-commands",
 		Subcommands: []cli.Command{
 			{
 				Name:      "list",

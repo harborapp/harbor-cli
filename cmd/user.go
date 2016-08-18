@@ -66,9 +66,8 @@ Name: {{ .Name }}
 // User provides the sub-command for the user API.
 func User() cli.Command {
 	return cli.Command{
-		Name:    "user",
-		Aliases: []string{"u"},
-		Usage:   "User related sub-commands",
+		Name:  "user",
+		Usage: "User related sub-commands",
 		Subcommands: []cli.Command{
 			{
 				Name:      "list",

@@ -65,9 +65,8 @@ Name: {{ .Name }}
 // Team provides the sub-command for the team API.
 func Team() cli.Command {
 	return cli.Command{
-		Name:    "team",
-		Aliases: []string{"t"},
-		Usage:   "Team related sub-commands",
+		Name:  "team",
+		Usage: "Team related sub-commands",
 		Subcommands: []cli.Command{
 			{
 				Name:      "list",

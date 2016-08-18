@@ -34,6 +34,15 @@ var orgFuncMap = template.FuncMap{
 
 		return strings.Join(res, ", ")
 	},
+	"repoList": func(s []*umschlag.Repo) string {
+		res := []string{}
+
+		for _, row := range s {
+			res = append(res, row.FullName)
+		}
+
+		return strings.Join(res, ", ")
+	},
 }
 
 // tmplOrgList represents a row within org listing.
@@ -46,7 +55,8 @@ Name: {{ .Name }}
 var tmplOrgShow = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
 ID: {{ .ID }}
 Name: {{ .Name }}{{with .Registry}}
-Registry: {{ .Name }}{{end}}{{with .Users}}
+Registry: {{ .Name }}{{end}}{{with .Repos}}
+Repos: {{ repoList . }}{{end}}{{with .Users}}
 Users: {{ userList . }}{{end}}{{with .Teams}}
 Teams: {{ teamList . }}{{end}}
 Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
@@ -68,9 +78,8 @@ Name: {{ .Name }}
 // Org provides the sub-command for the org API.
 func Org() cli.Command {
 	return cli.Command{
-		Name:    "org",
-		Aliases: []string{"o"},
-		Usage:   "Org related sub-commands",
+		Name:  "org",
+		Usage: "Org related sub-commands",
 		Subcommands: []cli.Command{
 			{
 				Name:      "list",
