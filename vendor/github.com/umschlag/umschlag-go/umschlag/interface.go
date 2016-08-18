@@ -69,14 +69,14 @@ type ClientAPI interface {
 	// UserTeamDelete remove a team from a user.
 	UserTeamDelete(UserTeamParams) error
 
-	// UserNamespaceList returns a list of related namespaces for a user.
-	UserNamespaceList(UserNamespaceParams) ([]*Namespace, error)
+	// UserOrgList returns a list of related orgs for a user.
+	UserOrgList(UserOrgParams) ([]*Org, error)
 
-	// UserNamespaceAppend appends a namespace to a user.
-	UserNamespaceAppend(UserNamespaceParams) error
+	// UserOrgAppend appends a org to a user.
+	UserOrgAppend(UserOrgParams) error
 
-	// UserNamespaceDelete remove a namespace from a user.
-	UserNamespaceDelete(UserNamespaceParams) error
+	// UserOrgDelete remove a org from a user.
+	UserOrgDelete(UserOrgParams) error
 
 	// TeamList returns a list of all teams.
 	TeamList() ([]*Team, error)
@@ -102,45 +102,45 @@ type ClientAPI interface {
 	// TeamUserDelete remove a user from a team.
 	TeamUserDelete(TeamUserParams) error
 
-	// TeamNamespaceList returns a list of related namespaces for a team.
-	TeamNamespaceList(TeamNamespaceParams) ([]*Namespace, error)
+	// TeamOrgList returns a list of related orgs for a team.
+	TeamOrgList(TeamOrgParams) ([]*Org, error)
 
-	// TeamNamespaceAppend appends a namespace to a team.
-	TeamNamespaceAppend(TeamNamespaceParams) error
+	// TeamOrgAppend appends a org to a team.
+	TeamOrgAppend(TeamOrgParams) error
 
-	// TeamNamespaceDelete remove a namespace from a team.
-	TeamNamespaceDelete(TeamNamespaceParams) error
+	// TeamOrgDelete remove a org from a team.
+	TeamOrgDelete(TeamOrgParams) error
 
-	// NamespaceList returns a list of all namespaces.
-	NamespaceList() ([]*Namespace, error)
+	// OrgList returns a list of all orgs.
+	OrgList() ([]*Org, error)
 
-	// NamespaceGet returns a namespace.
-	NamespaceGet(string) (*Namespace, error)
+	// OrgGet returns a org.
+	OrgGet(string) (*Org, error)
 
-	// NamespacePost creates a namespace.
-	NamespacePost(*Namespace) (*Namespace, error)
+	// OrgPost creates a org.
+	OrgPost(*Org) (*Org, error)
 
-	// NamespacePatch updates a namespace.
-	NamespacePatch(*Namespace) (*Namespace, error)
+	// OrgPatch updates a org.
+	OrgPatch(*Org) (*Org, error)
 
-	// NamespaceDelete deletes a namespace.
-	NamespaceDelete(string) error
+	// OrgDelete deletes a org.
+	OrgDelete(string) error
 
-	// NamespaceUserList returns a list of related users for a namespace.
-	NamespaceUserList(NamespaceUserParams) ([]*User, error)
+	// OrgUserList returns a list of related users for a org.
+	OrgUserList(OrgUserParams) ([]*User, error)
 
-	// NamespaceUserAppend appends a user to a namespace.
-	NamespaceUserAppend(NamespaceUserParams) error
+	// OrgUserAppend appends a user to a org.
+	OrgUserAppend(OrgUserParams) error
 
-	// NamespaceUserDelete remove a user from a namespace.
-	NamespaceUserDelete(NamespaceUserParams) error
+	// OrgUserDelete remove a user from a org.
+	OrgUserDelete(OrgUserParams) error
 
-	// NamespaceTeamList returns a list of related teams for a namespace.
-	NamespaceTeamList(NamespaceTeamParams) ([]*Team, error)
+	// OrgTeamList returns a list of related teams for a org.
+	OrgTeamList(OrgTeamParams) ([]*Team, error)
 
-	// NamespaceTeamAppend appends a team to a namespace.
-	NamespaceTeamAppend(NamespaceTeamParams) error
+	// OrgTeamAppend appends a team to a org.
+	OrgTeamAppend(OrgTeamParams) error
 
-	// NamespaceTeamDelete remove a team from a namespace.
-	NamespaceTeamDelete(NamespaceTeamParams) error
+	// OrgTeamDelete remove a team from a org.
+	OrgTeamDelete(OrgTeamParams) error
 }

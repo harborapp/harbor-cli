@@ -12,26 +12,26 @@ type UserTeamParams struct {
 	Team string `json:"team"`
 }
 
-// NamespaceUserParams is used to assign users to a namespace.
-type NamespaceUserParams struct {
-	Namespace string `json:"namespace"`
-	User      string `json:"user"`
+// OrgUserParams is used to assign users to a org.
+type OrgUserParams struct {
+	Org  string `json:"org"`
+	User string `json:"user"`
 }
 
-// UserNamespaceParams is used to assign namespaces to a user.
-type UserNamespaceParams struct {
-	User      string `json:"user"`
-	Namespace string `json:"namespace"`
+// UserOrgParams is used to assign orgs to a user.
+type UserOrgParams struct {
+	User string `json:"user"`
+	Org  string `json:"org"`
 }
 
-// NamespaceTeamParams is used to assign teams to a namespace.
-type NamespaceTeamParams struct {
-	Namespace string `json:"namespace"`
-	Team      string `json:"team"`
+// OrgTeamParams is used to assign teams to a org.
+type OrgTeamParams struct {
+	Org  string `json:"org"`
+	Team string `json:"team"`
 }
 
-// TeamNamespaceParams is used to assign namespaces to a team.
-type TeamNamespaceParams struct {
-	Team      string `json:"team"`
-	Namespace string `json:"namespace"`
+// TeamOrgParams is used to assign orgs to a team.
+type TeamOrgParams struct {
+	Team string `json:"team"`
+	Org  string `json:"org"`
 }

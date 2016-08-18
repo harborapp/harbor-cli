@@ -18,14 +18,14 @@ type Token struct {
 
 // Registry represents a registry API response.
 type Registry struct {
-	ID         int64        `json:"id"`
-	Slug       string       `json:"slug"`
-	Name       string       `json:"name"`
-	Host       string       `json:"host"`
-	UseSSL     bool         `json:"use_ssl"`
-	CreatedAt  time.Time    `json:"created_at"`
-	UpdatedAt  time.Time    `json:"updated_at"`
-	Namespaces []*Namespace `json:"namespaces,omitempty"`
+	ID        int64     `json:"id"`
+	Slug      string    `json:"slug"`
+	Name      string    `json:"name"`
+	Host      string    `json:"host"`
+	UseSSL    bool      `json:"use_ssl"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	Orgs      []*Org    `json:"orgs,omitempty"`
 }
 
 func (s *Registry) String() string {
@@ -34,15 +34,15 @@ func (s *Registry) String() string {
 
 // User represents a user API response.
 type User struct {
-	ID         int64        `json:"id"`
-	Slug       string       `json:"slug"`
-	Username   string       `json:"username"`
-	Password   string       `json:"password"`
-	Email      string       `json:"email"`
-	CreatedAt  time.Time    `json:"created_at"`
-	UpdatedAt  time.Time    `json:"updated_at"`
-	Teams      []*Team      `json:"teams,omitempty"`
-	Namespaces []*Namespace `json:"namespaces,omitempty"`
+	ID        int64     `json:"id"`
+	Slug      string    `json:"slug"`
+	Username  string    `json:"username"`
+	Password  string    `json:"password"`
+	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	Teams     []*Team   `json:"teams,omitempty"`
+	Orgs      []*Org    `json:"orgs,omitempty"`
 }
 
 func (s *User) String() string {
@@ -51,21 +51,21 @@ func (s *User) String() string {
 
 // Team represents a team API response.
 type Team struct {
-	ID         int64        `json:"id"`
-	Slug       string       `json:"slug"`
-	Name       string       `json:"name"`
-	CreatedAt  time.Time    `json:"created_at"`
-	UpdatedAt  time.Time    `json:"updated_at"`
-	Users      []*User      `json:"users,omitempty"`
-	Namespaces []*Namespace `json:"namespaces,omitempty"`
+	ID        int64     `json:"id"`
+	Slug      string    `json:"slug"`
+	Name      string    `json:"name"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	Users     []*User   `json:"users,omitempty"`
+	Orgs      []*Org    `json:"orgs,omitempty"`
 }
 
 func (s *Team) String() string {
 	return s.Name
 }
 
-// Namespace represents a namespace API response.
-type Namespace struct {
+// Org represents a org API response.
+type Org struct {
 	ID         int64     `json:"id"`
 	Registry   *Registry `json:"registry,omitempty"`
 	RegistryID int64     `json:"registry_id"`
@@ -77,7 +77,7 @@ type Namespace struct {
 	Teams      []*Team   `json:"teams,omitempty"`
 }
 
-func (s *Namespace) String() string {
+func (s *Org) String() string {
 	return s.Name
 }
 

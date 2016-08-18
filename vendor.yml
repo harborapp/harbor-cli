@@ -1,6 +1,6 @@
 vendors:
 - path: github.com/golang/protobuf
-  rev: 7390af9dcd3c33042ebaf2474a1724a83cf1a7e6
+  rev: f592bd283e9ef86337a432eb50e592278c3d534d
 - path: github.com/jackspirou/syscerts
   rev: b68f5469dff16e102bd6a2d5b3e79341c938d736
 - path: github.com/kardianos/osext
@@ -14,13 +14,13 @@ vendors:
 - path: github.com/sanbornm/go-selfupdate
   rev: 83c3c7d653a71718e36191c7c0dc6773e65629f2
 - path: github.com/umschlag/umschlag-go
-  rev: f2b964b7aaf11267167cf935cc07f176b9e50bfa
+  rev: d16af4c320bc01a5ff7af64fe60e48842e7d2f44
 - path: github.com/urfave/cli
   rev: 168c95418e66e019fe17b8f4f5c45aa62ff80e23
 - path: golang.org/x/net
   rev: 07b51741c1d6423d4a6abab1c49940ec09cb1aaf
 - path: golang.org/x/oauth2
-  rev: 4784bb855e56a530f1ce5d788959359ed6cb4a16
+  rev: 3b966c7f301c0c71c53d94dc632a62df0a682cd7
 - path: google.golang.org/appengine
   rev: e951d3868b377b14f4e60efa3a301532ee3c1ebf
 - path: gopkg.in/inconshreveable/go-update.v0

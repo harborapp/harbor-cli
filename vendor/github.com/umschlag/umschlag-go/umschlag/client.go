@@ -11,23 +11,23 @@ import (
 )
 
 const (
-	pathAuthLogin     = "%s/api/auth/login"
-	pathProfile       = "%s/api/profile/self"
-	pathProfileToken  = "%s/api/profile/token"
-	pathRegistries    = "%s/api/registries"
-	pathRegistry      = "%s/api/registries/%v"
-	pathUsers         = "%s/api/users"
-	pathUser          = "%s/api/users/%v"
-	pathUserTeam      = "%s/api/users/%v/teams"
-	pathUserNamespace = "%s/api/users/%v/namespaces"
-	pathTeams         = "%s/api/teams"
-	pathTeam          = "%s/api/teams/%v"
-	pathTeamUser      = "%s/api/teams/%v/users"
-	pathTeamNamespace = "%s/api/teams/%v/namespaces"
-	pathNamespaces    = "%s/api/namespaces"
-	pathNamespace     = "%s/api/namespaces/%v"
-	pathNamespaceUser = "%s/api/namespaces/%v/users"
-	pathNamespaceTeam = "%s/api/namespaces/%v/teams"
+	pathAuthLogin    = "%s/api/auth/login"
+	pathProfile      = "%s/api/profile/self"
+	pathProfileToken = "%s/api/profile/token"
+	pathRegistries   = "%s/api/registries"
+	pathRegistry     = "%s/api/registries/%v"
+	pathUsers        = "%s/api/users"
+	pathUser         = "%s/api/users/%v"
+	pathUserTeam     = "%s/api/users/%v/teams"
+	pathUserOrg      = "%s/api/users/%v/orgs"
+	pathTeams        = "%s/api/teams"
+	pathTeam         = "%s/api/teams/%v"
+	pathTeamUser     = "%s/api/teams/%v/users"
+	pathTeamOrg      = "%s/api/teams/%v/orgs"
+	pathOrgs         = "%s/api/orgs"
+	pathOrg          = "%s/api/orgs/%v"
+	pathOrgUser      = "%s/api/orgs/%v/users"
+	pathOrgTeam      = "%s/api/orgs/%v/teams"
 )
 
 // DefaultClient implements the client interface.
@@ -290,27 +290,27 @@ func (c *DefaultClient) UserTeamDelete(opts UserTeamParams) error {
 	return err
 }
 
-// UserNamespaceList returns a list of related namespaces for a user.
-func (c *DefaultClient) UserNamespaceList(opts UserNamespaceParams) ([]*Namespace, error) {
-	var out []*Namespace
+// UserOrgList returns a list of related orgs for a user.
+func (c *DefaultClient) UserOrgList(opts UserOrgParams) ([]*Org, error) {
+	var out []*Org
 
-	uri := fmt.Sprintf(pathUserNamespace, c.base, opts.User)
+	uri := fmt.Sprintf(pathUserOrg, c.base, opts.User)
 	err := c.get(uri, &out)
 
 	return out, err
 }
 
-// UserNamespaceAppend appends a namespace to a user.
-func (c *DefaultClient) UserNamespaceAppend(opts UserNamespaceParams) error {
-	uri := fmt.Sprintf(pathUserNamespace, c.base, opts.User)
+// UserOrgAppend appends a org to a user.
+func (c *DefaultClient) UserOrgAppend(opts UserOrgParams) error {
+	uri := fmt.Sprintf(pathUserOrg, c.base, opts.User)
 	err := c.patch(uri, opts, nil)
 
 	return err
 }
 
-// UserNamespaceDelete remove a namespace from a user.
-func (c *DefaultClient) UserNamespaceDelete(opts UserNamespaceParams) error {
-	uri := fmt.Sprintf(pathUserNamespace, c.base, opts.User)
+// UserOrgDelete remove a org from a user.
+func (c *DefaultClient) UserOrgDelete(opts UserOrgParams) error {
+	uri := fmt.Sprintf(pathUserOrg, c.base, opts.User)
 	err := c.delete(uri, opts)
 
 	return err
@@ -390,127 +390,127 @@ func (c *DefaultClient) TeamUserDelete(opts TeamUserParams) error {
 	return err
 }
 
-// TeamNamespaceList returns a list of related namespaces for a team.
-func (c *DefaultClient) TeamNamespaceList(opts TeamNamespaceParams) ([]*Namespace, error) {
-	var out []*Namespace
+// TeamOrgList returns a list of related orgs for a team.
+func (c *DefaultClient) TeamOrgList(opts TeamOrgParams) ([]*Org, error) {
+	var out []*Org
 
-	uri := fmt.Sprintf(pathTeamNamespace, c.base, opts.Team)
+	uri := fmt.Sprintf(pathTeamOrg, c.base, opts.Team)
 	err := c.get(uri, &out)
 
 	return out, err
 }
 
-// TeamNamespaceAppend appends a namespace to a team.
-func (c *DefaultClient) TeamNamespaceAppend(opts TeamNamespaceParams) error {
-	uri := fmt.Sprintf(pathTeamNamespace, c.base, opts.Team)
+// TeamOrgAppend appends a org to a team.
+func (c *DefaultClient) TeamOrgAppend(opts TeamOrgParams) error {
+	uri := fmt.Sprintf(pathTeamOrg, c.base, opts.Team)
 	err := c.patch(uri, opts, nil)
 
 	return err
 }
 
-// TeamNamespaceDelete remove a namespace from a team.
-func (c *DefaultClient) TeamNamespaceDelete(opts TeamNamespaceParams) error {
-	uri := fmt.Sprintf(pathTeamNamespace, c.base, opts.Team)
+// TeamOrgDelete remove a org from a team.
+func (c *DefaultClient) TeamOrgDelete(opts TeamOrgParams) error {
+	uri := fmt.Sprintf(pathTeamOrg, c.base, opts.Team)
 	err := c.delete(uri, opts)
 
 	return err
 }
 
-// NamespaceList returns a list of all namespaces.
-func (c *DefaultClient) NamespaceList() ([]*Namespace, error) {
-	var out []*Namespace
+// OrgList returns a list of all orgs.
+func (c *DefaultClient) OrgList() ([]*Org, error) {
+	var out []*Org
 
-	uri := fmt.Sprintf(pathNamespaces, c.base)
+	uri := fmt.Sprintf(pathOrgs, c.base)
 	err := c.get(uri, &out)
 
 	return out, err
 }
 
-// NamespaceGet returns a namespace.
-func (c *DefaultClient) NamespaceGet(id string) (*Namespace, error) {
-	out := &Namespace{}
+// OrgGet returns a org.
+func (c *DefaultClient) OrgGet(id string) (*Org, error) {
+	out := &Org{}
 
-	uri := fmt.Sprintf(pathNamespace, c.base, id)
+	uri := fmt.Sprintf(pathOrg, c.base, id)
 	err := c.get(uri, out)
 
 	return out, err
 }
 
-// NamespacePost creates a namespace.
-func (c *DefaultClient) NamespacePost(in *Namespace) (*Namespace, error) {
-	out := &Namespace{}
+// OrgPost creates a org.
+func (c *DefaultClient) OrgPost(in *Org) (*Org, error) {
+	out := &Org{}
 
-	uri := fmt.Sprintf(pathNamespaces, c.base)
+	uri := fmt.Sprintf(pathOrgs, c.base)
 	err := c.post(uri, in, out)
 
 	return out, err
 }
 
-// NamespacePatch updates a namespace.
-func (c *DefaultClient) NamespacePatch(in *Namespace) (*Namespace, error) {
-	out := &Namespace{}
+// OrgPatch updates a org.
+func (c *DefaultClient) OrgPatch(in *Org) (*Org, error) {
+	out := &Org{}
 
-	uri := fmt.Sprintf(pathNamespace, c.base, in.ID)
+	uri := fmt.Sprintf(pathOrg, c.base, in.ID)
 	err := c.patch(uri, in, out)
 
 	return out, err
 }
 
-// NamespaceDelete deletes a namespace.
-func (c *DefaultClient) NamespaceDelete(id string) error {
-	uri := fmt.Sprintf(pathNamespace, c.base, id)
+// OrgDelete deletes a org.
+func (c *DefaultClient) OrgDelete(id string) error {
+	uri := fmt.Sprintf(pathOrg, c.base, id)
 	err := c.delete(uri, nil)
 
 	return err
 }
 
-// NamespaceUserList returns a list of related users for a namespace.
-func (c *DefaultClient) NamespaceUserList(opts NamespaceUserParams) ([]*User, error) {
+// OrgUserList returns a list of related users for a org.
+func (c *DefaultClient) OrgUserList(opts OrgUserParams) ([]*User, error) {
 	var out []*User
 
-	uri := fmt.Sprintf(pathNamespaceUser, c.base, opts.Namespace)
+	uri := fmt.Sprintf(pathOrgUser, c.base, opts.Org)
 	err := c.get(uri, &out)
 
 	return out, err
 }
 
-// NamespaceUserAppend appends a user to a namespace.
-func (c *DefaultClient) NamespaceUserAppend(opts NamespaceUserParams) error {
-	uri := fmt.Sprintf(pathNamespaceUser, c.base, opts.Namespace)
+// OrgUserAppend appends a user to a org.
+func (c *DefaultClient) OrgUserAppend(opts OrgUserParams) error {
+	uri := fmt.Sprintf(pathOrgUser, c.base, opts.Org)
 	err := c.patch(uri, opts, nil)
 
 	return err
 }
 
-// NamespaceUserDelete remove a user from a namespace.
-func (c *DefaultClient) NamespaceUserDelete(opts NamespaceUserParams) error {
-	uri := fmt.Sprintf(pathNamespaceUser, c.base, opts.Namespace)
+// OrgUserDelete remove a user from a org.
+func (c *DefaultClient) OrgUserDelete(opts OrgUserParams) error {
+	uri := fmt.Sprintf(pathOrgUser, c.base, opts.Org)
 	err := c.delete(uri, opts)
 
 	return err
 }
 
-// NamespaceTeamList returns a list of related teams for a namespace.
-func (c *DefaultClient) NamespaceTeamList(opts NamespaceTeamParams) ([]*Team, error) {
+// OrgTeamList returns a list of related teams for a org.
+func (c *DefaultClient) OrgTeamList(opts OrgTeamParams) ([]*Team, error) {
 	var out []*Team
 
-	uri := fmt.Sprintf(pathNamespaceTeam, c.base, opts.Namespace)
+	uri := fmt.Sprintf(pathOrgTeam, c.base, opts.Org)
 	err := c.get(uri, &out)
 
 	return out, err
 }
 
-// NamespaceTeamAppend appends a team to a namespace.
-func (c *DefaultClient) NamespaceTeamAppend(opts NamespaceTeamParams) error {
-	uri := fmt.Sprintf(pathNamespaceTeam, c.base, opts.Namespace)
+// OrgTeamAppend appends a team to a org.
+func (c *DefaultClient) OrgTeamAppend(opts OrgTeamParams) error {
+	uri := fmt.Sprintf(pathOrgTeam, c.base, opts.Org)
 	err := c.patch(uri, opts, nil)
 
 	return err
 }
 
-// NamespaceTeamDelete remove a team from a namespace.
-func (c *DefaultClient) NamespaceTeamDelete(opts NamespaceTeamParams) error {
-	uri := fmt.Sprintf(pathNamespaceTeam, c.base, opts.Namespace)
+// OrgTeamDelete remove a team from a org.
+func (c *DefaultClient) OrgTeamDelete(opts OrgTeamParams) error {
+	uri := fmt.Sprintf(pathOrgTeam, c.base, opts.Org)
 	err := c.delete(uri, opts)
 
 	return err
