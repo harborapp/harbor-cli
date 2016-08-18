@@ -183,23 +183,23 @@ func User() cli.Command {
 				},
 			},
 			{
-				Name:      "namespace-list",
-				Usage:     "List assigned namespaces",
+				Name:      "org-list",
+				Usage:     "List assigned orgs",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
-						Usage: "User ID or slug to list namespaces",
+						Usage: "User ID or slug to list orgs",
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, UserNamespaceList)
+					return Handle(c, UserOrgList)
 				},
 			},
 			{
-				Name:      "namespace-append",
-				Usage:     "Append a namespace to user",
+				Name:      "org-append",
+				Usage:     "Append a org to user",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
@@ -208,18 +208,18 @@ func User() cli.Command {
 						Usage: "User ID or slug to append to",
 					},
 					cli.StringFlag{
-						Name:  "namespace, t",
+						Name:  "org, t",
 						Value: "",
-						Usage: "Namespace ID or slug to append",
+						Usage: "Org ID or slug to append",
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, UserNamespaceAppend)
+					return Handle(c, UserOrgAppend)
 				},
 			},
 			{
-				Name:      "namespace-remove",
-				Usage:     "Remove a namespace from user",
+				Name:      "org-remove",
+				Usage:     "Remove a org from user",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
@@ -228,13 +228,13 @@ func User() cli.Command {
 						Usage: "User ID or slug to remove from",
 					},
 					cli.StringFlag{
-						Name:  "namespace, t",
+						Name:  "org, t",
 						Value: "",
-						Usage: "Namespace ID or slug to remove",
+						Usage: "Org ID or slug to remove",
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, UserNamespaceRemove)
+					return Handle(c, UserOrgRemove)
 				},
 			},
 		},
@@ -500,10 +500,10 @@ func UserTeamRemove(c *cli.Context, client umschlag.ClientAPI) error {
 	return nil
 }
 
-// UserNamespaceList provides the sub-command to list namespaces of the user.
-func UserNamespaceList(c *cli.Context, client umschlag.ClientAPI) error {
-	records, err := client.UserNamespaceList(
-		umschlag.UserNamespaceParams{
+// UserOrgList provides the sub-command to list orgs of the user.
+func UserOrgList(c *cli.Context, client umschlag.ClientAPI) error {
+	records, err := client.UserOrgList(
+		umschlag.UserOrgParams{
 			User: GetIdentifierParam(c),
 		},
 	)
@@ -519,7 +519,7 @@ func UserNamespaceList(c *cli.Context, client umschlag.ClientAPI) error {
 
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"Namespace"})
+	table.SetHeader([]string{"Org"})
 
 	for _, record := range records {
 		table.Append(
@@ -533,12 +533,12 @@ func UserNamespaceList(c *cli.Context, client umschlag.ClientAPI) error {
 	return nil
 }
 
-// UserNamespaceAppend provides the sub-command to append a namespace to the user.
-func UserNamespaceAppend(c *cli.Context, client umschlag.ClientAPI) error {
-	err := client.UserNamespaceAppend(
-		umschlag.UserNamespaceParams{
+// UserOrgAppend provides the sub-command to append a org to the user.
+func UserOrgAppend(c *cli.Context, client umschlag.ClientAPI) error {
+	err := client.UserOrgAppend(
+		umschlag.UserOrgParams{
 			User:      GetIdentifierParam(c),
-			Namespace: GetNamespaceParam(c),
+			Org: GetOrgParam(c),
 		},
 	)
 
@@ -550,12 +550,12 @@ func UserNamespaceAppend(c *cli.Context, client umschlag.ClientAPI) error {
 	return nil
 }
 
-// UserNamespaceRemove provides the sub-command to remove a namespace from the user.
-func UserNamespaceRemove(c *cli.Context, client umschlag.ClientAPI) error {
-	err := client.UserNamespaceDelete(
-		umschlag.UserNamespaceParams{
+// UserOrgRemove provides the sub-command to remove a org from the user.
+func UserOrgRemove(c *cli.Context, client umschlag.ClientAPI) error {
+	err := client.UserOrgDelete(
+		umschlag.UserOrgParams{
 			User:      GetIdentifierParam(c),
-			Namespace: GetNamespaceParam(c),
+			Org: GetOrgParam(c),
 		},
 	)
 

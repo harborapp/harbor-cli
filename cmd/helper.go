@@ -43,12 +43,12 @@ func GetTeamParam(c *cli.Context) string {
 	return val
 }
 
-// GetNamespaceParam checks and returns the namespace id/slug parameter.
-func GetNamespaceParam(c *cli.Context) string {
-	val := c.String("namespace")
+// GetOrgParam checks and returns the org id/slug parameter.
+func GetOrgParam(c *cli.Context) string {
+	val := c.String("org")
 
 	if val == "" {
-		fmt.Println("Error: You must provide a namespace ID or slug.")
+		fmt.Println("Error: You must provide a org ID or slug.")
 		os.Exit(1)
 	}
 

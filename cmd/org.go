@@ -12,47 +12,47 @@ import (
 	"github.com/urfave/cli"
 )
 
-// Namespace provides the sub-command for the namespace API.
-func Namespace() cli.Command {
+// Org provides the sub-command for the org API.
+func Org() cli.Command {
 	return cli.Command{
-		Name:    "namespace",
-		Aliases: []string{"n"},
-		Usage:   "Namespace related sub-commands",
+		Name:    "org",
+		Aliases: []string{"o"},
+		Usage:   "Org related sub-commands",
 		Subcommands: []cli.Command{
 			{
 				Name:      "list",
 				Aliases:   []string{"ls"},
-				Usage:     "List all namespaces",
+				Usage:     "List all orgs",
 				ArgsUsage: " ",
 				Action: func(c *cli.Context) error {
-					return Handle(c, NamespaceList)
+					return Handle(c, OrgList)
 				},
 			},
 			{
 				Name:      "show",
-				Usage:     "Display a namespace",
+				Usage:     "Display a org",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
-						Usage: "Namespace ID or slug to show",
+						Usage: "Org ID or slug to show",
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, NamespaceShow)
+					return Handle(c, OrgShow)
 				},
 			},
 			{
 				Name:      "update",
-				Usage:     "Update a namespace",
+				Usage:     "Update a org",
 				ArgsUsage: " ",
 				Flags: append(
 					[]cli.Flag{
 						cli.StringFlag{
 							Name:  "id, i",
 							Value: "",
-							Usage: "Namespace ID or slug to update",
+							Usage: "Org ID or slug to update",
 						},
 						cli.StringFlag{
 							Name:  "slug",
@@ -67,28 +67,28 @@ func Namespace() cli.Command {
 					},
 				),
 				Action: func(c *cli.Context) error {
-					return Handle(c, NamespaceUpdate)
+					return Handle(c, OrgUpdate)
 				},
 			},
 			{
 				Name:      "delete",
 				Aliases:   []string{"rm"},
-				Usage:     "Delete a namespace",
+				Usage:     "Delete a org",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
-						Usage: "Namespace ID or slug to show",
+						Usage: "Org ID or slug to show",
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, NamespaceDelete)
+					return Handle(c, OrgDelete)
 				},
 			},
 			{
 				Name:      "create",
-				Usage:     "Create a namespace",
+				Usage:     "Create a org",
 				ArgsUsage: " ",
 				Flags: append(
 					[]cli.Flag{
@@ -110,7 +110,7 @@ func Namespace() cli.Command {
 					},
 				),
 				Action: func(c *cli.Context) error {
-					return Handle(c, NamespaceCreate)
+					return Handle(c, OrgCreate)
 				},
 			},
 			{
@@ -121,22 +121,22 @@ func Namespace() cli.Command {
 					cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
-						Usage: "Namespace ID or slug to list users",
+						Usage: "Org ID or slug to list users",
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, NamespaceUserList)
+					return Handle(c, OrgUserList)
 				},
 			},
 			{
 				Name:      "user-append",
-				Usage:     "Append a user to namespace",
+				Usage:     "Append a user to org",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
-						Usage: "Namespace ID or slug to append to",
+						Usage: "Org ID or slug to append to",
 					},
 					cli.StringFlag{
 						Name:  "user, u",
@@ -145,18 +145,18 @@ func Namespace() cli.Command {
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, NamespaceUserAppend)
+					return Handle(c, OrgUserAppend)
 				},
 			},
 			{
 				Name:      "user-remove",
-				Usage:     "Remove a user from namespace",
+				Usage:     "Remove a user from org",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
-						Usage: "Namespace ID or slug to remove from",
+						Usage: "Org ID or slug to remove from",
 					},
 					cli.StringFlag{
 						Name:  "user, u",
@@ -165,7 +165,7 @@ func Namespace() cli.Command {
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, NamespaceUserRemove)
+					return Handle(c, OrgUserRemove)
 				},
 			},
 			{
@@ -176,22 +176,22 @@ func Namespace() cli.Command {
 					cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
-						Usage: "Namespace ID or slug to list teams",
+						Usage: "Org ID or slug to list teams",
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, NamespaceTeamList)
+					return Handle(c, OrgTeamList)
 				},
 			},
 			{
 				Name:      "team-append",
-				Usage:     "Append a team to namespace",
+				Usage:     "Append a team to org",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
-						Usage: "Namespace ID or slug to append to",
+						Usage: "Org ID or slug to append to",
 					},
 					cli.StringFlag{
 						Name:  "team, t",
@@ -200,18 +200,18 @@ func Namespace() cli.Command {
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, NamespaceTeamAppend)
+					return Handle(c, OrgTeamAppend)
 				},
 			},
 			{
 				Name:      "team-remove",
-				Usage:     "Remove a team from namespace",
+				Usage:     "Remove a team from org",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
-						Usage: "Namespace ID or slug to remove from",
+						Usage: "Org ID or slug to remove from",
 					},
 					cli.StringFlag{
 						Name:  "team, t",
@@ -220,16 +220,16 @@ func Namespace() cli.Command {
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, NamespaceTeamRemove)
+					return Handle(c, OrgTeamRemove)
 				},
 			},
 		},
 	}
 }
 
-// NamespaceList provides the sub-command to list all namespaces.
-func NamespaceList(c *cli.Context, client umschlag.ClientAPI) error {
-	records, err := client.NamespaceList()
+// OrgList provides the sub-command to list all orgs.
+func OrgList(c *cli.Context, client umschlag.ClientAPI) error {
+	records, err := client.OrgList()
 
 	if err != nil {
 		return err
@@ -258,9 +258,9 @@ func NamespaceList(c *cli.Context, client umschlag.ClientAPI) error {
 	return nil
 }
 
-// NamespaceShow provides the sub-command to show namespace details.
-func NamespaceShow(c *cli.Context, client umschlag.ClientAPI) error {
-	record, err := client.NamespaceGet(
+// OrgShow provides the sub-command to show org details.
+func OrgShow(c *cli.Context, client umschlag.ClientAPI) error {
+	record, err := client.OrgGet(
 		GetIdentifierParam(c),
 	)
 
@@ -320,9 +320,9 @@ func NamespaceShow(c *cli.Context, client umschlag.ClientAPI) error {
 	return nil
 }
 
-// NamespaceDelete provides the sub-command to delete a namespace.
-func NamespaceDelete(c *cli.Context, client umschlag.ClientAPI) error {
-	err := client.NamespaceDelete(
+// OrgDelete provides the sub-command to delete a org.
+func OrgDelete(c *cli.Context, client umschlag.ClientAPI) error {
+	err := client.OrgDelete(
 		GetIdentifierParam(c),
 	)
 
@@ -334,9 +334,9 @@ func NamespaceDelete(c *cli.Context, client umschlag.ClientAPI) error {
 	return nil
 }
 
-// NamespaceUpdate provides the sub-command to update a namespace.
-func NamespaceUpdate(c *cli.Context, client umschlag.ClientAPI) error {
-	record, err := client.NamespaceGet(
+// OrgUpdate provides the sub-command to update a org.
+func OrgUpdate(c *cli.Context, client umschlag.ClientAPI) error {
+	record, err := client.OrgGet(
 		GetIdentifierParam(c),
 	)
 
@@ -357,7 +357,7 @@ func NamespaceUpdate(c *cli.Context, client umschlag.ClientAPI) error {
 	}
 
 	if changed {
-		_, patch := client.NamespacePatch(
+		_, patch := client.OrgPatch(
 			record,
 		)
 
@@ -373,9 +373,9 @@ func NamespaceUpdate(c *cli.Context, client umschlag.ClientAPI) error {
 	return nil
 }
 
-// NamespaceCreate provides the sub-command to create a namespace.
-func NamespaceCreate(c *cli.Context, client umschlag.ClientAPI) error {
-	record := &umschlag.Namespace{}
+// OrgCreate provides the sub-command to create a org.
+func OrgCreate(c *cli.Context, client umschlag.ClientAPI) error {
+	record := &umschlag.Org{}
 
 	if c.String("registry") == "" {
 		return fmt.Errorf("You must provide a registry ID or slug.")
@@ -413,7 +413,7 @@ func NamespaceCreate(c *cli.Context, client umschlag.ClientAPI) error {
 		return fmt.Errorf("You must provide a name.")
 	}
 
-	_, err := client.NamespacePost(
+	_, err := client.OrgPost(
 		record,
 	)
 
@@ -425,11 +425,11 @@ func NamespaceCreate(c *cli.Context, client umschlag.ClientAPI) error {
 	return nil
 }
 
-// NamespaceUserList provides the sub-command to list users of the namespace.
-func NamespaceUserList(c *cli.Context, client umschlag.ClientAPI) error {
-	records, err := client.NamespaceUserList(
-		umschlag.NamespaceUserParams{
-			Namespace: GetIdentifierParam(c),
+// OrgUserList provides the sub-command to list users of the org.
+func OrgUserList(c *cli.Context, client umschlag.ClientAPI) error {
+	records, err := client.OrgUserList(
+		umschlag.OrgUserParams{
+			Org: GetIdentifierParam(c),
 		},
 	)
 
@@ -458,11 +458,11 @@ func NamespaceUserList(c *cli.Context, client umschlag.ClientAPI) error {
 	return nil
 }
 
-// NamespaceUserAppend provides the sub-command to append a user to the namespace.
-func NamespaceUserAppend(c *cli.Context, client umschlag.ClientAPI) error {
-	err := client.NamespaceUserAppend(
-		umschlag.NamespaceUserParams{
-			Namespace: GetIdentifierParam(c),
+// OrgUserAppend provides the sub-command to append a user to the org.
+func OrgUserAppend(c *cli.Context, client umschlag.ClientAPI) error {
+	err := client.OrgUserAppend(
+		umschlag.OrgUserParams{
+			Org: GetIdentifierParam(c),
 			User:      GetUserParam(c),
 		},
 	)
@@ -471,15 +471,15 @@ func NamespaceUserAppend(c *cli.Context, client umschlag.ClientAPI) error {
 		return err
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully appended to namespace\n")
+	fmt.Fprintf(os.Stderr, "Successfully appended to org\n")
 	return nil
 }
 
-// NamespaceUserRemove provides the sub-command to remove a user from the namespace.
-func NamespaceUserRemove(c *cli.Context, client umschlag.ClientAPI) error {
-	err := client.NamespaceUserDelete(
-		umschlag.NamespaceUserParams{
-			Namespace: GetIdentifierParam(c),
+// OrgUserRemove provides the sub-command to remove a user from the org.
+func OrgUserRemove(c *cli.Context, client umschlag.ClientAPI) error {
+	err := client.OrgUserDelete(
+		umschlag.OrgUserParams{
+			Org: GetIdentifierParam(c),
 			User:      GetUserParam(c),
 		},
 	)
@@ -488,15 +488,15 @@ func NamespaceUserRemove(c *cli.Context, client umschlag.ClientAPI) error {
 		return err
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully removed from namespace\n")
+	fmt.Fprintf(os.Stderr, "Successfully removed from org\n")
 	return nil
 }
 
-// NamespaceTeamList provides the sub-command to list teams of the namespace.
-func NamespaceTeamList(c *cli.Context, client umschlag.ClientAPI) error {
-	records, err := client.NamespaceTeamList(
-		umschlag.NamespaceTeamParams{
-			Namespace: GetIdentifierParam(c),
+// OrgTeamList provides the sub-command to list teams of the org.
+func OrgTeamList(c *cli.Context, client umschlag.ClientAPI) error {
+	records, err := client.OrgTeamList(
+		umschlag.OrgTeamParams{
+			Org: GetIdentifierParam(c),
 		},
 	)
 
@@ -525,11 +525,11 @@ func NamespaceTeamList(c *cli.Context, client umschlag.ClientAPI) error {
 	return nil
 }
 
-// NamespaceTeamAppend provides the sub-command to append a team to the namespace.
-func NamespaceTeamAppend(c *cli.Context, client umschlag.ClientAPI) error {
-	err := client.NamespaceTeamAppend(
-		umschlag.NamespaceTeamParams{
-			Namespace: GetIdentifierParam(c),
+// OrgTeamAppend provides the sub-command to append a team to the org.
+func OrgTeamAppend(c *cli.Context, client umschlag.ClientAPI) error {
+	err := client.OrgTeamAppend(
+		umschlag.OrgTeamParams{
+			Org: GetIdentifierParam(c),
 			Team:      GetTeamParam(c),
 		},
 	)
@@ -538,15 +538,15 @@ func NamespaceTeamAppend(c *cli.Context, client umschlag.ClientAPI) error {
 		return err
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully appended to namespace\n")
+	fmt.Fprintf(os.Stderr, "Successfully appended to org\n")
 	return nil
 }
 
-// NamespaceTeamRemove provides the sub-command to remove a team from the namespace.
-func NamespaceTeamRemove(c *cli.Context, client umschlag.ClientAPI) error {
-	err := client.NamespaceTeamDelete(
-		umschlag.NamespaceTeamParams{
-			Namespace: GetIdentifierParam(c),
+// OrgTeamRemove provides the sub-command to remove a team from the org.
+func OrgTeamRemove(c *cli.Context, client umschlag.ClientAPI) error {
+	err := client.OrgTeamDelete(
+		umschlag.OrgTeamParams{
+			Org: GetIdentifierParam(c),
 			Team:      GetTeamParam(c),
 		},
 	)
@@ -555,6 +555,6 @@ func NamespaceTeamRemove(c *cli.Context, client umschlag.ClientAPI) error {
 		return err
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully removed from namespace\n")
+	fmt.Fprintf(os.Stderr, "Successfully removed from org\n")
 	return nil
 }

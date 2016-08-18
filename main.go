@@ -75,7 +75,7 @@ func main() {
 		cmd.Registry(),
 		cmd.User(),
 		cmd.Team(),
-		cmd.Namespace(),
+		cmd.Org(),
 	}
 
 	cli.HelpFlag = cli.BoolFlag{
