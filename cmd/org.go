@@ -46,8 +46,7 @@ Name: {{ .Name }}
 var tmplOrgShow = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
 ID: {{ .ID }}
 Name: {{ .Name }}{{with .Registry}}
-Registry: {{ .Name }}
-{{end}}{{with .Users}}
+Registry: {{ .Name }}{{end}}{{with .Users}}
 Users: {{ userList . }}{{end}}{{with .Teams}}
 Teams: {{ teamList . }}{{end}}
 Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
