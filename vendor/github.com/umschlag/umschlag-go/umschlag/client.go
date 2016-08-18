@@ -16,6 +16,14 @@ const (
 	pathProfileToken = "%s/api/profile/token"
 	pathRegistries   = "%s/api/registries"
 	pathRegistry     = "%s/api/registries/%v"
+	pathTags         = "%s/api/tags"
+	pathTag          = "%s/api/tags/%v"
+	pathRepos        = "%s/api/repos"
+	pathRepo         = "%s/api/repos/%v"
+	pathOrgs         = "%s/api/orgs"
+	pathOrg          = "%s/api/orgs/%v"
+	pathOrgUser      = "%s/api/orgs/%v/users"
+	pathOrgTeam      = "%s/api/orgs/%v/teams"
 	pathUsers        = "%s/api/users"
 	pathUser         = "%s/api/users/%v"
 	pathUserTeam     = "%s/api/users/%v/teams"
@@ -24,10 +32,6 @@ const (
 	pathTeam         = "%s/api/teams/%v"
 	pathTeamUser     = "%s/api/teams/%v/users"
 	pathTeamOrg      = "%s/api/teams/%v/orgs"
-	pathOrgs         = "%s/api/orgs"
-	pathOrg          = "%s/api/orgs/%v"
-	pathOrgUser      = "%s/api/orgs/%v/users"
-	pathOrgTeam      = "%s/api/orgs/%v/teams"
 )
 
 // DefaultClient implements the client interface.
@@ -212,6 +216,162 @@ func (c *DefaultClient) RegistryPatch(in *Registry) (*Registry, error) {
 func (c *DefaultClient) RegistryDelete(id string) error {
 	uri := fmt.Sprintf(pathRegistry, c.base, id)
 	err := c.delete(uri, nil)
+
+	return err
+}
+
+// TagList returns a list of all tags.
+func (c *DefaultClient) TagList() ([]*Tag, error) {
+	var out []*Tag
+
+	uri := fmt.Sprintf(pathTags, c.base)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// TagGet returns a tag.
+func (c *DefaultClient) TagGet(id string) (*Tag, error) {
+	out := &Tag{}
+
+	uri := fmt.Sprintf(pathTag, c.base, id)
+	err := c.get(uri, out)
+
+	return out, err
+}
+
+// TagDelete deletes a tag.
+func (c *DefaultClient) TagDelete(id string) error {
+	uri := fmt.Sprintf(pathTag, c.base, id)
+	err := c.delete(uri, nil)
+
+	return err
+}
+
+// RepoList returns a list of all repos.
+func (c *DefaultClient) RepoList() ([]*Repo, error) {
+	var out []*Repo
+
+	uri := fmt.Sprintf(pathRepos, c.base)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// RepoGet returns a repo.
+func (c *DefaultClient) RepoGet(id string) (*Repo, error) {
+	out := &Repo{}
+
+	uri := fmt.Sprintf(pathRepo, c.base, id)
+	err := c.get(uri, out)
+
+	return out, err
+}
+
+// RepoDelete deletes a repo.
+func (c *DefaultClient) RepoDelete(id string) error {
+	uri := fmt.Sprintf(pathRepo, c.base, id)
+	err := c.delete(uri, nil)
+
+	return err
+}
+
+// OrgList returns a list of all orgs.
+func (c *DefaultClient) OrgList() ([]*Org, error) {
+	var out []*Org
+
+	uri := fmt.Sprintf(pathOrgs, c.base)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// OrgGet returns a org.
+func (c *DefaultClient) OrgGet(id string) (*Org, error) {
+	out := &Org{}
+
+	uri := fmt.Sprintf(pathOrg, c.base, id)
+	err := c.get(uri, out)
+
+	return out, err
+}
+
+// OrgPost creates a org.
+func (c *DefaultClient) OrgPost(in *Org) (*Org, error) {
+	out := &Org{}
+
+	uri := fmt.Sprintf(pathOrgs, c.base)
+	err := c.post(uri, in, out)
+
+	return out, err
+}
+
+// OrgPatch updates a org.
+func (c *DefaultClient) OrgPatch(in *Org) (*Org, error) {
+	out := &Org{}
+
+	uri := fmt.Sprintf(pathOrg, c.base, in.ID)
+	err := c.patch(uri, in, out)
+
+	return out, err
+}
+
+// OrgDelete deletes a org.
+func (c *DefaultClient) OrgDelete(id string) error {
+	uri := fmt.Sprintf(pathOrg, c.base, id)
+	err := c.delete(uri, nil)
+
+	return err
+}
+
+// OrgUserList returns a list of related users for a org.
+func (c *DefaultClient) OrgUserList(opts OrgUserParams) ([]*User, error) {
+	var out []*User
+
+	uri := fmt.Sprintf(pathOrgUser, c.base, opts.Org)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// OrgUserAppend appends a user to a org.
+func (c *DefaultClient) OrgUserAppend(opts OrgUserParams) error {
+	uri := fmt.Sprintf(pathOrgUser, c.base, opts.Org)
+	err := c.patch(uri, opts, nil)
+
+	return err
+}
+
+// OrgUserDelete remove a user from a org.
+func (c *DefaultClient) OrgUserDelete(opts OrgUserParams) error {
+	uri := fmt.Sprintf(pathOrgUser, c.base, opts.Org)
+	err := c.delete(uri, opts)
+
+	return err
+}
+
+// OrgTeamList returns a list of related teams for a org.
+func (c *DefaultClient) OrgTeamList(opts OrgTeamParams) ([]*Team, error) {
+	var out []*Team
+
+	uri := fmt.Sprintf(pathOrgTeam, c.base, opts.Org)
+	err := c.get(uri, &out)
+
+	return out, err
+}
+
+// OrgTeamAppend appends a team to a org.
+func (c *DefaultClient) OrgTeamAppend(opts OrgTeamParams) error {
+	uri := fmt.Sprintf(pathOrgTeam, c.base, opts.Org)
+	err := c.patch(uri, opts, nil)
+
+	return err
+}
+
+// OrgTeamDelete remove a team from a org.
+func (c *DefaultClient) OrgTeamDelete(opts OrgTeamParams) error {
+	uri := fmt.Sprintf(pathOrgTeam, c.base, opts.Org)
+	err := c.delete(uri, opts)
 
 	return err
 }
@@ -411,106 +571,6 @@ func (c *DefaultClient) TeamOrgAppend(opts TeamOrgParams) error {
 // TeamOrgDelete remove a org from a team.
 func (c *DefaultClient) TeamOrgDelete(opts TeamOrgParams) error {
 	uri := fmt.Sprintf(pathTeamOrg, c.base, opts.Team)
-	err := c.delete(uri, opts)
-
-	return err
-}
-
-// OrgList returns a list of all orgs.
-func (c *DefaultClient) OrgList() ([]*Org, error) {
-	var out []*Org
-
-	uri := fmt.Sprintf(pathOrgs, c.base)
-	err := c.get(uri, &out)
-
-	return out, err
-}
-
-// OrgGet returns a org.
-func (c *DefaultClient) OrgGet(id string) (*Org, error) {
-	out := &Org{}
-
-	uri := fmt.Sprintf(pathOrg, c.base, id)
-	err := c.get(uri, out)
-
-	return out, err
-}
-
-// OrgPost creates a org.
-func (c *DefaultClient) OrgPost(in *Org) (*Org, error) {
-	out := &Org{}
-
-	uri := fmt.Sprintf(pathOrgs, c.base)
-	err := c.post(uri, in, out)
-
-	return out, err
-}
-
-// OrgPatch updates a org.
-func (c *DefaultClient) OrgPatch(in *Org) (*Org, error) {
-	out := &Org{}
-
-	uri := fmt.Sprintf(pathOrg, c.base, in.ID)
-	err := c.patch(uri, in, out)
-
-	return out, err
-}
-
-// OrgDelete deletes a org.
-func (c *DefaultClient) OrgDelete(id string) error {
-	uri := fmt.Sprintf(pathOrg, c.base, id)
-	err := c.delete(uri, nil)
-
-	return err
-}
-
-// OrgUserList returns a list of related users for a org.
-func (c *DefaultClient) OrgUserList(opts OrgUserParams) ([]*User, error) {
-	var out []*User
-
-	uri := fmt.Sprintf(pathOrgUser, c.base, opts.Org)
-	err := c.get(uri, &out)
-
-	return out, err
-}
-
-// OrgUserAppend appends a user to a org.
-func (c *DefaultClient) OrgUserAppend(opts OrgUserParams) error {
-	uri := fmt.Sprintf(pathOrgUser, c.base, opts.Org)
-	err := c.patch(uri, opts, nil)
-
-	return err
-}
-
-// OrgUserDelete remove a user from a org.
-func (c *DefaultClient) OrgUserDelete(opts OrgUserParams) error {
-	uri := fmt.Sprintf(pathOrgUser, c.base, opts.Org)
-	err := c.delete(uri, opts)
-
-	return err
-}
-
-// OrgTeamList returns a list of related teams for a org.
-func (c *DefaultClient) OrgTeamList(opts OrgTeamParams) ([]*Team, error) {
-	var out []*Team
-
-	uri := fmt.Sprintf(pathOrgTeam, c.base, opts.Org)
-	err := c.get(uri, &out)
-
-	return out, err
-}
-
-// OrgTeamAppend appends a team to a org.
-func (c *DefaultClient) OrgTeamAppend(opts OrgTeamParams) error {
-	uri := fmt.Sprintf(pathOrgTeam, c.base, opts.Org)
-	err := c.patch(uri, opts, nil)
-
-	return err
-}
-
-// OrgTeamDelete remove a team from a org.
-func (c *DefaultClient) OrgTeamDelete(opts OrgTeamParams) error {
-	uri := fmt.Sprintf(pathOrgTeam, c.base, opts.Org)
 	err := c.delete(uri, opts)
 
 	return err

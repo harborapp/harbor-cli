@@ -7,14 +7,10 @@ vendors:
   rev: c2c54e542fb797ad986b31721e1baedf214ca413
 - path: github.com/kr/binarydist
   rev: 3035450ff8b987ec4373f65c40767f096b35f2d2
-- path: github.com/mattn/go-runewidth
-  rev: d6bea18f789704b5f83375793155289da36a3c7f
-- path: github.com/olekukonko/tablewriter
-  rev: daf2955e742cf123959884fdff4685aa79b63135
 - path: github.com/sanbornm/go-selfupdate
   rev: 83c3c7d653a71718e36191c7c0dc6773e65629f2
 - path: github.com/umschlag/umschlag-go
-  rev: d16af4c320bc01a5ff7af64fe60e48842e7d2f44
+  rev: 9fcf5172835f74529248420d08890b56f1fee444
 - path: github.com/urfave/cli
   rev: 168c95418e66e019fe17b8f4f5c45aa62ff80e23
 - path: golang.org/x/net

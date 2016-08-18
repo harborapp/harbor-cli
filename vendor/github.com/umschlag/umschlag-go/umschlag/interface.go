@@ -45,6 +45,57 @@ type ClientAPI interface {
 	// RegistryDelete deletes a registry.
 	RegistryDelete(string) error
 
+	// TagList returns a list of all tags.
+	TagList() ([]*Tag, error)
+
+	// TagGet returns a tag.
+	TagGet(string) (*Tag, error)
+
+	// TagDelete deletes a tag.
+	TagDelete(string) error
+
+	// RepoList returns a list of all repos.
+	RepoList() ([]*Repo, error)
+
+	// RepoGet returns a repo.
+	RepoGet(string) (*Repo, error)
+
+	// RepoDelete deletes a repo.
+	RepoDelete(string) error
+
+	// OrgList returns a list of all orgs.
+	OrgList() ([]*Org, error)
+
+	// OrgGet returns a org.
+	OrgGet(string) (*Org, error)
+
+	// OrgPost creates a org.
+	OrgPost(*Org) (*Org, error)
+
+	// OrgPatch updates a org.
+	OrgPatch(*Org) (*Org, error)
+
+	// OrgDelete deletes a org.
+	OrgDelete(string) error
+
+	// OrgUserList returns a list of related users for a org.
+	OrgUserList(OrgUserParams) ([]*User, error)
+
+	// OrgUserAppend appends a user to a org.
+	OrgUserAppend(OrgUserParams) error
+
+	// OrgUserDelete remove a user from a org.
+	OrgUserDelete(OrgUserParams) error
+
+	// OrgTeamList returns a list of related teams for a org.
+	OrgTeamList(OrgTeamParams) ([]*Team, error)
+
+	// OrgTeamAppend appends a team to a org.
+	OrgTeamAppend(OrgTeamParams) error
+
+	// OrgTeamDelete remove a team from a org.
+	OrgTeamDelete(OrgTeamParams) error
+
 	// UserList returns a list of all users.
 	UserList() ([]*User, error)
 
@@ -110,37 +161,4 @@ type ClientAPI interface {
 
 	// TeamOrgDelete remove a org from a team.
 	TeamOrgDelete(TeamOrgParams) error
-
-	// OrgList returns a list of all orgs.
-	OrgList() ([]*Org, error)
-
-	// OrgGet returns a org.
-	OrgGet(string) (*Org, error)
-
-	// OrgPost creates a org.
-	OrgPost(*Org) (*Org, error)
-
-	// OrgPatch updates a org.
-	OrgPatch(*Org) (*Org, error)
-
-	// OrgDelete deletes a org.
-	OrgDelete(string) error
-
-	// OrgUserList returns a list of related users for a org.
-	OrgUserList(OrgUserParams) ([]*User, error)
-
-	// OrgUserAppend appends a user to a org.
-	OrgUserAppend(OrgUserParams) error
-
-	// OrgUserDelete remove a user from a org.
-	OrgUserDelete(OrgUserParams) error
-
-	// OrgTeamList returns a list of related teams for a org.
-	OrgTeamList(OrgTeamParams) ([]*Team, error)
-
-	// OrgTeamAppend appends a team to a org.
-	OrgTeamAppend(OrgTeamParams) error
-
-	// OrgTeamDelete remove a team from a org.
-	OrgTeamDelete(OrgTeamParams) error
 }
