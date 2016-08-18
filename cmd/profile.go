@@ -1,15 +1,27 @@
 package cmd
 
 import (
+	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"os"
-	"strconv"
-	"time"
+	"text/template"
 
-	"github.com/olekukonko/tablewriter"
 	"github.com/umschlag/umschlag-go/umschlag"
 	"github.com/urfave/cli"
 )
+
+// profileFuncMap provides template helper functions.
+var profileFuncMap = template.FuncMap{}
+
+// tmplProfileShow represents a profile within details view.
+var tmplProfileShow = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
+ID: {{ .ID }}
+Username: {{ .Username }}
+Email: {{ .Email }}
+Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
+Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
+`
 
 // Profile provides the sub-command for the profile API.
 func Profile() cli.Command {
@@ -17,6 +29,28 @@ func Profile() cli.Command {
 		Name:  "profile",
 		Usage: "Profile related sub-commands",
 		Subcommands: []cli.Command{
+			{
+				Name:  "show",
+				Usage: "Show profile details",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplProfileShow,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					return Handle(c, ProfileShow)
+				},
+			},
 			{
 				Name:  "token",
 				Usage: "Show your token",
@@ -34,13 +68,6 @@ func Profile() cli.Command {
 				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, ProfileToken)
-				},
-			},
-			{
-				Name:  "show",
-				Usage: "Show profile details",
-				Action: func(c *cli.Context) error {
-					return Handle(c, ProfileShow)
 				},
 			},
 			{
@@ -76,6 +103,55 @@ func Profile() cli.Command {
 	}
 }
 
+// ProfileShow provides the sub-command to show profile details.
+func ProfileShow(c *cli.Context, client umschlag.ClientAPI) error {
+	record, err := client.ProfileGet()
+
+	if err != nil {
+		return err
+	}
+
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+	}
+
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(record, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(record, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		profileFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return tmpl.Execute(os.Stdout, record)
+}
+
 // ProfileToken provides the sub-command to show your token.
 func ProfileToken(c *cli.Context, client umschlag.ClientAPI) error {
 	if !client.IsAuthenticated() {
@@ -109,64 +185,6 @@ func ProfileToken(c *cli.Context, client umschlag.ClientAPI) error {
 	}
 
 	fmt.Fprintf(os.Stdout, "%s\n", record.Token)
-	return nil
-}
-
-// ProfileShow provides the sub-command to show profile details.
-func ProfileShow(c *cli.Context, client umschlag.ClientAPI) error {
-	record, err := client.ProfileGet()
-
-	if err != nil {
-		return err
-	}
-
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"Key", "Value"})
-
-	table.Append(
-		[]string{
-			"ID",
-			strconv.FormatInt(record.ID, 10),
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Slug",
-			record.Slug,
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Username",
-			record.Username,
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Email",
-			record.Email,
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Created",
-			record.CreatedAt.Format(time.UnixDate),
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Updated",
-			record.UpdatedAt.Format(time.UnixDate),
-		},
-	)
-
-	table.Render()
 	return nil
 }
 

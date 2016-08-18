@@ -1,16 +1,70 @@
 package cmd
 
 import (
+	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"os"
 	"regexp"
 	"strconv"
-	"time"
+	"strings"
+	"text/template"
 
-	"github.com/olekukonko/tablewriter"
 	"github.com/umschlag/umschlag-go/umschlag"
 	"github.com/urfave/cli"
 )
+
+// orgFuncMap provides template helper functions.
+var orgFuncMap = template.FuncMap{
+	"userList": func(s []*umschlag.User) string {
+		res := []string{}
+
+		for _, row := range s {
+			res = append(res, row.String())
+		}
+
+		return strings.Join(res, ", ")
+	},
+	"teamList": func(s []*umschlag.Team) string {
+		res := []string{}
+
+		for _, row := range s {
+			res = append(res, row.String())
+		}
+
+		return strings.Join(res, ", ")
+	},
+}
+
+// tmplOrgList represents a row within org listing.
+var tmplOrgList = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
+ID: {{ .ID }}
+Name: {{ .Name }}
+`
+
+// tmplOrgShow represents a org within details view.
+var tmplOrgShow = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
+ID: {{ .ID }}
+Name: {{ .Name }}{{with .Registry}}
+Registry: {{ .Name }}
+{{end}}{{with .Users}}
+Users: {{ userList . }}{{end}}{{with .Teams}}
+Teams: {{ teamList . }}{{end}}
+Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
+Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
+`
+
+// tmplOrgUserList represents a row within org user listing.
+var tmplOrgUserList = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
+ID: {{ .ID }}
+Name: {{ .Name }}
+`
+
+// tmplOrgTeamList represents a row within org team listing.
+var tmplOrgTeamList = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
+ID: {{ .ID }}
+Name: {{ .Name }}
+`
 
 // Org provides the sub-command for the org API.
 func Org() cli.Command {
@@ -24,6 +78,21 @@ func Org() cli.Command {
 				Aliases:   []string{"ls"},
 				Usage:     "List all orgs",
 				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplOrgList,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
+					},
+				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, OrgList)
 				},
@@ -37,6 +106,19 @@ func Org() cli.Command {
 						Name:  "id, i",
 						Value: "",
 						Usage: "Org ID or slug to show",
+					},
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplOrgShow,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -123,6 +205,19 @@ func Org() cli.Command {
 						Value: "",
 						Usage: "Org ID or slug to list users",
 					},
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplOrgUserList,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
+					},
 				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, OrgUserList)
@@ -177,6 +272,19 @@ func Org() cli.Command {
 						Name:  "id, i",
 						Value: "",
 						Usage: "Org ID or slug to list teams",
+					},
+					cli.StringFlag{
+						Name:  "format",
+						Value: tmplOrgTeamList,
+						Usage: "Custom output format",
+					},
+					cli.BoolFlag{
+						Name:  "json",
+						Usage: "Print in JSON format",
+					},
+					cli.BoolFlag{
+						Name:  "xml",
+						Usage: "Print in XML format",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -235,26 +343,57 @@ func OrgList(c *cli.Context, client umschlag.ClientAPI) error {
 		return err
 	}
 
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+	}
+
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
 	if len(records) == 0 {
 		fmt.Fprintf(os.Stderr, "Empty result\n")
 		return nil
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"ID", "Slug", "Name"})
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		orgFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
+	)
 
-	for _, record := range records {
-		table.Append(
-			[]string{
-				strconv.FormatInt(record.ID, 10),
-				record.Slug,
-				record.Name,
-			},
-		)
+	if err != nil {
+		return err
 	}
 
-	table.Render()
+	for _, record := range records {
+		err := tmpl.Execute(os.Stdout, record)
+
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -268,56 +407,45 @@ func OrgShow(c *cli.Context, client umschlag.ClientAPI) error {
 		return err
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"Key", "Value"})
-
-	table.Append(
-		[]string{
-			"ID",
-			strconv.FormatInt(record.ID, 10),
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Slug",
-			record.Slug,
-		},
-	)
-
-	table.Append(
-		[]string{
-			"Name",
-			record.Name,
-		},
-	)
-
-	if record.Registry != nil {
-		table.Append(
-			[]string{
-				"Registry",
-				record.Registry.String(),
-			},
-		)
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
 	}
 
-	table.Append(
-		[]string{
-			"Created",
-			record.CreatedAt.Format(time.UnixDate),
-		},
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(record, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(record, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		orgFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
 	)
 
-	table.Append(
-		[]string{
-			"Updated",
-			record.UpdatedAt.Format(time.UnixDate),
-		},
-	)
+	if err != nil {
+		return err
+	}
 
-	table.Render()
-	return nil
+	return tmpl.Execute(os.Stdout, record)
 }
 
 // OrgDelete provides the sub-command to delete a org.
@@ -437,24 +565,57 @@ func OrgUserList(c *cli.Context, client umschlag.ClientAPI) error {
 		return err
 	}
 
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+	}
+
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
 	if len(records) == 0 {
 		fmt.Fprintf(os.Stderr, "Empty result\n")
 		return nil
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"User"})
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		orgFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
+	)
 
-	for _, record := range records {
-		table.Append(
-			[]string{
-				record.Slug,
-			},
-		)
+	if err != nil {
+		return err
 	}
 
-	table.Render()
+	for _, record := range records {
+		err := tmpl.Execute(os.Stdout, record)
+
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -471,7 +632,7 @@ func OrgUserAppend(c *cli.Context, client umschlag.ClientAPI) error {
 		return err
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully appended to org\n")
+	fmt.Fprintf(os.Stderr, "Successfully appended to user\n")
 	return nil
 }
 
@@ -488,7 +649,7 @@ func OrgUserRemove(c *cli.Context, client umschlag.ClientAPI) error {
 		return err
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully removed from org\n")
+	fmt.Fprintf(os.Stderr, "Successfully removed from user\n")
 	return nil
 }
 
@@ -504,24 +665,57 @@ func OrgTeamList(c *cli.Context, client umschlag.ClientAPI) error {
 		return err
 	}
 
+	if c.IsSet("json") && c.IsSet("xml") {
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+	}
+
+	if c.Bool("xml") {
+		res, err := xml.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
+	if c.Bool("json") {
+		res, err := json.MarshalIndent(records, "", "  ")
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", res)
+		return nil
+	}
+
 	if len(records) == 0 {
 		fmt.Fprintf(os.Stderr, "Empty result\n")
 		return nil
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetHeader([]string{"Team"})
+	tmpl, err := template.New(
+		"_",
+	).Funcs(
+		orgFuncMap,
+	).Parse(
+		fmt.Sprintf("%s\n", c.String("format")),
+	)
 
-	for _, record := range records {
-		table.Append(
-			[]string{
-				record.Slug,
-			},
-		)
+	if err != nil {
+		return err
 	}
 
-	table.Render()
+	for _, record := range records {
+		err := tmpl.Execute(os.Stdout, record)
+
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -538,7 +732,7 @@ func OrgTeamAppend(c *cli.Context, client umschlag.ClientAPI) error {
 		return err
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully appended to org\n")
+	fmt.Fprintf(os.Stderr, "Successfully appended to team\n")
 	return nil
 }
 
@@ -555,6 +749,6 @@ func OrgTeamRemove(c *cli.Context, client umschlag.ClientAPI) error {
 		return err
 	}
 
-	fmt.Fprintf(os.Stderr, "Successfully removed from org\n")
+	fmt.Fprintf(os.Stderr, "Successfully removed from team\n")
 	return nil
 }
