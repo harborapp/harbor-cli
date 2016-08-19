@@ -10,7 +10,7 @@ vendors:
 - path: github.com/sanbornm/go-selfupdate
   rev: 83c3c7d653a71718e36191c7c0dc6773e65629f2
 - path: github.com/umschlag/umschlag-go
-  rev: 9fcf5172835f74529248420d08890b56f1fee444
+  rev: 470640b531cabadc665eddefa28852760de2554f
 - path: github.com/urfave/cli
   rev: 168c95418e66e019fe17b8f4f5c45aa62ff80e23
 - path: golang.org/x/net

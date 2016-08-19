@@ -44,7 +44,8 @@ Username: {{ .Username }}
 var tmplUserShow = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
 ID: {{ .ID }}
 Username: {{ .Username }}
-Email: {{ .Email }}{{with .Teams}}
+Email: {{ .Email }}
+Active: {{ .Active }}{{with .Teams}}
 Teams: {{ teamList . }}{{end}}{{with .Orgs}}
 Orgs: {{ orgList . }}{{end}}
 Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
