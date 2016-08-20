@@ -109,6 +109,7 @@ type User struct {
 	Password  string    `json:"password"`
 	Email     string    `json:"email"`
 	Active    bool      `json:"active"`
+	Admin     bool      `json:"admin"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	Teams     []*Team   `json:"teams,omitempty"`

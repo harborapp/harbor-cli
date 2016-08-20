@@ -45,7 +45,8 @@ var tmplUserShow = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
 ID: {{ .ID }}
 Username: {{ .Username }}
 Email: {{ .Email }}
-Active: {{ .Active }}{{with .Teams}}
+Active: {{ .Active }}
+Admin: {{ .Admin }}{{with .Teams}}
 Teams: {{ teamList . }}{{end}}{{with .Orgs}}
 Orgs: {{ orgList . }}{{end}}
 Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
@@ -126,35 +127,49 @@ func User() cli.Command {
 				Name:      "update",
 				Usage:     "Update a user",
 				ArgsUsage: " ",
-				Flags: append(
-					[]cli.Flag{
-						cli.StringFlag{
-							Name:  "id, i",
-							Value: "",
-							Usage: "User ID or slug to update",
-						},
-						cli.StringFlag{
-							Name:  "slug",
-							Value: "",
-							Usage: "Provide a slug",
-						},
-						cli.StringFlag{
-							Name:  "username",
-							Value: "",
-							Usage: "Provide an username",
-						},
-						cli.StringFlag{
-							Name:  "email",
-							Value: "",
-							Usage: "Provide an email",
-						},
-						cli.StringFlag{
-							Name:  "password",
-							Value: "",
-							Usage: "Provide a password",
-						},
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "User ID or slug to update",
 					},
-				),
+					cli.StringFlag{
+						Name:  "slug",
+						Value: "",
+						Usage: "Provide a slug",
+					},
+					cli.StringFlag{
+						Name:  "username",
+						Value: "",
+						Usage: "Provide an username",
+					},
+					cli.StringFlag{
+						Name:  "email",
+						Value: "",
+						Usage: "Provide an email",
+					},
+					cli.StringFlag{
+						Name:  "password",
+						Value: "",
+						Usage: "Provide a password",
+					},
+					cli.BoolFlag{
+						Name:  "active",
+						Usage: "Mark user as active",
+					},
+					cli.BoolFlag{
+						Name:  "blocked",
+						Usage: "Mark user as blocked",
+					},
+					cli.BoolFlag{
+						Name:  "admin",
+						Usage: "Mark user as admin",
+					},
+					cli.BoolFlag{
+						Name:  "user",
+						Usage: "Mark user as user",
+					},
+				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, UserUpdate)
 				},
@@ -179,30 +194,44 @@ func User() cli.Command {
 				Name:      "create",
 				Usage:     "Create a user",
 				ArgsUsage: " ",
-				Flags: append(
-					[]cli.Flag{
-						cli.StringFlag{
-							Name:  "slug",
-							Value: "",
-							Usage: "Provide a slug",
-						},
-						cli.StringFlag{
-							Name:  "username",
-							Value: "",
-							Usage: "Provide an username",
-						},
-						cli.StringFlag{
-							Name:  "email",
-							Value: "",
-							Usage: "Provide an email",
-						},
-						cli.StringFlag{
-							Name:  "password",
-							Value: "",
-							Usage: "Provide a password",
-						},
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "slug",
+						Value: "",
+						Usage: "Provide a slug",
 					},
-				),
+					cli.StringFlag{
+						Name:  "username",
+						Value: "",
+						Usage: "Provide an username",
+					},
+					cli.StringFlag{
+						Name:  "email",
+						Value: "",
+						Usage: "Provide an email",
+					},
+					cli.StringFlag{
+						Name:  "password",
+						Value: "",
+						Usage: "Provide a password",
+					},
+					cli.BoolFlag{
+						Name:  "active",
+						Usage: "Mark user as active",
+					},
+					cli.BoolFlag{
+						Name:  "blocked",
+						Usage: "Mark user as blocked",
+					},
+					cli.BoolFlag{
+						Name:  "admin",
+						Usage: "Mark user as admin",
+					},
+					cli.BoolFlag{
+						Name:  "user",
+						Usage: "Mark user as user",
+					},
+				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, UserCreate)
 				},
@@ -506,6 +535,34 @@ func UserUpdate(c *cli.Context, client umschlag.ClientAPI) error {
 		changed = true
 	}
 
+	if c.IsSet("active") && c.IsSet("blocked") {
+		return fmt.Errorf("Conflict, you can mark it only active OR blocked!")
+	}
+
+	if c.IsSet("active") {
+		record.Active = true
+		changed = true
+	}
+
+	if c.IsSet("blocked") {
+		record.Active = false
+		changed = true
+	}
+
+	if c.IsSet("admin") && c.IsSet("user") {
+		return fmt.Errorf("Conflict, you can mark it only admin OR user!")
+	}
+
+	if c.IsSet("admin") {
+		record.Admin = true
+		changed = true
+	}
+
+	if c.IsSet("user") {
+		record.Admin = false
+		changed = true
+	}
+
 	if changed {
 		_, patch := client.UserPatch(
 			record,
@@ -547,6 +604,30 @@ func UserCreate(c *cli.Context, client umschlag.ClientAPI) error {
 		record.Password = val
 	} else {
 		return fmt.Errorf("You must provide a password.")
+	}
+
+	if c.IsSet("active") && c.IsSet("blocked") {
+		return fmt.Errorf("Conflict, you can mark it only active OR blocked!")
+	}
+
+	if c.IsSet("active") {
+		record.Active = true
+	}
+
+	if c.IsSet("blocked") {
+		record.Active = false
+	}
+
+	if c.IsSet("admin") && c.IsSet("user") {
+		return fmt.Errorf("Conflict, you can mark it only admin OR user!")
+	}
+
+	if c.IsSet("admin") {
+		record.Admin = true
+	}
+
+	if c.IsSet("user") {
+		record.Admin = false
 	}
 
 	_, err := client.UserPost(
