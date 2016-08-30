@@ -5,7 +5,6 @@ import (
 	"encoding/xml"
 	"fmt"
 	"os"
-	"strings"
 	"text/template"
 
 	"github.com/umschlag/umschlag-go/umschlag"
@@ -13,17 +12,7 @@ import (
 )
 
 // repoFuncMap provides template helper functions.
-var repoFuncMap = template.FuncMap{
-	"tagList": func(s []*umschlag.Tag) string {
-		res := []string{}
-
-		for _, row := range s {
-			res = append(res, row.FullName)
-		}
-
-		return strings.Join(res, ", ")
-	},
-}
+var repoFuncMap = template.FuncMap{}
 
 // tmplRepoList represents a row within repo listing.
 var tmplRepoList = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `

@@ -5,7 +5,6 @@ import (
 	"encoding/xml"
 	"fmt"
 	"os"
-	"strings"
 	"text/template"
 
 	"github.com/umschlag/umschlag-go/umschlag"
@@ -13,17 +12,7 @@ import (
 )
 
 // tagFuncMap provides template helper functions.
-var tagFuncMap = template.FuncMap{
-	"tagList": func(s []*umschlag.Tag) string {
-		res := []string{}
-
-		for _, row := range s {
-			res = append(res, row.String())
-		}
-
-		return strings.Join(res, ", ")
-	},
-}
+var tagFuncMap = template.FuncMap{}
 
 // tmplTagList represents a row within tag listing.
 var tmplTagList = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `

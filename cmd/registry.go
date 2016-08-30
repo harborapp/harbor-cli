@@ -5,7 +5,6 @@ import (
 	"encoding/xml"
 	"fmt"
 	"os"
-	"strings"
 	"text/template"
 
 	"github.com/umschlag/umschlag-go/umschlag"
@@ -13,17 +12,7 @@ import (
 )
 
 // registryFuncMap provides template helper functions.
-var registryFuncMap = template.FuncMap{
-	"orgList": func(s []*umschlag.Org) string {
-		res := []string{}
-
-		for _, row := range s {
-			res = append(res, row.String())
-		}
-
-		return strings.Join(res, ", ")
-	},
-}
+var registryFuncMap = template.FuncMap{}
 
 // tmplRegistryList represents a row within registry listing.
 var tmplRegistryList = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
@@ -101,46 +90,6 @@ func Registry() cli.Command {
 				},
 			},
 			{
-				Name:      "update",
-				Usage:     "Update a registry",
-				ArgsUsage: " ",
-				Flags: append(
-					[]cli.Flag{
-						cli.StringFlag{
-							Name:  "id, i",
-							Value: "",
-							Usage: "Registry ID or slug to update",
-						},
-						cli.StringFlag{
-							Name:  "slug",
-							Value: "",
-							Usage: "Provide a slug",
-						},
-						cli.StringFlag{
-							Name:  "name",
-							Value: "",
-							Usage: "Provide an name",
-						},
-						cli.StringFlag{
-							Name:  "host",
-							Value: "",
-							Usage: "Provide an host",
-						},
-						cli.BoolFlag{
-							Name:  "use-ssl",
-							Usage: "Should use SSL",
-						},
-						cli.BoolFlag{
-							Name:  "no-ssl",
-							Usage: "Should not use SSL",
-						},
-					},
-				),
-				Action: func(c *cli.Context) error {
-					return Handle(c, RegistryUpdate)
-				},
-			},
-			{
 				Name:      "delete",
 				Aliases:   []string{"rm"},
 				Usage:     "Delete a registry",
@@ -157,36 +106,72 @@ func Registry() cli.Command {
 				},
 			},
 			{
+				Name:      "update",
+				Usage:     "Update a registry",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "Registry ID or slug to update",
+					},
+					cli.StringFlag{
+						Name:  "slug",
+						Value: "",
+						Usage: "Provide a slug",
+					},
+					cli.StringFlag{
+						Name:  "name",
+						Value: "",
+						Usage: "Provide an name",
+					},
+					cli.StringFlag{
+						Name:  "host",
+						Value: "",
+						Usage: "Provide an host",
+					},
+					cli.BoolFlag{
+						Name:  "use-ssl",
+						Usage: "Should use SSL",
+					},
+					cli.BoolFlag{
+						Name:  "no-ssl",
+						Usage: "Should not use SSL",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					return Handle(c, RegistryUpdate)
+				},
+			},
+			{
 				Name:      "create",
 				Usage:     "Create a registry",
 				ArgsUsage: " ",
-				Flags: append(
-					[]cli.Flag{
-						cli.StringFlag{
-							Name:  "slug",
-							Value: "",
-							Usage: "Provide a slug",
-						},
-						cli.StringFlag{
-							Name:  "name",
-							Value: "",
-							Usage: "Provide an name",
-						},
-						cli.StringFlag{
-							Name:  "host",
-							Value: "",
-							Usage: "Provide an host",
-						},
-						cli.BoolFlag{
-							Name:  "use-ssl",
-							Usage: "Should use SSL",
-						},
-						cli.BoolFlag{
-							Name:  "no-ssl",
-							Usage: "Should not use SSL",
-						},
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "slug",
+						Value: "",
+						Usage: "Provide a slug",
 					},
-				),
+					cli.StringFlag{
+						Name:  "name",
+						Value: "",
+						Usage: "Provide an name",
+					},
+					cli.StringFlag{
+						Name:  "host",
+						Value: "",
+						Usage: "Provide an host",
+					},
+					cli.BoolFlag{
+						Name:  "use-ssl",
+						Usage: "Should use SSL",
+					},
+					cli.BoolFlag{
+						Name:  "no-ssl",
+						Usage: "Should not use SSL",
+					},
+				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, RegistryCreate)
 				},

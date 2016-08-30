@@ -7,7 +7,6 @@ import (
 	"os"
 	"regexp"
 	"strconv"
-	"strings"
 	"text/template"
 
 	"github.com/umschlag/umschlag-go/umschlag"
@@ -15,35 +14,7 @@ import (
 )
 
 // orgFuncMap provides template helper functions.
-var orgFuncMap = template.FuncMap{
-	"userList": func(s []*umschlag.User) string {
-		res := []string{}
-
-		for _, row := range s {
-			res = append(res, row.String())
-		}
-
-		return strings.Join(res, ", ")
-	},
-	"teamList": func(s []*umschlag.Team) string {
-		res := []string{}
-
-		for _, row := range s {
-			res = append(res, row.String())
-		}
-
-		return strings.Join(res, ", ")
-	},
-	"repoList": func(s []*umschlag.Repo) string {
-		res := []string{}
-
-		for _, row := range s {
-			res = append(res, row.FullName)
-		}
-
-		return strings.Join(res, ", ")
-	},
-}
+var orgFuncMap = template.FuncMap{}
 
 // tmplOrgList represents a row within org listing.
 var tmplOrgList = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
@@ -64,15 +35,17 @@ Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `
 
 // tmplOrgUserList represents a row within org user listing.
-var tmplOrgUserList = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
-ID: {{ .ID }}
-Name: {{ .Name }}
+var tmplOrgUserList = "Slug: \x1b[33m{{ .User.Slug }} \x1b[0m" + `
+ID: {{ .User.ID }}
+Name: {{ .User.Name }}
+Permission: {{ .Perm }}
 `
 
 // tmplOrgTeamList represents a row within org team listing.
-var tmplOrgTeamList = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
-ID: {{ .ID }}
-Name: {{ .Name }}
+var tmplOrgTeamList = "Slug: \x1b[33m{{ .Team.Slug }} \x1b[0m" + `
+ID: {{ .Team.ID }}
+Name: {{ .Team.Name }}
+Permission: {{ .Perm }}
 `
 
 // Org provides the sub-command for the org API.
@@ -134,33 +107,6 @@ func Org() cli.Command {
 				},
 			},
 			{
-				Name:      "update",
-				Usage:     "Update a org",
-				ArgsUsage: " ",
-				Flags: append(
-					[]cli.Flag{
-						cli.StringFlag{
-							Name:  "id, i",
-							Value: "",
-							Usage: "Org ID or slug to update",
-						},
-						cli.StringFlag{
-							Name:  "slug",
-							Value: "",
-							Usage: "Provide a slug",
-						},
-						cli.StringFlag{
-							Name:  "name",
-							Value: "",
-							Usage: "Provide a name",
-						},
-					},
-				),
-				Action: func(c *cli.Context) error {
-					return Handle(c, OrgUpdate)
-				},
-			},
-			{
 				Name:      "delete",
 				Aliases:   []string{"rm"},
 				Usage:     "Delete a org",
@@ -177,166 +123,265 @@ func Org() cli.Command {
 				},
 			},
 			{
+				Name:      "update",
+				Usage:     "Update a org",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "Org ID or slug to update",
+					},
+					cli.StringFlag{
+						Name:  "slug",
+						Value: "",
+						Usage: "Provide a slug",
+					},
+					cli.StringFlag{
+						Name:  "name",
+						Value: "",
+						Usage: "Provide a name",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					return Handle(c, OrgUpdate)
+				},
+			},
+			{
 				Name:      "create",
 				Usage:     "Create a org",
 				ArgsUsage: " ",
-				Flags: append(
-					[]cli.Flag{
-						cli.StringFlag{
-							Name:  "registry",
-							Value: "",
-							Usage: "Registry ID or slug",
-						},
-						cli.StringFlag{
-							Name:  "slug",
-							Value: "",
-							Usage: "Provide a slug",
-						},
-						cli.StringFlag{
-							Name:  "name",
-							Value: "",
-							Usage: "Provide a name",
-						},
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "registry",
+						Value: "",
+						Usage: "Registry ID or slug",
 					},
-				),
+					cli.StringFlag{
+						Name:  "slug",
+						Value: "",
+						Usage: "Provide a slug",
+					},
+					cli.StringFlag{
+						Name:  "name",
+						Value: "",
+						Usage: "Provide a name",
+					},
+				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, OrgCreate)
 				},
 			},
 			{
-				Name:      "user-list",
-				Usage:     "List assigned users",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Org ID or slug to list users",
+				Name:  "user",
+				Usage: "User assignments",
+				Subcommands: []cli.Command{
+					{
+						Name:      "list",
+						Aliases:   []string{"ls"},
+						Usage:     "List assigned users",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Org ID or slug to list users",
+							},
+							cli.StringFlag{
+								Name:  "format",
+								Value: tmplOrgUserList,
+								Usage: "Custom output format",
+							},
+							cli.BoolFlag{
+								Name:  "json",
+								Usage: "Print in JSON format",
+							},
+							cli.BoolFlag{
+								Name:  "xml",
+								Usage: "Print in XML format",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, OrgUserList)
+						},
 					},
-					cli.StringFlag{
-						Name:  "format",
-						Value: tmplOrgUserList,
-						Usage: "Custom output format",
+					{
+						Name:      "append",
+						Usage:     "Append a user to org",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Org ID or slug to append to",
+							},
+							cli.StringFlag{
+								Name:  "user, u",
+								Value: "",
+								Usage: "User ID or slug to append",
+							},
+							cli.StringFlag{
+								Name:  "perm",
+								Value: "user",
+								Usage: "Permission for the user, can be user, admin or owner",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, OrgUserAppend)
+						},
 					},
-					cli.BoolFlag{
-						Name:  "json",
-						Usage: "Print in JSON format",
+					{
+						Name:      "perm",
+						Usage:     "Update org user permissions",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Org ID or slug to update",
+							},
+							cli.StringFlag{
+								Name:  "user, u",
+								Value: "",
+								Usage: "User ID or slug to update",
+							},
+							cli.StringFlag{
+								Name:  "perm",
+								Value: "user",
+								Usage: "Permission for the user, can be user, admin or owner",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, OrgUserPerm)
+						},
 					},
-					cli.BoolFlag{
-						Name:  "xml",
-						Usage: "Print in XML format",
+					{
+						Name:      "remove",
+						Aliases:   []string{"rm"},
+						Usage:     "Remove a user from org",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Org ID or slug to remove from",
+							},
+							cli.StringFlag{
+								Name:  "user, u",
+								Value: "",
+								Usage: "User ID or slug to remove",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, OrgUserRemove)
+						},
 					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, OrgUserList)
 				},
 			},
 			{
-				Name:      "user-append",
-				Usage:     "Append a user to org",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Org ID or slug to append to",
+				Name:  "team",
+				Usage: "Team assignments",
+				Subcommands: []cli.Command{
+					{
+						Name:      "list",
+						Aliases:   []string{"ls"},
+						Usage:     "List assigned teams",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Org ID or slug to list teams",
+							},
+							cli.StringFlag{
+								Name:  "format",
+								Value: tmplOrgTeamList,
+								Usage: "Custom output format",
+							},
+							cli.BoolFlag{
+								Name:  "json",
+								Usage: "Print in JSON format",
+							},
+							cli.BoolFlag{
+								Name:  "xml",
+								Usage: "Print in XML format",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, OrgTeamList)
+						},
 					},
-					cli.StringFlag{
-						Name:  "user, u",
-						Value: "",
-						Usage: "User ID or slug to append",
+					{
+						Name:      "append",
+						Usage:     "Append a team to org",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Org ID or slug to append to",
+							},
+							cli.StringFlag{
+								Name:  "team, t",
+								Value: "",
+								Usage: "Team ID or slug to append",
+							},
+							cli.StringFlag{
+								Name:  "perm",
+								Value: "user",
+								Usage: "Permission for the team, can be user, admin or owner",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, OrgTeamAppend)
+						},
 					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, OrgUserAppend)
-				},
-			},
-			{
-				Name:      "user-remove",
-				Usage:     "Remove a user from org",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Org ID or slug to remove from",
+					{
+						Name:      "perm",
+						Usage:     "Update org team permissions",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Org ID or slug to update",
+							},
+							cli.StringFlag{
+								Name:  "team, t",
+								Value: "",
+								Usage: "Team ID or slug to update",
+							},
+							cli.StringFlag{
+								Name:  "perm",
+								Value: "user",
+								Usage: "Permission for the team, can be user, admin or owner",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, OrgTeamPerm)
+						},
 					},
-					cli.StringFlag{
-						Name:  "user, u",
-						Value: "",
-						Usage: "User ID or slug to remove",
+					{
+						Name:      "remove",
+						Aliases:   []string{"rm"},
+						Usage:     "Remove a team from org",
+						ArgsUsage: " ",
+						Flags: []cli.Flag{
+							cli.StringFlag{
+								Name:  "id, i",
+								Value: "",
+								Usage: "Org ID or slug to remove from",
+							},
+							cli.StringFlag{
+								Name:  "team, t",
+								Value: "",
+								Usage: "Team ID or slug to remove",
+							},
+						},
+						Action: func(c *cli.Context) error {
+							return Handle(c, OrgTeamRemove)
+						},
 					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, OrgUserRemove)
-				},
-			},
-			{
-				Name:      "team-list",
-				Usage:     "List assigned teams",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Org ID or slug to list teams",
-					},
-					cli.StringFlag{
-						Name:  "format",
-						Value: tmplOrgTeamList,
-						Usage: "Custom output format",
-					},
-					cli.BoolFlag{
-						Name:  "json",
-						Usage: "Print in JSON format",
-					},
-					cli.BoolFlag{
-						Name:  "xml",
-						Usage: "Print in XML format",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, OrgTeamList)
-				},
-			},
-			{
-				Name:      "team-append",
-				Usage:     "Append a team to org",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Org ID or slug to append to",
-					},
-					cli.StringFlag{
-						Name:  "team, t",
-						Value: "",
-						Usage: "Team ID or slug to append",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, OrgTeamAppend)
-				},
-			},
-			{
-				Name:      "team-remove",
-				Usage:     "Remove a team from org",
-				ArgsUsage: " ",
-				Flags: []cli.Flag{
-					cli.StringFlag{
-						Name:  "id, i",
-						Value: "",
-						Usage: "Org ID or slug to remove from",
-					},
-					cli.StringFlag{
-						Name:  "team, t",
-						Value: "",
-						Usage: "Team ID or slug to remove",
-					},
-				},
-				Action: func(c *cli.Context) error {
-					return Handle(c, OrgTeamRemove)
 				},
 			},
 		},
@@ -633,6 +678,7 @@ func OrgUserAppend(c *cli.Context, client umschlag.ClientAPI) error {
 		umschlag.OrgUserParams{
 			Org:  GetIdentifierParam(c),
 			User: GetUserParam(c),
+			Perm: GetPermParam(c),
 		},
 	)
 
@@ -641,6 +687,24 @@ func OrgUserAppend(c *cli.Context, client umschlag.ClientAPI) error {
 	}
 
 	fmt.Fprintf(os.Stderr, "Successfully appended to user\n")
+	return nil
+}
+
+// OrgUserPerm provides the sub-command to update org user permissions.
+func OrgUserPerm(c *cli.Context, client umschlag.ClientAPI) error {
+	err := client.OrgUserPerm(
+		umschlag.OrgUserParams{
+			Org:  GetIdentifierParam(c),
+			User: GetUserParam(c),
+			Perm: GetPermParam(c),
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully updated permissions\n")
 	return nil
 }
 
@@ -733,6 +797,7 @@ func OrgTeamAppend(c *cli.Context, client umschlag.ClientAPI) error {
 		umschlag.OrgTeamParams{
 			Org:  GetIdentifierParam(c),
 			Team: GetTeamParam(c),
+			Perm: GetPermParam(c),
 		},
 	)
 
@@ -741,6 +806,24 @@ func OrgTeamAppend(c *cli.Context, client umschlag.ClientAPI) error {
 	}
 
 	fmt.Fprintf(os.Stderr, "Successfully appended to team\n")
+	return nil
+}
+
+// OrgTeamPerm provides the sub-command to update org team permissions.
+func OrgTeamPerm(c *cli.Context, client umschlag.ClientAPI) error {
+	err := client.OrgTeamPerm(
+		umschlag.OrgTeamParams{
+			Org:  GetIdentifierParam(c),
+			Team: GetTeamParam(c),
+			Perm: GetPermParam(c),
+		},
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully updated permissions\n")
 	return nil
 }
 

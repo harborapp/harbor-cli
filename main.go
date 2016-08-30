@@ -5,16 +5,11 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/sanbornm/go-selfupdate/selfupdate"
 	"github.com/umschlag/umschlag-cli/cmd"
 	"github.com/umschlag/umschlag-cli/config"
 	"github.com/urfave/cli"
 
 	_ "github.com/joho/godotenv/autoload"
-)
-
-var (
-	updates = "http://dl.webhippie.de/"
 )
 
 func main() {
@@ -39,37 +34,6 @@ func main() {
 			Usage:  "Umschlag API token",
 			EnvVar: "UMSCHLAG_TOKEN",
 		},
-		cli.BoolTFlag{
-			Name:   "update, u",
-			Usage:  "Enable auto update",
-			EnvVar: "UMSCHLAG_UPDATE",
-		},
-	}
-
-	app.Before = func(c *cli.Context) error {
-		if c.BoolT("update") {
-			if config.VersionDev == "dev" {
-				fmt.Fprintf(os.Stderr, "Updates are disabled for development versions.\n")
-			} else {
-				updater := &selfupdate.Updater{
-					CurrentVersion: fmt.Sprintf(
-						"%d.%d.%d",
-						config.VersionMajor,
-						config.VersionMinor,
-						config.VersionPatch,
-					),
-					ApiURL:  updates,
-					BinURL:  updates,
-					DiffURL: updates,
-					Dir:     "updates/",
-					CmdName: app.Name,
-				}
-
-				go updater.BackgroundRun()
-			}
-		}
-
-		return nil
 	}
 
 	app.Commands = []cli.Command{
