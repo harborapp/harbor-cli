@@ -9,6 +9,8 @@ import (
 	"github.com/umschlag/umschlag-cli/cmd"
 	"github.com/umschlag/umschlag-cli/config"
 	"github.com/urfave/cli"
+
+	_ "github.com/joho/godotenv/autoload"
 )
 
 var (
@@ -90,5 +92,8 @@ func main() {
 		Usage: "Print the current version of that tool",
 	}
 
-	app.Run(os.Args)
+	if err := app.Run(os.Args); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }
