@@ -10,6 +10,8 @@ import (
 	"golang.org/x/oauth2"
 )
 
+//go:generate mockery -all -case=underscore
+
 const (
 	pathAuthLogin    = "%s/api/auth/login"
 	pathProfile      = "%s/api/profile/self"
@@ -33,6 +35,181 @@ const (
 	pathTeamUser     = "%s/api/teams/%v/users"
 	pathTeamOrg      = "%s/api/teams/%v/orgs"
 )
+
+// ClientAPI describes a client API.
+type ClientAPI interface {
+	// SetClient sets the default http client. This should
+	// be used in conjunction with golang.org/x/oauth2 to
+	// authenticate requests to the Umschlag API.
+	SetClient(client *http.Client)
+
+	// IsAuthenticated checks if we already provided an authentication
+	// token for our client requests. If it returns false you can update
+	// the client after fetching a valid token.
+	IsAuthenticated() bool
+
+	// AuthLogin signs in based on credentials and returns a token.
+	AuthLogin(string, string) (*Token, error)
+
+	// ProfileToken returns a token.
+	ProfileToken() (*Token, error)
+
+	// ProfileGet returns a profile.
+	ProfileGet() (*Profile, error)
+
+	// ProfilePatch updates a profile.
+	ProfilePatch(*Profile) (*Profile, error)
+
+	// RegistryList returns a list of all registries.
+	RegistryList() ([]*Registry, error)
+
+	// RegistryGet returns a registry.
+	RegistryGet(string) (*Registry, error)
+
+	// RegistryPost creates a registry.
+	RegistryPost(*Registry) (*Registry, error)
+
+	// RegistryPatch updates a registry.
+	RegistryPatch(*Registry) (*Registry, error)
+
+	// RegistryDelete deletes a registry.
+	RegistryDelete(string) error
+
+	// TagList returns a list of all tags.
+	TagList() ([]*Tag, error)
+
+	// TagGet returns a tag.
+	TagGet(string) (*Tag, error)
+
+	// TagDelete deletes a tag.
+	TagDelete(string) error
+
+	// RepoList returns a list of all repos.
+	RepoList() ([]*Repo, error)
+
+	// RepoGet returns a repo.
+	RepoGet(string) (*Repo, error)
+
+	// RepoDelete deletes a repo.
+	RepoDelete(string) error
+
+	// OrgList returns a list of all orgs.
+	OrgList() ([]*Org, error)
+
+	// OrgGet returns a org.
+	OrgGet(string) (*Org, error)
+
+	// OrgPost creates a org.
+	OrgPost(*Org) (*Org, error)
+
+	// OrgPatch updates a org.
+	OrgPatch(*Org) (*Org, error)
+
+	// OrgDelete deletes a org.
+	OrgDelete(string) error
+
+	// OrgUserList returns a list of related users for a org.
+	OrgUserList(OrgUserParams) ([]*User, error)
+
+	// OrgUserAppend appends a user to a org.
+	OrgUserAppend(OrgUserParams) error
+
+	// OrgUserPerm updates perms for org user.
+	OrgUserPerm(OrgUserParams) error
+
+	// OrgUserDelete remove a user from a org.
+	OrgUserDelete(OrgUserParams) error
+
+	// OrgTeamList returns a list of related teams for a org.
+	OrgTeamList(OrgTeamParams) ([]*Team, error)
+
+	// OrgTeamAppend appends a team to a org.
+	OrgTeamAppend(OrgTeamParams) error
+
+	// OrgTeamPerm updates perms for org team.
+	OrgTeamPerm(OrgTeamParams) error
+
+	// OrgTeamDelete remove a team from a org.
+	OrgTeamDelete(OrgTeamParams) error
+
+	// UserList returns a list of all users.
+	UserList() ([]*User, error)
+
+	// UserGet returns a user.
+	UserGet(string) (*User, error)
+
+	// UserPost creates a user.
+	UserPost(*User) (*User, error)
+
+	// UserPatch updates a user.
+	UserPatch(*User) (*User, error)
+
+	// UserDelete deletes a user.
+	UserDelete(string) error
+
+	// UserTeamList returns a list of related teams for a user.
+	UserTeamList(UserTeamParams) ([]*Team, error)
+
+	// UserTeamAppend appends a team to a user.
+	UserTeamAppend(UserTeamParams) error
+
+	// UserTeamPerm updates perms for user team.
+	UserTeamPerm(UserTeamParams) error
+
+	// UserTeamDelete remove a team from a user.
+	UserTeamDelete(UserTeamParams) error
+
+	// UserOrgList returns a list of related orgs for a user.
+	UserOrgList(UserOrgParams) ([]*Org, error)
+
+	// UserOrgAppend appends a org to a user.
+	UserOrgAppend(UserOrgParams) error
+
+	// UserOrgPerm updates perms for user org.
+	UserOrgPerm(UserOrgParams) error
+
+	// UserOrgDelete remove a org from a user.
+	UserOrgDelete(UserOrgParams) error
+
+	// TeamList returns a list of all teams.
+	TeamList() ([]*Team, error)
+
+	// TeamGet returns a team.
+	TeamGet(string) (*Team, error)
+
+	// TeamPost creates a team.
+	TeamPost(*Team) (*Team, error)
+
+	// TeamPatch updates a team.
+	TeamPatch(*Team) (*Team, error)
+
+	// TeamDelete deletes a team.
+	TeamDelete(string) error
+
+	// TeamUserList returns a list of related users for a team.
+	TeamUserList(TeamUserParams) ([]*User, error)
+
+	// TeamUserAppend appends a user to a team.
+	TeamUserAppend(TeamUserParams) error
+
+	// TeamUserPerm updates perms for team user.
+	TeamUserPerm(TeamUserParams) error
+
+	// TeamUserDelete remove a user from a team.
+	TeamUserDelete(TeamUserParams) error
+
+	// TeamOrgList returns a list of related orgs for a team.
+	TeamOrgList(TeamOrgParams) ([]*Org, error)
+
+	// TeamOrgAppend appends a org to a team.
+	TeamOrgAppend(TeamOrgParams) error
+
+	// TeamOrgPerm updates perms for team org.
+	TeamOrgPerm(TeamOrgParams) error
+
+	// TeamOrgDelete remove a org from a team.
+	TeamOrgDelete(TeamOrgParams) error
+}
 
 // DefaultClient implements the client interface.
 type DefaultClient struct {
@@ -337,6 +514,14 @@ func (c *DefaultClient) OrgUserList(opts OrgUserParams) ([]*User, error) {
 // OrgUserAppend appends a user to a org.
 func (c *DefaultClient) OrgUserAppend(opts OrgUserParams) error {
 	uri := fmt.Sprintf(pathOrgUser, c.base, opts.Org)
+	err := c.post(uri, opts, nil)
+
+	return err
+}
+
+// OrgUserPerm updates perms for org user.
+func (c *DefaultClient) OrgUserPerm(opts OrgUserParams) error {
+	uri := fmt.Sprintf(pathOrgUser, c.base, opts.Org)
 	err := c.patch(uri, opts, nil)
 
 	return err
@@ -362,6 +547,14 @@ func (c *DefaultClient) OrgTeamList(opts OrgTeamParams) ([]*Team, error) {
 
 // OrgTeamAppend appends a team to a org.
 func (c *DefaultClient) OrgTeamAppend(opts OrgTeamParams) error {
+	uri := fmt.Sprintf(pathOrgTeam, c.base, opts.Org)
+	err := c.post(uri, opts, nil)
+
+	return err
+}
+
+// OrgTeamPerm updates perms for org team.
+func (c *DefaultClient) OrgTeamPerm(opts OrgTeamParams) error {
 	uri := fmt.Sprintf(pathOrgTeam, c.base, opts.Org)
 	err := c.patch(uri, opts, nil)
 
@@ -437,6 +630,14 @@ func (c *DefaultClient) UserTeamList(opts UserTeamParams) ([]*Team, error) {
 // UserTeamAppend appends a team to a user.
 func (c *DefaultClient) UserTeamAppend(opts UserTeamParams) error {
 	uri := fmt.Sprintf(pathUserTeam, c.base, opts.User)
+	err := c.post(uri, opts, nil)
+
+	return err
+}
+
+// UserTeamPerm updates perms for user team.
+func (c *DefaultClient) UserTeamPerm(opts UserTeamParams) error {
+	uri := fmt.Sprintf(pathUserTeam, c.base, opts.User)
 	err := c.patch(uri, opts, nil)
 
 	return err
@@ -462,6 +663,14 @@ func (c *DefaultClient) UserOrgList(opts UserOrgParams) ([]*Org, error) {
 
 // UserOrgAppend appends a org to a user.
 func (c *DefaultClient) UserOrgAppend(opts UserOrgParams) error {
+	uri := fmt.Sprintf(pathUserOrg, c.base, opts.User)
+	err := c.post(uri, opts, nil)
+
+	return err
+}
+
+// UserOrgPerm updates perms for user org.
+func (c *DefaultClient) UserOrgPerm(opts UserOrgParams) error {
 	uri := fmt.Sprintf(pathUserOrg, c.base, opts.User)
 	err := c.patch(uri, opts, nil)
 
@@ -537,6 +746,14 @@ func (c *DefaultClient) TeamUserList(opts TeamUserParams) ([]*User, error) {
 // TeamUserAppend appends a user to a team.
 func (c *DefaultClient) TeamUserAppend(opts TeamUserParams) error {
 	uri := fmt.Sprintf(pathTeamUser, c.base, opts.Team)
+	err := c.post(uri, opts, nil)
+
+	return err
+}
+
+// TeamUserPerm updates perms for team user.
+func (c *DefaultClient) TeamUserPerm(opts TeamUserParams) error {
+	uri := fmt.Sprintf(pathTeamUser, c.base, opts.Team)
 	err := c.patch(uri, opts, nil)
 
 	return err
@@ -562,6 +779,14 @@ func (c *DefaultClient) TeamOrgList(opts TeamOrgParams) ([]*Org, error) {
 
 // TeamOrgAppend appends a org to a team.
 func (c *DefaultClient) TeamOrgAppend(opts TeamOrgParams) error {
+	uri := fmt.Sprintf(pathTeamOrg, c.base, opts.Team)
+	err := c.post(uri, opts, nil)
+
+	return err
+}
+
+// TeamOrgPerm updates perms for team org.
+func (c *DefaultClient) TeamOrgPerm(opts TeamOrgParams) error {
 	uri := fmt.Sprintf(pathTeamOrg, c.base, opts.Team)
 	err := c.patch(uri, opts, nil)
 

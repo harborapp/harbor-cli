@@ -8,16 +8,16 @@ clean:
 
 deps:
 	go get -u github.com/golang/lint/golint
+	go get -u github.com/govend/govend
+	go get -u github.com/vektra/mockery/...
 
 vendor:
-	go get -u github.com/govend/govend
 	govend -v
 
 update:
 	govend -vtlu --prune
 
 generate:
-	go get -u github.com/vektra/mockery/...
 	go generate $(GENERATE)
 
 fmt:
