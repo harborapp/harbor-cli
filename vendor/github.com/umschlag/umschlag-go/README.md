@@ -5,7 +5,7 @@
 [![Go Doc](https://godoc.org/github.com/umschlag/umschlag-go?status.svg)](http://godoc.org/github.com/umschlag/umschlag-go)
 [![Go Report](http://goreportcard.com/badge/github.com/umschlag/umschlag-go)](http://goreportcard.com/report/github.com/umschlag/umschlag-go)
 [![Join the chat at https://gitter.im/umschlag/umschlag](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/umschlag/umschlag)
-![Release Status](https://img.shields.io/badge/status-beta-yellow.svg?style=flat)
+[![Stories in Ready](https://badge.waffle.io/umschlag/umschlag-api.svg?label=ready&title=Ready)](http://waffle.io/umschlag/umschlag-api)
 
 **This project is under heavy development, it's not in a working state yet!**
 
