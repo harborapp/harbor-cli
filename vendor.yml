@@ -5,21 +5,13 @@ vendors:
   rev: b68f5469dff16e102bd6a2d5b3e79341c938d736
 - path: github.com/joho/godotenv
   rev: 4ed13390c0acd2ff4e371e64d8b97c8954138243
-- path: github.com/kardianos/osext
-  rev: c2c54e542fb797ad986b31721e1baedf214ca413
-- path: github.com/kr/binarydist
-  rev: 3035450ff8b987ec4373f65c40767f096b35f2d2
-- path: github.com/sanbornm/go-selfupdate
-  rev: 83c3c7d653a71718e36191c7c0dc6773e65629f2
 - path: github.com/umschlag/umschlag-go
-  rev: ccc3cd3d87700e670835b23189a5c07fa2ca97e1
+  rev: eba6eaa8761cb738691f731a5a093bafa763097d
 - path: github.com/urfave/cli
   rev: 33bb4c121333cd8eb7d8cc8d74474f4ec156f371
 - path: golang.org/x/net
-  rev: 6250b412798208e6c90b03b7c4f226de5aa299e2
+  rev: 9bc2a3340c92c17a20edcd0080e93851ed58f5d5
 - path: golang.org/x/oauth2
   rev: 4d549c893be7d4011bab739cc585d091a7188d27
 - path: google.golang.org/appengine
   rev: 4f7eeb5305a4ba1966344836ba4af9996b7b4e05
-- path: gopkg.in/inconshreveable/go-update.v0
-  rev: d8b0b1d421aa1cbf392c05869f8abbc669bb7066
