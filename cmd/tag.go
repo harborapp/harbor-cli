@@ -148,6 +148,8 @@ func TagList(c *cli.Context, client umschlag.ClientAPI) error {
 	tmpl, err := template.New(
 		"_",
 	).Funcs(
+		globalFuncMap,
+	).Funcs(
 		tagFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
@@ -206,6 +208,8 @@ func TagShow(c *cli.Context, client umschlag.ClientAPI) error {
 
 	tmpl, err := template.New(
 		"_",
+	).Funcs(
+		globalFuncMap,
 	).Funcs(
 		tagFuncMap,
 	).Parse(

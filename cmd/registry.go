@@ -222,6 +222,8 @@ func RegistryList(c *cli.Context, client umschlag.ClientAPI) error {
 	tmpl, err := template.New(
 		"_",
 	).Funcs(
+		globalFuncMap,
+	).Funcs(
 		registryFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
@@ -280,6 +282,8 @@ func RegistryShow(c *cli.Context, client umschlag.ClientAPI) error {
 
 	tmpl, err := template.New(
 		"_",
+	).Funcs(
+		globalFuncMap,
 	).Funcs(
 		registryFuncMap,
 	).Parse(

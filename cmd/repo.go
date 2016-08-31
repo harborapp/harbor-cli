@@ -149,6 +149,8 @@ func RepoList(c *cli.Context, client umschlag.ClientAPI) error {
 	tmpl, err := template.New(
 		"_",
 	).Funcs(
+		globalFuncMap,
+	).Funcs(
 		repoFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
@@ -207,6 +209,8 @@ func RepoShow(c *cli.Context, client umschlag.ClientAPI) error {
 
 	tmpl, err := template.New(
 		"_",
+	).Funcs(
+		globalFuncMap,
 	).Funcs(
 		repoFuncMap,
 	).Parse(

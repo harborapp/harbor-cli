@@ -476,6 +476,8 @@ func UserList(c *cli.Context, client umschlag.ClientAPI) error {
 	tmpl, err := template.New(
 		"_",
 	).Funcs(
+		globalFuncMap,
+	).Funcs(
 		userFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
@@ -534,6 +536,8 @@ func UserShow(c *cli.Context, client umschlag.ClientAPI) error {
 
 	tmpl, err := template.New(
 		"_",
+	).Funcs(
+		globalFuncMap,
 	).Funcs(
 		userFuncMap,
 	).Parse(
@@ -746,6 +750,8 @@ func UserTeamList(c *cli.Context, client umschlag.ClientAPI) error {
 	tmpl, err := template.New(
 		"_",
 	).Funcs(
+		globalFuncMap,
+	).Funcs(
 		userFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
@@ -864,6 +870,8 @@ func UserOrgList(c *cli.Context, client umschlag.ClientAPI) error {
 
 	tmpl, err := template.New(
 		"_",
+	).Funcs(
+		globalFuncMap,
 	).Funcs(
 		userFuncMap,
 	).Parse(
