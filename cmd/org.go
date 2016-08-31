@@ -37,7 +37,7 @@ Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 // tmplOrgUserList represents a row within org user listing.
 var tmplOrgUserList = "Slug: \x1b[33m{{ .User.Slug }} \x1b[0m" + `
 ID: {{ .User.ID }}
-Name: {{ .User.Name }}
+Username: {{ .User.Username }}
 Permission: {{ .Perm }}
 `
 

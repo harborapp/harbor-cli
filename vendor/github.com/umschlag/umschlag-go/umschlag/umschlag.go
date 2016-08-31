@@ -109,7 +109,7 @@ type ClientAPI interface {
 	OrgDelete(string) error
 
 	// OrgUserList returns a list of related users for a org.
-	OrgUserList(OrgUserParams) ([]*User, error)
+	OrgUserList(OrgUserParams) ([]*UserOrg, error)
 
 	// OrgUserAppend appends a user to a org.
 	OrgUserAppend(OrgUserParams) error
@@ -121,7 +121,7 @@ type ClientAPI interface {
 	OrgUserDelete(OrgUserParams) error
 
 	// OrgTeamList returns a list of related teams for a org.
-	OrgTeamList(OrgTeamParams) ([]*Team, error)
+	OrgTeamList(OrgTeamParams) ([]*TeamOrg, error)
 
 	// OrgTeamAppend appends a team to a org.
 	OrgTeamAppend(OrgTeamParams) error
@@ -148,7 +148,7 @@ type ClientAPI interface {
 	UserDelete(string) error
 
 	// UserTeamList returns a list of related teams for a user.
-	UserTeamList(UserTeamParams) ([]*Team, error)
+	UserTeamList(UserTeamParams) ([]*TeamUser, error)
 
 	// UserTeamAppend appends a team to a user.
 	UserTeamAppend(UserTeamParams) error
@@ -160,7 +160,7 @@ type ClientAPI interface {
 	UserTeamDelete(UserTeamParams) error
 
 	// UserOrgList returns a list of related orgs for a user.
-	UserOrgList(UserOrgParams) ([]*Org, error)
+	UserOrgList(UserOrgParams) ([]*UserOrg, error)
 
 	// UserOrgAppend appends a org to a user.
 	UserOrgAppend(UserOrgParams) error
@@ -187,7 +187,7 @@ type ClientAPI interface {
 	TeamDelete(string) error
 
 	// TeamUserList returns a list of related users for a team.
-	TeamUserList(TeamUserParams) ([]*User, error)
+	TeamUserList(TeamUserParams) ([]*TeamUser, error)
 
 	// TeamUserAppend appends a user to a team.
 	TeamUserAppend(TeamUserParams) error
@@ -199,7 +199,7 @@ type ClientAPI interface {
 	TeamUserDelete(TeamUserParams) error
 
 	// TeamOrgList returns a list of related orgs for a team.
-	TeamOrgList(TeamOrgParams) ([]*Org, error)
+	TeamOrgList(TeamOrgParams) ([]*TeamOrg, error)
 
 	// TeamOrgAppend appends a org to a team.
 	TeamOrgAppend(TeamOrgParams) error
@@ -502,8 +502,8 @@ func (c *DefaultClient) OrgDelete(id string) error {
 }
 
 // OrgUserList returns a list of related users for a org.
-func (c *DefaultClient) OrgUserList(opts OrgUserParams) ([]*User, error) {
-	var out []*User
+func (c *DefaultClient) OrgUserList(opts OrgUserParams) ([]*UserOrg, error) {
+	var out []*UserOrg
 
 	uri := fmt.Sprintf(pathOrgUser, c.base, opts.Org)
 	err := c.get(uri, &out)
@@ -536,8 +536,8 @@ func (c *DefaultClient) OrgUserDelete(opts OrgUserParams) error {
 }
 
 // OrgTeamList returns a list of related teams for a org.
-func (c *DefaultClient) OrgTeamList(opts OrgTeamParams) ([]*Team, error) {
-	var out []*Team
+func (c *DefaultClient) OrgTeamList(opts OrgTeamParams) ([]*TeamOrg, error) {
+	var out []*TeamOrg
 
 	uri := fmt.Sprintf(pathOrgTeam, c.base, opts.Org)
 	err := c.get(uri, &out)
@@ -618,8 +618,8 @@ func (c *DefaultClient) UserDelete(id string) error {
 }
 
 // UserTeamList returns a list of related teams for a user.
-func (c *DefaultClient) UserTeamList(opts UserTeamParams) ([]*Team, error) {
-	var out []*Team
+func (c *DefaultClient) UserTeamList(opts UserTeamParams) ([]*TeamUser, error) {
+	var out []*TeamUser
 
 	uri := fmt.Sprintf(pathUserTeam, c.base, opts.User)
 	err := c.get(uri, &out)
@@ -652,8 +652,8 @@ func (c *DefaultClient) UserTeamDelete(opts UserTeamParams) error {
 }
 
 // UserOrgList returns a list of related orgs for a user.
-func (c *DefaultClient) UserOrgList(opts UserOrgParams) ([]*Org, error) {
-	var out []*Org
+func (c *DefaultClient) UserOrgList(opts UserOrgParams) ([]*UserOrg, error) {
+	var out []*UserOrg
 
 	uri := fmt.Sprintf(pathUserOrg, c.base, opts.User)
 	err := c.get(uri, &out)
@@ -734,8 +734,8 @@ func (c *DefaultClient) TeamDelete(id string) error {
 }
 
 // TeamUserList returns a list of related users for a team.
-func (c *DefaultClient) TeamUserList(opts TeamUserParams) ([]*User, error) {
-	var out []*User
+func (c *DefaultClient) TeamUserList(opts TeamUserParams) ([]*TeamUser, error) {
+	var out []*TeamUser
 
 	uri := fmt.Sprintf(pathTeamUser, c.base, opts.Team)
 	err := c.get(uri, &out)
@@ -768,8 +768,8 @@ func (c *DefaultClient) TeamUserDelete(opts TeamUserParams) error {
 }
 
 // TeamOrgList returns a list of related orgs for a team.
-func (c *DefaultClient) TeamOrgList(opts TeamOrgParams) ([]*Org, error) {
-	var out []*Org
+func (c *DefaultClient) TeamOrgList(opts TeamOrgParams) ([]*TeamOrg, error) {
+	var out []*TeamOrg
 
 	uri := fmt.Sprintf(pathTeamOrg, c.base, opts.Team)
 	err := c.get(uri, &out)

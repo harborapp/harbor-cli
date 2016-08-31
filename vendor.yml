@@ -6,7 +6,7 @@ vendors:
 - path: github.com/joho/godotenv
   rev: 4ed13390c0acd2ff4e371e64d8b97c8954138243
 - path: github.com/umschlag/umschlag-go
-  rev: eba6eaa8761cb738691f731a5a093bafa763097d
+  rev: 00f3eb90d71b91c50bfadef7926fed52c29f7af2
 - path: github.com/urfave/cli
   rev: 33bb4c121333cd8eb7d8cc8d74474f4ec156f371
 - path: golang.org/x/net
