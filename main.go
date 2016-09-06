@@ -24,7 +24,7 @@ func main() {
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:   "server, s",
-			Value:  "",
+			Value:  "http://localhost:8080",
 			Usage:  "Umschlag API server",
 			EnvVar: "UMSCHLAG_SERVER",
 		},
