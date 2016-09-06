@@ -8,6 +8,8 @@ LDFLAGS += -extldflags "-static" -X "github.com/umschlag/umschlag-cli/config.Ver
 RELEASES ?= windows/386 windows/amd64 darwin/386 darwin/amd64 linux/386 linux/amd64 linux/arm
 PACKAGES ?= $(shell go list ./... | grep -v /vendor/)
 
+TAGS ?=
+
 ifneq ($(DRONE_TAG),)
 	VERSION ?= $(DRONE_TAG)
 else
@@ -18,22 +20,11 @@ else
 	endif
 endif
 
-all: clean deps vet lint test build
+all: clean vet lint test build
 
 clean:
 	go clean -i ./...
 	rm -rf $(BIN) $(DIST)
-
-deps:
-	go get -u github.com/golang/lint/golint
-	go get -u github.com/mitchellh/gox
-	go get -u github.com/govend/govend
-
-vendor:
-	govend -v
-
-update:
-	govend -vtlu --prune
 
 fmt:
 	go fmt $(PACKAGES)
@@ -42,6 +33,9 @@ vet:
 	go vet $(PACKAGES)
 
 lint:
+	@which golint > /dev/null; if [ $$? -ne 0 ]; then \
+		go get -u github.com/golang/lint/golint; \
+	fi
 	for PKG in $(PACKAGES); do golint -set_exit_status $$PKG || exit 1; done;
 
 test:
@@ -53,12 +47,15 @@ install: $(BIN)/$(EXECUTABLE)
 build: $(BIN)/$(EXECUTABLE)
 
 $(BIN)/$(EXECUTABLE): $(wildcard *.go)
-	CGO_ENABLED=0 go build -ldflags '-s -w $(LDFLAGS)' -o $@
+	go build -tags '$(TAGS)' -ldflags '-s -w $(LDFLAGS)' -o $@
 
 release: release-build release-copy release-check
 
 release-build:
-	gox -osarch='$(RELEASES)' -ldflags='-s -w $(LDFLAGS)' -output='$(BIN)/$(EXECUTABLE)-{{.OS}}-{{.Arch}}'
+	@which gox > /dev/null; if [ $$? -ne 0 ]; then \
+		go get -u github.com/mitchellh/gox; \
+	fi
+	gox -osarch='$(RELEASES)' -tags='$(TAGS)' -ldflags='-s -w $(LDFLAGS)' -output='$(BIN)/$(EXECUTABLE)-{{.OS}}-{{.Arch}}'
 
 release-copy:
 	mkdir -p $(DIST)/release
@@ -78,4 +75,4 @@ latest-check:
 
 publish: release latest
 
-.PHONY: all clean deps vendor update fmt vet lint test build release latest publish
+.PHONY: all clean fmt vet lint test build release latest publish
