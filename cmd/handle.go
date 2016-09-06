@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"net/url"
 	"os"
 
 	"github.com/umschlag/umschlag-go/umschlag"
@@ -22,6 +23,11 @@ func Handle(c *cli.Context, fn HandleFunc) error {
 
 	if server == "" {
 		fmt.Fprintf(os.Stderr, "Error: You must provide the server address.\n")
+		os.Exit(1)
+	}
+
+	if _, err := url.Parse(server); err != nil {
+		fmt.Fprintf(os.Stderr, "Error: Invalid server address, bad format?.\n")
 		os.Exit(1)
 	}
 
