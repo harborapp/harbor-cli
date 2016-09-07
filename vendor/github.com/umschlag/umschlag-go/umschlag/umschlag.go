@@ -13,27 +13,28 @@ import (
 //go:generate mockery -all -case=underscore
 
 const (
-	pathAuthLogin    = "%s/api/auth/login"
-	pathProfile      = "%s/api/profile/self"
-	pathProfileToken = "%s/api/profile/token"
-	pathRegistries   = "%s/api/registries"
-	pathRegistry     = "%s/api/registries/%v"
-	pathTags         = "%s/api/tags"
-	pathTag          = "%s/api/tags/%v"
-	pathRepos        = "%s/api/repos"
-	pathRepo         = "%s/api/repos/%v"
-	pathOrgs         = "%s/api/orgs"
-	pathOrg          = "%s/api/orgs/%v"
-	pathOrgUser      = "%s/api/orgs/%v/users"
-	pathOrgTeam      = "%s/api/orgs/%v/teams"
-	pathUsers        = "%s/api/users"
-	pathUser         = "%s/api/users/%v"
-	pathUserTeam     = "%s/api/users/%v/teams"
-	pathUserOrg      = "%s/api/users/%v/orgs"
-	pathTeams        = "%s/api/teams"
-	pathTeam         = "%s/api/teams/%v"
-	pathTeamUser     = "%s/api/teams/%v/users"
-	pathTeamOrg      = "%s/api/teams/%v/orgs"
+	pathAuthLogin      = "%s/api/auth/login"
+	pathProfile        = "%s/api/profile/self"
+	pathProfileToken   = "%s/api/profile/token"
+	pathRegistries     = "%s/api/registries"
+	pathRegistry       = "%s/api/registries/%v"
+	pathRegistryMember = "%s/api/registries/%v/%v"
+	pathTags           = "%s/api/tags"
+	pathTag            = "%s/api/tags/%v"
+	pathRepos          = "%s/api/repos"
+	pathRepo           = "%s/api/repos/%v"
+	pathOrgs           = "%s/api/orgs"
+	pathOrg            = "%s/api/orgs/%v"
+	pathOrgUser        = "%s/api/orgs/%v/users"
+	pathOrgTeam        = "%s/api/orgs/%v/teams"
+	pathUsers          = "%s/api/users"
+	pathUser           = "%s/api/users/%v"
+	pathUserTeam       = "%s/api/users/%v/teams"
+	pathUserOrg        = "%s/api/users/%v/orgs"
+	pathTeams          = "%s/api/teams"
+	pathTeam           = "%s/api/teams/%v"
+	pathTeamUser       = "%s/api/teams/%v/users"
+	pathTeamOrg        = "%s/api/teams/%v/orgs"
 )
 
 // ClientAPI describes a client API.
@@ -74,6 +75,9 @@ type ClientAPI interface {
 
 	// RegistryDelete deletes a registry.
 	RegistryDelete(string) error
+
+	// RegistrySync synchronizes a registry.
+	RegistrySync(string) error
 
 	// TagList returns a list of all tags.
 	TagList() ([]*Tag, error)
@@ -393,6 +397,14 @@ func (c *DefaultClient) RegistryPatch(in *Registry) (*Registry, error) {
 func (c *DefaultClient) RegistryDelete(id string) error {
 	uri := fmt.Sprintf(pathRegistry, c.base, id)
 	err := c.delete(uri, nil)
+
+	return err
+}
+
+// RegistrySync synchronizes a registry.
+func (c *DefaultClient) RegistrySync(id string) error {
+	uri := fmt.Sprintf(pathRegistryMember, c.base, id, "sync")
+	err := c.post(uri, nil, nil)
 
 	return err
 }

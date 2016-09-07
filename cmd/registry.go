@@ -106,6 +106,21 @@ func Registry() cli.Command {
 				},
 			},
 			{
+				Name:      "sync",
+				Usage:     "Sync a registry",
+				ArgsUsage: " ",
+				Flags: []cli.Flag{
+					cli.StringFlag{
+						Name:  "id, i",
+						Value: "",
+						Usage: "Registry ID or slug to sync",
+					},
+				},
+				Action: func(c *cli.Context) error {
+					return Handle(c, RegistrySync)
+				},
+			},
+			{
 				Name:      "update",
 				Usage:     "Update a registry",
 				ArgsUsage: " ",
@@ -308,6 +323,20 @@ func RegistryDelete(c *cli.Context, client umschlag.ClientAPI) error {
 	}
 
 	fmt.Fprintf(os.Stderr, "Successfully delete\n")
+	return nil
+}
+
+// RegistrySync provides the sub-command to sync a registry.
+func RegistrySync(c *cli.Context, client umschlag.ClientAPI) error {
+	err := client.RegistrySync(
+		GetIdentifierParam(c),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(os.Stderr, "Successfully synced\n")
 	return nil
 }
 
