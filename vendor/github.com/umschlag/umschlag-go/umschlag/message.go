@@ -2,6 +2,6 @@ package umschlag
 
 // Message represents a standard response.
 type Message struct {
-	Status  int    `json:"status"`
+	Status  int64  `json:"status"`
 	Message string `json:"message"`
 }

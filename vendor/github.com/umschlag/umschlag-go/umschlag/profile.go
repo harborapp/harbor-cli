@@ -11,6 +11,8 @@ type Profile struct {
 	Username  string    `json:"username"`
 	Password  string    `json:"password"`
 	Email     string    `json:"email"`
+	Active    bool      `json:"active"`
+	Admin     bool      `json:"admin"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
