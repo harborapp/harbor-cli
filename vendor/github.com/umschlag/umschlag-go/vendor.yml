@@ -1,8 +1,8 @@
 vendors:
 - path: github.com/davecgh/go-spew
-  rev: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
+  rev: 6d212800a42e8ab5c146b8ace3490ee17e5225f9
 - path: github.com/golang/protobuf
-  rev: f6b4231c7fd7ac9df487f17759fc107fd61d98a0
+  rev: 87c000235d3d852c1628dc9490cd21ab36a7d69f
 - path: github.com/jackspirou/syscerts
   rev: b68f5469dff16e102bd6a2d5b3e79341c938d736
 - path: github.com/pmezard/go-difflib
@@ -10,10 +10,10 @@ vendors:
 - path: github.com/stretchr/objx
   rev: 1a9d0bb9f541897e62256577b352fdbc1fb4fd94
 - path: github.com/stretchr/testify
-  rev: d77da356e56a7428ad25149ca77381849a6a5232
+  rev: 976c720a22c8eb4eb6a0b4348ad85ad12491a506
 - path: golang.org/x/net
-  rev: 04557861f124410b768b1ba5bb3a91b705afbfc6
+  rev: f09c4662a0bd6bd8943ac7b4931e185df9471da4
 - path: golang.org/x/oauth2
-  rev: 65a8d08c6292395d47053be10b3c5e91960def76
+  rev: 3c3a985cb79f52a3190fbc056984415ca6763d01
 - path: google.golang.org/appengine
-  rev: 267c27e7492265b84fc6719503b14a1e17975d79
+  rev: 8d4efd07a9358ec8c7e75b29387c31a7692db8d2
