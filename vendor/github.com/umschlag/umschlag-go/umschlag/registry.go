@@ -10,7 +10,6 @@ type Registry struct {
 	Slug      string    `json:"slug"`
 	Name      string    `json:"name"`
 	Host      string    `json:"host"`
-	UseSSL    bool      `json:"use_ssl"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	Orgs      []*Org    `json:"orgs,omitempty"`
