@@ -24,8 +24,7 @@ Name: {{ .Name }}
 var tmplRegistryShow = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
 ID: {{ .ID }}
 Name: {{ .Name }}
-Host: {{ .Host }}
-Use SSL: {{ .UseSSL }}{{with .Orgs}}
+Host: {{ .Host }}{{with .Orgs}}
 Orgs: {{ orgList . }}{{end}}
 Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
@@ -145,14 +144,6 @@ func Registry() cli.Command {
 						Value: "",
 						Usage: "Provide an host",
 					},
-					cli.BoolFlag{
-						Name:  "use-ssl",
-						Usage: "Should use SSL",
-					},
-					cli.BoolFlag{
-						Name:  "no-ssl",
-						Usage: "Should not use SSL",
-					},
 				},
 				Action: func(c *cli.Context) error {
 					return Handle(c, RegistryUpdate)
@@ -177,14 +168,6 @@ func Registry() cli.Command {
 						Name:  "host",
 						Value: "",
 						Usage: "Provide an host",
-					},
-					cli.BoolFlag{
-						Name:  "use-ssl",
-						Usage: "Should use SSL",
-					},
-					cli.BoolFlag{
-						Name:  "no-ssl",
-						Usage: "Should not use SSL",
 					},
 				},
 				Action: func(c *cli.Context) error {
@@ -367,20 +350,6 @@ func RegistryUpdate(c *cli.Context, client umschlag.ClientAPI) error {
 		changed = true
 	}
 
-	if c.IsSet("use-ssl") && c.IsSet("no-ssl") {
-		return fmt.Errorf("Conflict, you can mark it only use-ssl OR no-ssl!")
-	}
-
-	if c.IsSet("use-ssl") {
-		record.UseSSL = true
-		changed = true
-	}
-
-	if c.IsSet("no-ssl") {
-		record.UseSSL = false
-		changed = true
-	}
-
 	if changed {
 		_, patch := client.RegistryPatch(
 			record,
@@ -416,18 +385,6 @@ func RegistryCreate(c *cli.Context, client umschlag.ClientAPI) error {
 		record.Host = val
 	} else {
 		return fmt.Errorf("You must provide an host.")
-	}
-
-	if c.IsSet("use-ssl") && c.IsSet("no-ssl") {
-		return fmt.Errorf("Conflict, you can mark it only use-ssl OR no-ssl!")
-	}
-
-	if c.IsSet("use-ssl") {
-		record.UseSSL = true
-	}
-
-	if c.IsSet("no-ssl") {
-		record.UseSSL = false
 	}
 
 	_, err := client.RegistryPost(
