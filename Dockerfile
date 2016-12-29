@@ -1,11 +1,24 @@
 FROM alpine:edge
+MAINTAINER Thomas Boerger <thomas@webhippie.de>
 
 RUN apk update && \
   apk add \
-    ca-certificates && \
+    ca-certificates \
+    bash && \
   rm -rf \
-    /var/cache/apk/*
+    /var/cache/apk/* && \
+  addgroup \
+    -g 1000 \
+    umschlag && \
+  adduser -D \
+    -h /home/umschlag \
+    -s /bin/bash \
+    -G umschlag \
+    -u 1000 \
+    umschlag
 
-ADD bin/umschlag-cli /usr/bin/
+COPY umschlag-cli /usr/bin/
+
+USER umschlag
 ENTRYPOINT ["/usr/bin/umschlag-cli"]
 CMD ["help"]
