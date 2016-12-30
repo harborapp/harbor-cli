@@ -397,7 +397,7 @@ func OrgList(c *cli.Context, client umschlag.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
 	}
 
 	if c.Bool("xml") {
@@ -463,7 +463,7 @@ func OrgShow(c *cli.Context, client umschlag.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
 	}
 
 	if c.Bool("xml") {
@@ -563,7 +563,7 @@ func OrgCreate(c *cli.Context, client umschlag.ClientAPI) error {
 	record := &umschlag.Org{}
 
 	if c.String("registry") == "" {
-		return fmt.Errorf("You must provide a registry ID or slug.")
+		return fmt.Errorf("You must provide a registry ID or slug")
 	}
 
 	if c.IsSet("registry") {
@@ -595,7 +595,7 @@ func OrgCreate(c *cli.Context, client umschlag.ClientAPI) error {
 	if val := c.String("name"); c.IsSet("name") && val != "" {
 		record.Name = val
 	} else {
-		return fmt.Errorf("You must provide a name.")
+		return fmt.Errorf("You must provide a name")
 	}
 
 	_, err := client.OrgPost(
@@ -623,7 +623,7 @@ func OrgUserList(c *cli.Context, client umschlag.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
 	}
 
 	if c.Bool("xml") {
@@ -744,7 +744,7 @@ func OrgTeamList(c *cli.Context, client umschlag.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
 	}
 
 	if c.Bool("xml") {

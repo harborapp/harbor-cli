@@ -388,7 +388,7 @@ func TeamList(c *cli.Context, client umschlag.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
 	}
 
 	if c.Bool("xml") {
@@ -454,7 +454,7 @@ func TeamShow(c *cli.Context, client umschlag.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
 	}
 
 	if c.Bool("xml") {
@@ -560,7 +560,7 @@ func TeamCreate(c *cli.Context, client umschlag.ClientAPI) error {
 	if val := c.String("name"); c.IsSet("name") && val != "" {
 		record.Name = val
 	} else {
-		return fmt.Errorf("You must provide a name.")
+		return fmt.Errorf("You must provide a name")
 	}
 
 	_, err := client.TeamPost(
@@ -588,7 +588,7 @@ func TeamUserList(c *cli.Context, client umschlag.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
 	}
 
 	if c.Bool("xml") {
@@ -709,7 +709,7 @@ func TeamOrgList(c *cli.Context, client umschlag.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once!")
+		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
 	}
 
 	if c.Bool("xml") {
