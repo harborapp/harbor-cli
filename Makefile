@@ -1,9 +1,15 @@
 DIST := dist
-EXECUTABLE := umschlag-cli
 IMPORT := github.com/umschlag/umschlag-cli
 
+ifeq ($(OS), Windows_NT)
+	EXECUTABLE := umschlag-cli.exe
+else
+	EXECUTABLE := umschlag-cli
+endif
+
 SHA := $(shell git rev-parse --short HEAD)
-LDFLAGS += -s -w -extldflags "-static" -X "github.com/umschlag/umschlag-cli/config.VersionDev=$(SHA)"
+DATE := $(shell date -u '+%Y%m%d')
+LDFLAGS += -s -w -extldflags "-static" -X "$(IMPORT)/config.VersionDev=$(SHA)" -X "$(IMPORT)/config.VersionDate=$(DATE)"
 
 TARGETS ?= linux/*,darwin/*,windows/*
 PACKAGES ?= $(shell go list ./... | grep -v /vendor/)
