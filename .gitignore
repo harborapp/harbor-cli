@@ -27,4 +27,4 @@ coverage.out
 
 .env
 /dist
-/bin
+/umschlag-cli
