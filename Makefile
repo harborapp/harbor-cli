@@ -52,9 +52,6 @@ vet:
 
 .PHONY: generate
 generate:
-	@which go-bindata > /dev/null; if [ $$? -ne 0 ]; then \
-		go get -u github.com/jteeuwen/go-bindata/...; \
-	fi
 	go generate $(PACKAGES)
 
 .PHONY: errcheck
