@@ -1,17 +1,17 @@
 vendors:
 - path: github.com/golang/protobuf
-  rev: 87c000235d3d852c1628dc9490cd21ab36a7d69f
+  rev: 8ee79997227bf9b34611aee7946ae64735e6fd93
 - path: github.com/jackspirou/syscerts
   rev: b68f5469dff16e102bd6a2d5b3e79341c938d736
 - path: github.com/joho/godotenv
-  rev: 4ed13390c0acd2ff4e371e64d8b97c8954138243
+  rev: 726cc8b906e3d31c70a9671c90a13716a8d3f50d
 - path: github.com/umschlag/umschlag-go
-  rev: 271ef49d3b5984063cfc642aa3e4c4298a7a1dde
+  rev: 4a0ed7c0766dd5b28542eb1ae1279835f7fc84bc
 - path: github.com/urfave/cli
-  rev: d53eb991652b1d438abdd34ce4bfa3ef1539108e
+  rev: 0bdeddeeb0f650497d603c4ad7b20cfe685682f6
 - path: golang.org/x/net
-  rev: f09c4662a0bd6bd8943ac7b4931e185df9471da4
+  rev: ae05321a78c1401cec22ba7bc203b597ea372496
 - path: golang.org/x/oauth2
-  rev: 3c3a985cb79f52a3190fbc056984415ca6763d01
+  rev: 314dd2c0bf3ebd592ec0d20847d27e79d0dbe8dd
 - path: google.golang.org/appengine
-  rev: 8d4efd07a9358ec8c7e75b29387c31a7692db8d2
+  rev: 8758a385849434ba5eac8aeedcf5192c5a0f5f10
