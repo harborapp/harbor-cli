@@ -235,14 +235,14 @@ func NewClient(uri string) ClientAPI {
 func NewClientToken(uri, token string) ClientAPI {
 	config := oauth2.Config{}
 
-	auther := config.Client(
+	client := config.Client(
 		oauth2.NoContext,
 		&oauth2.Token{
 			AccessToken: token,
 		},
 	)
 
-	if trans, ok := auther.Transport.(*oauth2.Transport); ok {
+	if trans, ok := client.Transport.(*oauth2.Transport); ok {
 		trans.Base = &http.Transport{
 			Proxy: http.ProxyFromEnvironment,
 			TLSClientConfig: &tls.Config{
@@ -252,7 +252,7 @@ func NewClientToken(uri, token string) ClientAPI {
 	}
 
 	return &DefaultClient{
-		client: auther,
+		client: client,
 		base:   uri,
 		token:  token,
 	}
@@ -291,11 +291,7 @@ func (c *DefaultClient) IsAuthenticated() bool {
 
 	defer resp.Body.Close()
 
-	if resp.StatusCode == http.StatusUnauthorized {
-		return false
-	}
-
-	return true
+	return resp.StatusCode == http.StatusUnauthorized
 }
 
 // SetClient sets the default http client. This should
@@ -348,7 +344,7 @@ func (c *DefaultClient) ProfilePatch(in *Profile) (*Profile, error) {
 	out := &Profile{}
 
 	uri := fmt.Sprintf(pathProfile, c.base)
-	err := c.patch(uri, in, out)
+	err := c.put(uri, in, out)
 
 	return out, err
 }
@@ -388,7 +384,7 @@ func (c *DefaultClient) RegistryPatch(in *Registry) (*Registry, error) {
 	out := &Registry{}
 
 	uri := fmt.Sprintf(pathRegistry, c.base, in.ID)
-	err := c.patch(uri, in, out)
+	err := c.put(uri, in, out)
 
 	return out, err
 }
@@ -500,7 +496,7 @@ func (c *DefaultClient) OrgPatch(in *Org) (*Org, error) {
 	out := &Org{}
 
 	uri := fmt.Sprintf(pathOrg, c.base, in.ID)
-	err := c.patch(uri, in, out)
+	err := c.put(uri, in, out)
 
 	return out, err
 }
@@ -534,7 +530,7 @@ func (c *DefaultClient) OrgUserAppend(opts OrgUserParams) error {
 // OrgUserPerm updates perms for org user.
 func (c *DefaultClient) OrgUserPerm(opts OrgUserParams) error {
 	uri := fmt.Sprintf(pathOrgUser, c.base, opts.Org)
-	err := c.patch(uri, opts, nil)
+	err := c.put(uri, opts, nil)
 
 	return err
 }
@@ -568,7 +564,7 @@ func (c *DefaultClient) OrgTeamAppend(opts OrgTeamParams) error {
 // OrgTeamPerm updates perms for org team.
 func (c *DefaultClient) OrgTeamPerm(opts OrgTeamParams) error {
 	uri := fmt.Sprintf(pathOrgTeam, c.base, opts.Org)
-	err := c.patch(uri, opts, nil)
+	err := c.put(uri, opts, nil)
 
 	return err
 }
@@ -616,7 +612,7 @@ func (c *DefaultClient) UserPatch(in *User) (*User, error) {
 	out := &User{}
 
 	uri := fmt.Sprintf(pathUser, c.base, in.ID)
-	err := c.patch(uri, in, out)
+	err := c.put(uri, in, out)
 
 	return out, err
 }
@@ -650,7 +646,7 @@ func (c *DefaultClient) UserTeamAppend(opts UserTeamParams) error {
 // UserTeamPerm updates perms for user team.
 func (c *DefaultClient) UserTeamPerm(opts UserTeamParams) error {
 	uri := fmt.Sprintf(pathUserTeam, c.base, opts.User)
-	err := c.patch(uri, opts, nil)
+	err := c.put(uri, opts, nil)
 
 	return err
 }
@@ -684,7 +680,7 @@ func (c *DefaultClient) UserOrgAppend(opts UserOrgParams) error {
 // UserOrgPerm updates perms for user org.
 func (c *DefaultClient) UserOrgPerm(opts UserOrgParams) error {
 	uri := fmt.Sprintf(pathUserOrg, c.base, opts.User)
-	err := c.patch(uri, opts, nil)
+	err := c.put(uri, opts, nil)
 
 	return err
 }
@@ -732,7 +728,7 @@ func (c *DefaultClient) TeamPatch(in *Team) (*Team, error) {
 	out := &Team{}
 
 	uri := fmt.Sprintf(pathTeam, c.base, in.ID)
-	err := c.patch(uri, in, out)
+	err := c.put(uri, in, out)
 
 	return out, err
 }
@@ -766,7 +762,7 @@ func (c *DefaultClient) TeamUserAppend(opts TeamUserParams) error {
 // TeamUserPerm updates perms for team user.
 func (c *DefaultClient) TeamUserPerm(opts TeamUserParams) error {
 	uri := fmt.Sprintf(pathTeamUser, c.base, opts.Team)
-	err := c.patch(uri, opts, nil)
+	err := c.put(uri, opts, nil)
 
 	return err
 }
@@ -800,7 +796,7 @@ func (c *DefaultClient) TeamOrgAppend(opts TeamOrgParams) error {
 // TeamOrgPerm updates perms for team org.
 func (c *DefaultClient) TeamOrgPerm(opts TeamOrgParams) error {
 	uri := fmt.Sprintf(pathTeamOrg, c.base, opts.Team)
-	err := c.patch(uri, opts, nil)
+	err := c.put(uri, opts, nil)
 
 	return err
 }
