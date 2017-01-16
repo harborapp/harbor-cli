@@ -1,6 +1,7 @@
 IMPORT := github.com/umschlag/umschlag-go
 
 PACKAGES ?= $(shell go list ./... | grep -v /vendor/)
+SOURCES ?= $(shell find . -name "*.go" -type f -not -path "./vendor/*")
 GENERATE ?= $(IMPORT)/umschlag
 
 .PHONY: all
@@ -19,11 +20,18 @@ clean:
 
 .PHONY: fmt
 fmt:
-	go fmt $(PACKAGES)
+	gofmt -s -w $(SOURCES)
 
 .PHONY: vet
 vet:
 	go vet $(PACKAGES)
+
+.PHONY: misspell
+misspell:
+	@which misspell > /dev/null; if [ $$? -ne 0 ]; then \
+		go get -u github.com/client9/misspell/cmd/misspell; \
+	fi
+	misspell $(SOURCES)
 
 .PHONY: generate
 generate:
@@ -31,6 +39,13 @@ generate:
 		go get -u github.com/vektra/mockery/...; \
 	fi
 	go generate $(GENERATE)
+
+.PHONY: staticcheck
+staticcheck:
+	@which staticcheck > /dev/null; if [ $$? -ne 0 ]; then \
+		go get honnef.co/go/staticcheck/cmd/staticcheck; \
+	fi
+	staticcheck $(PACKAGES)
 
 .PHONY: errcheck
 errcheck:
@@ -52,6 +67,48 @@ structcheck:
 		go get -u github.com/opennota/check/cmd/structcheck; \
 	fi
 	structcheck $(PACKAGES)
+
+.PHONY: unused
+unused:
+	@which unused > /dev/null; if [ $$? -ne 0 ]; then \
+		go get -u honnef.co/go/unused/cmd/unused; \
+	fi
+	unused $(PACKAGES)
+
+.PHONY: gosimple
+gosimple:
+	@which gosimple > /dev/null; if [ $$? -ne 0 ]; then \
+		go get -u honnef.co/go/simple/cmd/gosimple; \
+	fi
+	gosimple $(PACKAGES)
+
+.PHONY: unconvert
+unconvert:
+	@which unconvert > /dev/null; if [ $$? -ne 0 ]; then \
+		go get -u github.com/mdempsky/unconvert; \
+	fi
+	unconvert $(PACKAGES)
+
+.PHONY: interfacer
+interfacer:
+	@which interfacer > /dev/null; if [ $$? -ne 0 ]; then \
+		go get -u github.com/mvdan/interfacer/cmd/interfacer; \
+	fi
+	interfacer $(PACKAGES)
+
+.PHONY: ineffassign
+ineffassign:
+	@which ineffassign > /dev/null; if [ $$? -ne 0 ]; then \
+		go get -u github.com/gordonklaus/ineffassign; \
+	fi
+	ineffassign .
+
+.PHONY: dupl
+dupl:
+	@which dupl > /dev/null; if [ $$? -ne 0 ]; then \
+		go get -u github.com/mibk/dupl; \
+	fi
+	dupl .
 
 .PHONY: lint
 lint:

@@ -25,11 +25,6 @@ func (c *DefaultClient) put(rawurl string, in, out interface{}) error {
 	return c.do(rawurl, "PUT", in, out)
 }
 
-// Helper function for making an PATCH request.
-func (c *DefaultClient) patch(rawurl string, in, out interface{}) error {
-	return c.do(rawurl, "PATCH", in, out)
-}
-
 // Helper function for making an DELETE request.
 func (c *DefaultClient) delete(rawurl string, in interface{}) error {
 	return c.do(rawurl, "DELETE", in, nil)
