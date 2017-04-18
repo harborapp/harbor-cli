@@ -1,7 +1,6 @@
 # Umschlag: SDK for Golang
 
 [![Build Status](http://github.dronehippie.de/api/badges/umschlag/umschlag-go/status.svg)](http://github.dronehippie.de/umschlag/umschlag-go)
-[![Coverage Status](http://coverage.dronehippie.de/badges/umschlag/umschlag-go/coverage.svg)](http://coverage.dronehippie.de/umschlag/umschlag-go)
 [![Go Doc](https://godoc.org/github.com/umschlag/umschlag-go?status.svg)](http://godoc.org/github.com/umschlag/umschlag-go)
 [![Go Report](http://goreportcard.com/badge/github.com/umschlag/umschlag-go)](http://goreportcard.com/report/github.com/umschlag/umschlag-go)
 [![Join the chat at https://gitter.im/umschlag/umschlag](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/umschlag/umschlag)
