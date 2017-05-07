@@ -1,4 +1,4 @@
-package cmd
+package main
 
 import (
 	"encoding/json"
@@ -11,39 +11,38 @@ import (
 	"github.com/urfave/cli"
 )
 
-// repoFuncMap provides template helper functions.
-var repoFuncMap = template.FuncMap{}
+// tagFuncMap provides template helper functions.
+var tagFuncMap = template.FuncMap{}
 
-// tmplRepoList represents a row within repo listing.
-var tmplRepoList = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
+// tmplTagList represents a row within tag listing.
+var tmplTagList = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
 ID: {{ .ID }}
 Name: {{ .FullName }}
 `
 
-// tmplRepoShow represents a repo within details view.
-var tmplRepoShow = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
+// tmplTagShow represents a tag within details view.
+var tmplTagShow = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
 ID: {{ .ID }}
-Name: {{ .FullName }}{{with .Tags}}
-Tags: {{ tagList . }}{{end}}
+Name: {{ .FullName }}
 Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `
 
-// Repo provides the sub-command for the repo API.
-func Repo() cli.Command {
+// Tag provides the sub-command for the tag API.
+func Tag() cli.Command {
 	return cli.Command{
-		Name:  "repo",
-		Usage: "Repo related sub-commands",
+		Name:  "tag",
+		Usage: "Tag related sub-commands",
 		Subcommands: []cli.Command{
 			{
 				Name:      "list",
 				Aliases:   []string{"ls"},
-				Usage:     "List all repos",
+				Usage:     "List all tags",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "format",
-						Value: tmplRepoList,
+						Value: tmplTagList,
 						Usage: "Custom output format",
 					},
 					cli.BoolFlag{
@@ -56,22 +55,22 @@ func Repo() cli.Command {
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, RepoList)
+					return Handle(c, TagList)
 				},
 			},
 			{
 				Name:      "show",
-				Usage:     "Display a repo",
+				Usage:     "Display a tag",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
-						Usage: "Repo ID or slug to show",
+						Usage: "Tag ID or slug to show",
 					},
 					cli.StringFlag{
 						Name:  "format",
-						Value: tmplRepoShow,
+						Value: tmplTagShow,
 						Usage: "Custom output format",
 					},
 					cli.BoolFlag{
@@ -84,32 +83,32 @@ func Repo() cli.Command {
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, RepoShow)
+					return Handle(c, TagShow)
 				},
 			},
 			{
 				Name:      "delete",
 				Aliases:   []string{"rm"},
-				Usage:     "Delete a repo",
+				Usage:     "Delete a tag",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
 					cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
-						Usage: "Repo ID or slug to show",
+						Usage: "Tag ID or slug to show",
 					},
 				},
 				Action: func(c *cli.Context) error {
-					return Handle(c, RepoDelete)
+					return Handle(c, TagDelete)
 				},
 			},
 		},
 	}
 }
 
-// RepoList provides the sub-command to list all repos.
-func RepoList(c *cli.Context, client umschlag.ClientAPI) error {
-	records, err := client.RepoList()
+// TagList provides the sub-command to list all tags.
+func TagList(c *cli.Context, client umschlag.ClientAPI) error {
+	records, err := client.TagList()
 
 	if err != nil {
 		return err
@@ -151,7 +150,7 @@ func RepoList(c *cli.Context, client umschlag.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		repoFuncMap,
+		tagFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -171,9 +170,9 @@ func RepoList(c *cli.Context, client umschlag.ClientAPI) error {
 	return nil
 }
 
-// RepoShow provides the sub-command to show repo details.
-func RepoShow(c *cli.Context, client umschlag.ClientAPI) error {
-	record, err := client.RepoGet(
+// TagShow provides the sub-command to show tag details.
+func TagShow(c *cli.Context, client umschlag.ClientAPI) error {
+	record, err := client.TagGet(
 		GetIdentifierParam(c),
 	)
 
@@ -212,7 +211,7 @@ func RepoShow(c *cli.Context, client umschlag.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		repoFuncMap,
+		tagFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -224,9 +223,9 @@ func RepoShow(c *cli.Context, client umschlag.ClientAPI) error {
 	return tmpl.Execute(os.Stdout, record)
 }
 
-// RepoDelete provides the sub-command to delete a repo.
-func RepoDelete(c *cli.Context, client umschlag.ClientAPI) error {
-	err := client.RepoDelete(
+// TagDelete provides the sub-command to delete a tag.
+func TagDelete(c *cli.Context, client umschlag.ClientAPI) error {
+	err := client.TagDelete(
 		GetIdentifierParam(c),
 	)
 

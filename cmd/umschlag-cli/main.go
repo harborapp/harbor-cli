@@ -6,7 +6,6 @@ import (
 	"runtime"
 
 	"github.com/joho/godotenv"
-	"github.com/umschlag/umschlag-cli/cmd"
 	"github.com/umschlag/umschlag-cli/config"
 	"github.com/urfave/cli"
 )
@@ -40,13 +39,13 @@ func main() {
 	}
 
 	app.Commands = []cli.Command{
-		cmd.Profile(),
-		cmd.Registry(),
-		cmd.Tag(),
-		cmd.Repo(),
-		cmd.Org(),
-		cmd.User(),
-		cmd.Team(),
+		Profile(),
+		Registry(),
+		Tag(),
+		Repo(),
+		Org(),
+		User(),
+		Team(),
 	}
 
 	cli.HelpFlag = cli.BoolFlag{
