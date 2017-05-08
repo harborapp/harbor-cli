@@ -7,7 +7,7 @@ import (
 	"text/template"
 
 	"github.com/umschlag/umschlag-go/umschlag"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
 // globalFuncMap provides global template helper functions.

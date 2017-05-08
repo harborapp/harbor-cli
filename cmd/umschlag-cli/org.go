@@ -10,7 +10,7 @@ import (
 	"text/template"
 
 	"github.com/umschlag/umschlag-go/umschlag"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
 // orgFuncMap provides template helper functions.
@@ -49,28 +49,30 @@ Permission: {{ .Perm }}
 `
 
 // Org provides the sub-command for the org API.
-func Org() cli.Command {
-	return cli.Command{
+func Org() *cli.Command {
+	return &cli.Command{
 		Name:  "org",
 		Usage: "Org related sub-commands",
-		Subcommands: []cli.Command{
+		Subcommands: []*cli.Command{
 			{
 				Name:      "list",
 				Aliases:   []string{"ls"},
 				Usage:     "List all orgs",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "format",
 						Value: tmplOrgList,
 						Usage: "Custom output format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "json",
+						Value: false,
 						Usage: "Print in JSON format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "xml",
+						Value: false,
 						Usage: "Print in XML format",
 					},
 				},
@@ -83,22 +85,24 @@ func Org() cli.Command {
 				Usage:     "Display a org",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
 						Usage: "Org ID or slug to show",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "format",
 						Value: tmplOrgShow,
 						Usage: "Custom output format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "json",
+						Value: false,
 						Usage: "Print in JSON format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "xml",
+						Value: false,
 						Usage: "Print in XML format",
 					},
 				},
@@ -112,7 +116,7 @@ func Org() cli.Command {
 				Usage:     "Delete a org",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
 						Usage: "Org ID or slug to show",
@@ -127,17 +131,17 @@ func Org() cli.Command {
 				Usage:     "Update a org",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
 						Usage: "Org ID or slug to update",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "slug",
 						Value: "",
 						Usage: "Provide a slug",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "name",
 						Value: "",
 						Usage: "Provide a name",
@@ -152,17 +156,17 @@ func Org() cli.Command {
 				Usage:     "Create a org",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "registry",
 						Value: "",
 						Usage: "Registry ID or slug",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "slug",
 						Value: "",
 						Usage: "Provide a slug",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "name",
 						Value: "",
 						Usage: "Provide a name",
@@ -175,29 +179,31 @@ func Org() cli.Command {
 			{
 				Name:  "user",
 				Usage: "User assignments",
-				Subcommands: []cli.Command{
+				Subcommands: []*cli.Command{
 					{
 						Name:      "list",
 						Aliases:   []string{"ls"},
 						Usage:     "List assigned users",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Org ID or slug to list users",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "format",
 								Value: tmplOrgUserList,
 								Usage: "Custom output format",
 							},
-							cli.BoolFlag{
+							&cli.BoolFlag{
 								Name:  "json",
+								Value: false,
 								Usage: "Print in JSON format",
 							},
-							cli.BoolFlag{
+							&cli.BoolFlag{
 								Name:  "xml",
+								Value: false,
 								Usage: "Print in XML format",
 							},
 						},
@@ -210,17 +216,17 @@ func Org() cli.Command {
 						Usage:     "Append a user to org",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Org ID or slug to append to",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "user, u",
 								Value: "",
 								Usage: "User ID or slug to append",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "perm",
 								Value: "user",
 								Usage: "Permission for the user, can be user, admin or owner",
@@ -235,17 +241,17 @@ func Org() cli.Command {
 						Usage:     "Update org user permissions",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Org ID or slug to update",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "user, u",
 								Value: "",
 								Usage: "User ID or slug to update",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "perm",
 								Value: "user",
 								Usage: "Permission for the user, can be user, admin or owner",
@@ -261,12 +267,12 @@ func Org() cli.Command {
 						Usage:     "Remove a user from org",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Org ID or slug to remove from",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "user, u",
 								Value: "",
 								Usage: "User ID or slug to remove",
@@ -281,29 +287,31 @@ func Org() cli.Command {
 			{
 				Name:  "team",
 				Usage: "Team assignments",
-				Subcommands: []cli.Command{
+				Subcommands: []*cli.Command{
 					{
 						Name:      "list",
 						Aliases:   []string{"ls"},
 						Usage:     "List assigned teams",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Org ID or slug to list teams",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "format",
 								Value: tmplOrgTeamList,
 								Usage: "Custom output format",
 							},
-							cli.BoolFlag{
+							&cli.BoolFlag{
 								Name:  "json",
+								Value: false,
 								Usage: "Print in JSON format",
 							},
-							cli.BoolFlag{
+							&cli.BoolFlag{
 								Name:  "xml",
+								Value: false,
 								Usage: "Print in XML format",
 							},
 						},
@@ -316,17 +324,17 @@ func Org() cli.Command {
 						Usage:     "Append a team to org",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Org ID or slug to append to",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "team, t",
 								Value: "",
 								Usage: "Team ID or slug to append",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "perm",
 								Value: "user",
 								Usage: "Permission for the team, can be user, admin or owner",
@@ -341,17 +349,17 @@ func Org() cli.Command {
 						Usage:     "Update org team permissions",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Org ID or slug to update",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "team, t",
 								Value: "",
 								Usage: "Team ID or slug to update",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "perm",
 								Value: "user",
 								Usage: "Permission for the team, can be user, admin or owner",
@@ -367,12 +375,12 @@ func Org() cli.Command {
 						Usage:     "Remove a team from org",
 						ArgsUsage: " ",
 						Flags: []cli.Flag{
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "id, i",
 								Value: "",
 								Usage: "Org ID or slug to remove from",
 							},
-							cli.StringFlag{
+							&cli.StringFlag{
 								Name:  "team, t",
 								Value: "",
 								Usage: "Team ID or slug to remove",

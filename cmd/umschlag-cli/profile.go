@@ -8,7 +8,7 @@ import (
 	"text/template"
 
 	"github.com/umschlag/umschlag-go/umschlag"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
 // profileFuncMap provides template helper functions.
@@ -26,26 +26,28 @@ Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `
 
 // Profile provides the sub-command for the profile API.
-func Profile() cli.Command {
-	return cli.Command{
+func Profile() *cli.Command {
+	return &cli.Command{
 		Name:  "profile",
 		Usage: "Profile related sub-commands",
-		Subcommands: []cli.Command{
+		Subcommands: []*cli.Command{
 			{
 				Name:  "show",
 				Usage: "Show profile details",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "format",
 						Value: tmplProfileShow,
 						Usage: "Custom output format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "json",
+						Value: false,
 						Usage: "Print in JSON format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "xml",
+						Value: false,
 						Usage: "Print in XML format",
 					},
 				},
@@ -57,12 +59,12 @@ func Profile() cli.Command {
 				Name:  "token",
 				Usage: "Show your token",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "username",
 						Value: "",
 						Usage: "Username for authentication",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "password",
 						Value: "",
 						Usage: "Password for authentication",
@@ -76,22 +78,22 @@ func Profile() cli.Command {
 				Name:  "update",
 				Usage: "Update profile details",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "slug",
 						Value: "",
 						Usage: "Provide a slug",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "username",
 						Value: "",
 						Usage: "Provide a username",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "email",
 						Value: "",
 						Usage: "Provide a email",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "password",
 						Value: "",
 						Usage: "Provide a password",
@@ -177,7 +179,7 @@ func ProfileToken(c *cli.Context, client umschlag.ClientAPI) error {
 		}
 
 		client = umschlag.NewClientToken(
-			c.GlobalString("server"),
+			c.String("server"),
 			login.Token,
 		)
 	}
