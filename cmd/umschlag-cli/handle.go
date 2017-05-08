@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/umschlag/umschlag-go/umschlag"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
 // HandleFunc is the real handle implementation.
@@ -15,8 +15,8 @@ type HandleFunc func(c *cli.Context, client umschlag.ClientAPI) error
 // Handle wraps the command function handler.
 func Handle(c *cli.Context, fn HandleFunc) error {
 	var (
-		server = c.GlobalString("server")
-		token  = c.GlobalString("token")
+		server = c.String("server")
+		token  = c.String("token")
 
 		client umschlag.ClientAPI
 	)

@@ -8,7 +8,7 @@ import (
 	"text/template"
 
 	"github.com/umschlag/umschlag-go/umschlag"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
 // registryFuncMap provides template helper functions.
@@ -31,28 +31,30 @@ Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `
 
 // Registry provides the sub-command for the registry API.
-func Registry() cli.Command {
-	return cli.Command{
+func Registry() *cli.Command {
+	return &cli.Command{
 		Name:  "registry",
 		Usage: "Registry related sub-commands",
-		Subcommands: []cli.Command{
+		Subcommands: []*cli.Command{
 			{
 				Name:      "list",
 				Aliases:   []string{"ls"},
 				Usage:     "List all registries",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "format",
 						Value: tmplRegistryList,
 						Usage: "Custom output format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "json",
+						Value: false,
 						Usage: "Print in JSON format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "xml",
+						Value: false,
 						Usage: "Print in XML format",
 					},
 				},
@@ -65,22 +67,24 @@ func Registry() cli.Command {
 				Usage:     "Display a registry",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
 						Usage: "Registry ID or slug to show",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "format",
 						Value: tmplRegistryShow,
 						Usage: "Custom output format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "json",
+						Value: false,
 						Usage: "Print in JSON format",
 					},
-					cli.BoolFlag{
+					&cli.BoolFlag{
 						Name:  "xml",
+						Value: false,
 						Usage: "Print in XML format",
 					},
 				},
@@ -94,7 +98,7 @@ func Registry() cli.Command {
 				Usage:     "Delete a registry",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
 						Usage: "Registry ID or slug to show",
@@ -109,7 +113,7 @@ func Registry() cli.Command {
 				Usage:     "Sync a registry",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
 						Usage: "Registry ID or slug to sync",
@@ -124,22 +128,22 @@ func Registry() cli.Command {
 				Usage:     "Update a registry",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "id, i",
 						Value: "",
 						Usage: "Registry ID or slug to update",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "slug",
 						Value: "",
 						Usage: "Provide a slug",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "name",
 						Value: "",
 						Usage: "Provide an name",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "host",
 						Value: "",
 						Usage: "Provide an host",
@@ -154,17 +158,17 @@ func Registry() cli.Command {
 				Usage:     "Create a registry",
 				ArgsUsage: " ",
 				Flags: []cli.Flag{
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "slug",
 						Value: "",
 						Usage: "Provide a slug",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "name",
 						Value: "",
 						Usage: "Provide an name",
 					},
-					cli.StringFlag{
+					&cli.StringFlag{
 						Name:  "host",
 						Value: "",
 						Usage: "Provide an host",

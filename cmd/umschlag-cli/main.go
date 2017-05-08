@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"runtime"
+	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/umschlag/umschlag-cli/config"
-	"github.com/urfave/cli"
+	"gopkg.in/urfave/cli.v2"
 )
 
 func main() {
@@ -17,49 +17,58 @@ func main() {
 		godotenv.Load(env)
 	}
 
-	app := cli.NewApp()
-	app.Name = "umschlag-cli"
-	app.Version = config.Version
-	app.Author = "Thomas Boerger <thomas@webhippie.de>"
-	app.Usage = "A docker distribution management system"
+	app := &cli.App{
+		Name:     "umschlag-cli",
+		Version:  config.Version,
+		Usage:    "A docker distribution management system",
+		Compiled: time.Now(),
 
-	app.Flags = []cli.Flag{
-		cli.StringFlag{
-			Name:   "server, s",
-			Value:  "http://localhost:8080",
-			Usage:  "Umschlag API server",
-			EnvVar: "UMSCHLAG_SERVER",
+		Authors: []*cli.Author{
+			{
+				Name:  "Thomas Boerger",
+				Email: "thomas@webhippie.de",
+			},
 		},
-		cli.StringFlag{
-			Name:   "token, t",
-			Value:  "",
-			Usage:  "Umschlag API token",
-			EnvVar: "UMSCHLAG_TOKEN",
+
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:    "server, s",
+				Value:   "http://localhost:8080",
+				Usage:   "Umschlag API server",
+				EnvVars: []string{"UMSCHLAG_SERVER"},
+			},
+			&cli.StringFlag{
+				Name:    "token, t",
+				Value:   "",
+				Usage:   "Umschlag API token",
+				EnvVars: []string{"UMSCHLAG_TOKEN"},
+			},
+		},
+
+		Commands: []*cli.Command{
+			Profile(),
+			Registry(),
+			Tag(),
+			Repo(),
+			Org(),
+			User(),
+			Team(),
 		},
 	}
 
-	app.Commands = []cli.Command{
-		Profile(),
-		Registry(),
-		Tag(),
-		Repo(),
-		Org(),
-		User(),
-		Team(),
+	cli.HelpFlag = &cli.BoolFlag{
+		Name:    "help",
+		Aliases: []string{"h"},
+		Usage:   "Show the help, so what you see now",
 	}
 
-	cli.HelpFlag = cli.BoolFlag{
-		Name:  "help, h",
-		Usage: "Show the help, so what you see now",
-	}
-
-	cli.VersionFlag = cli.BoolFlag{
-		Name:  "version, v",
-		Usage: "Print the current version of that tool",
+	cli.VersionFlag = &cli.BoolFlag{
+		Name:    "version",
+		Aliases: []string{"v"},
+		Usage:   "Print the current version of that tool",
 	}
 
 	if err := app.Run(os.Args); err != nil {
-		fmt.Println(err)
 		os.Exit(1)
 	}
 }
