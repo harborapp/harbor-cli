@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
-	"github.com/umschlag/umschlag-cli/config"
+	"github.com/umschlag/umschlag-cli/pkg/version"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -19,7 +19,7 @@ func main() {
 
 	app := &cli.App{
 		Name:     "umschlag-cli",
-		Version:  config.Version,
+		Version:  version.Version.String(),
 		Usage:    "A docker distribution management system",
 		Compiled: time.Now(),
 
