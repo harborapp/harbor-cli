@@ -1,0 +1,24 @@
+workspace:
+  base: /srv/app
+  path: src/github.com/umschlag/umschlag-go
+
+pipeline:
+  testing:
+    image: webhippie/golang:latest
+    pull: true
+    environment:
+      - GOPATH=/srv/app
+    commands:
+      - make clean
+      - make vet
+      - make varcheck
+      - make structcheck
+      - make unconvert
+      - make ineffassign
+      - make lint
+      - make test
+      - make build
+
+  gitter:
+    image: plugins/gitter
+    secrets: [ gitter_webhook ]
