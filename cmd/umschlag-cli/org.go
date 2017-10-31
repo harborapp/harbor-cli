@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"text/template"
 
-	"github.com/umschlag/umschlag-go/umschlag"
+	"github.com/umschlag/umschlag-cli/pkg/sdk"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -397,7 +397,7 @@ func Org() *cli.Command {
 }
 
 // OrgList provides the sub-command to list all orgs.
-func OrgList(c *cli.Context, client umschlag.ClientAPI) error {
+func OrgList(c *cli.Context, client sdk.ClientAPI) error {
 	records, err := client.OrgList()
 
 	if err != nil {
@@ -461,7 +461,7 @@ func OrgList(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // OrgShow provides the sub-command to show org details.
-func OrgShow(c *cli.Context, client umschlag.ClientAPI) error {
+func OrgShow(c *cli.Context, client sdk.ClientAPI) error {
 	record, err := client.OrgGet(
 		GetIdentifierParam(c),
 	)
@@ -514,7 +514,7 @@ func OrgShow(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // OrgDelete provides the sub-command to delete a org.
-func OrgDelete(c *cli.Context, client umschlag.ClientAPI) error {
+func OrgDelete(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.OrgDelete(
 		GetIdentifierParam(c),
 	)
@@ -528,7 +528,7 @@ func OrgDelete(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // OrgUpdate provides the sub-command to update a org.
-func OrgUpdate(c *cli.Context, client umschlag.ClientAPI) error {
+func OrgUpdate(c *cli.Context, client sdk.ClientAPI) error {
 	record, err := client.OrgGet(
 		GetIdentifierParam(c),
 	)
@@ -567,8 +567,8 @@ func OrgUpdate(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // OrgCreate provides the sub-command to create a org.
-func OrgCreate(c *cli.Context, client umschlag.ClientAPI) error {
-	record := &umschlag.Org{}
+func OrgCreate(c *cli.Context, client sdk.ClientAPI) error {
+	record := &sdk.Org{}
 
 	if c.String("registry") == "" {
 		return fmt.Errorf("You must provide a registry ID or slug")
@@ -619,9 +619,9 @@ func OrgCreate(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // OrgUserList provides the sub-command to list users of the org.
-func OrgUserList(c *cli.Context, client umschlag.ClientAPI) error {
+func OrgUserList(c *cli.Context, client sdk.ClientAPI) error {
 	records, err := client.OrgUserList(
-		umschlag.OrgUserParams{
+		sdk.OrgUserParams{
 			Org: GetIdentifierParam(c),
 		},
 	)
@@ -687,9 +687,9 @@ func OrgUserList(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // OrgUserAppend provides the sub-command to append a user to the org.
-func OrgUserAppend(c *cli.Context, client umschlag.ClientAPI) error {
+func OrgUserAppend(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.OrgUserAppend(
-		umschlag.OrgUserParams{
+		sdk.OrgUserParams{
 			Org:  GetIdentifierParam(c),
 			User: GetUserParam(c),
 			Perm: GetPermParam(c),
@@ -705,9 +705,9 @@ func OrgUserAppend(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // OrgUserPerm provides the sub-command to update org user permissions.
-func OrgUserPerm(c *cli.Context, client umschlag.ClientAPI) error {
+func OrgUserPerm(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.OrgUserPerm(
-		umschlag.OrgUserParams{
+		sdk.OrgUserParams{
 			Org:  GetIdentifierParam(c),
 			User: GetUserParam(c),
 			Perm: GetPermParam(c),
@@ -723,9 +723,9 @@ func OrgUserPerm(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // OrgUserRemove provides the sub-command to remove a user from the org.
-func OrgUserRemove(c *cli.Context, client umschlag.ClientAPI) error {
+func OrgUserRemove(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.OrgUserDelete(
-		umschlag.OrgUserParams{
+		sdk.OrgUserParams{
 			Org:  GetIdentifierParam(c),
 			User: GetUserParam(c),
 		},
@@ -740,9 +740,9 @@ func OrgUserRemove(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // OrgTeamList provides the sub-command to list teams of the org.
-func OrgTeamList(c *cli.Context, client umschlag.ClientAPI) error {
+func OrgTeamList(c *cli.Context, client sdk.ClientAPI) error {
 	records, err := client.OrgTeamList(
-		umschlag.OrgTeamParams{
+		sdk.OrgTeamParams{
 			Org: GetIdentifierParam(c),
 		},
 	)
@@ -808,9 +808,9 @@ func OrgTeamList(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // OrgTeamAppend provides the sub-command to append a team to the org.
-func OrgTeamAppend(c *cli.Context, client umschlag.ClientAPI) error {
+func OrgTeamAppend(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.OrgTeamAppend(
-		umschlag.OrgTeamParams{
+		sdk.OrgTeamParams{
 			Org:  GetIdentifierParam(c),
 			Team: GetTeamParam(c),
 			Perm: GetPermParam(c),
@@ -826,9 +826,9 @@ func OrgTeamAppend(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // OrgTeamPerm provides the sub-command to update org team permissions.
-func OrgTeamPerm(c *cli.Context, client umschlag.ClientAPI) error {
+func OrgTeamPerm(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.OrgTeamPerm(
-		umschlag.OrgTeamParams{
+		sdk.OrgTeamParams{
 			Org:  GetIdentifierParam(c),
 			Team: GetTeamParam(c),
 			Perm: GetPermParam(c),
@@ -844,9 +844,9 @@ func OrgTeamPerm(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // OrgTeamRemove provides the sub-command to remove a team from the org.
-func OrgTeamRemove(c *cli.Context, client umschlag.ClientAPI) error {
+func OrgTeamRemove(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.OrgTeamDelete(
-		umschlag.OrgTeamParams{
+		sdk.OrgTeamParams{
 			Org:  GetIdentifierParam(c),
 			Team: GetTeamParam(c),
 		},

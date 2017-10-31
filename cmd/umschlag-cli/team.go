@@ -7,7 +7,7 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/umschlag/umschlag-go/umschlag"
+	"github.com/umschlag/umschlag-cli/pkg/sdk"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -388,7 +388,7 @@ func Team() *cli.Command {
 }
 
 // TeamList provides the sub-command to list all teams.
-func TeamList(c *cli.Context, client umschlag.ClientAPI) error {
+func TeamList(c *cli.Context, client sdk.ClientAPI) error {
 	records, err := client.TeamList()
 
 	if err != nil {
@@ -452,7 +452,7 @@ func TeamList(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // TeamShow provides the sub-command to show team details.
-func TeamShow(c *cli.Context, client umschlag.ClientAPI) error {
+func TeamShow(c *cli.Context, client sdk.ClientAPI) error {
 	record, err := client.TeamGet(
 		GetIdentifierParam(c),
 	)
@@ -505,7 +505,7 @@ func TeamShow(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // TeamDelete provides the sub-command to delete a team.
-func TeamDelete(c *cli.Context, client umschlag.ClientAPI) error {
+func TeamDelete(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.TeamDelete(
 		GetIdentifierParam(c),
 	)
@@ -519,7 +519,7 @@ func TeamDelete(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // TeamUpdate provides the sub-command to update a team.
-func TeamUpdate(c *cli.Context, client umschlag.ClientAPI) error {
+func TeamUpdate(c *cli.Context, client sdk.ClientAPI) error {
 	record, err := client.TeamGet(
 		GetIdentifierParam(c),
 	)
@@ -558,8 +558,8 @@ func TeamUpdate(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // TeamCreate provides the sub-command to create a team.
-func TeamCreate(c *cli.Context, client umschlag.ClientAPI) error {
-	record := &umschlag.Team{}
+func TeamCreate(c *cli.Context, client sdk.ClientAPI) error {
+	record := &sdk.Team{}
 
 	if val := c.String("slug"); c.IsSet("slug") && val != "" {
 		record.Slug = val
@@ -584,9 +584,9 @@ func TeamCreate(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // TeamUserList provides the sub-command to list users of the team.
-func TeamUserList(c *cli.Context, client umschlag.ClientAPI) error {
+func TeamUserList(c *cli.Context, client sdk.ClientAPI) error {
 	records, err := client.TeamUserList(
-		umschlag.TeamUserParams{
+		sdk.TeamUserParams{
 			Team: GetIdentifierParam(c),
 		},
 	)
@@ -652,9 +652,9 @@ func TeamUserList(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // TeamUserAppend provides the sub-command to append a user to the team.
-func TeamUserAppend(c *cli.Context, client umschlag.ClientAPI) error {
+func TeamUserAppend(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.TeamUserAppend(
-		umschlag.TeamUserParams{
+		sdk.TeamUserParams{
 			Team: GetIdentifierParam(c),
 			User: GetUserParam(c),
 			Perm: GetPermParam(c),
@@ -670,9 +670,9 @@ func TeamUserAppend(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // TeamUserPerm provides the sub-command to update team user permissions.
-func TeamUserPerm(c *cli.Context, client umschlag.ClientAPI) error {
+func TeamUserPerm(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.TeamUserPerm(
-		umschlag.TeamUserParams{
+		sdk.TeamUserParams{
 			Team: GetIdentifierParam(c),
 			User: GetUserParam(c),
 			Perm: GetPermParam(c),
@@ -688,9 +688,9 @@ func TeamUserPerm(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // TeamUserRemove provides the sub-command to remove a user from the team.
-func TeamUserRemove(c *cli.Context, client umschlag.ClientAPI) error {
+func TeamUserRemove(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.TeamUserDelete(
-		umschlag.TeamUserParams{
+		sdk.TeamUserParams{
 			Team: GetIdentifierParam(c),
 			User: GetUserParam(c),
 		},
@@ -705,9 +705,9 @@ func TeamUserRemove(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // TeamOrgList provides the sub-command to list orgs of the team.
-func TeamOrgList(c *cli.Context, client umschlag.ClientAPI) error {
+func TeamOrgList(c *cli.Context, client sdk.ClientAPI) error {
 	records, err := client.TeamOrgList(
-		umschlag.TeamOrgParams{
+		sdk.TeamOrgParams{
 			Team: GetIdentifierParam(c),
 		},
 	)
@@ -773,9 +773,9 @@ func TeamOrgList(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // TeamOrgAppend provides the sub-command to append a org to the team.
-func TeamOrgAppend(c *cli.Context, client umschlag.ClientAPI) error {
+func TeamOrgAppend(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.TeamOrgAppend(
-		umschlag.TeamOrgParams{
+		sdk.TeamOrgParams{
 			Team: GetIdentifierParam(c),
 			Org:  GetOrgParam(c),
 			Perm: GetPermParam(c),
@@ -791,9 +791,9 @@ func TeamOrgAppend(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // TeamOrgPerm provides the sub-command to update team org permissions.
-func TeamOrgPerm(c *cli.Context, client umschlag.ClientAPI) error {
+func TeamOrgPerm(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.TeamOrgPerm(
-		umschlag.TeamOrgParams{
+		sdk.TeamOrgParams{
 			Team: GetIdentifierParam(c),
 			Org:  GetOrgParam(c),
 			Perm: GetPermParam(c),
@@ -809,9 +809,9 @@ func TeamOrgPerm(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // TeamOrgRemove provides the sub-command to remove a org from the team.
-func TeamOrgRemove(c *cli.Context, client umschlag.ClientAPI) error {
+func TeamOrgRemove(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.TeamOrgDelete(
-		umschlag.TeamOrgParams{
+		sdk.TeamOrgParams{
 			Team: GetIdentifierParam(c),
 			Org:  GetOrgParam(c),
 		},

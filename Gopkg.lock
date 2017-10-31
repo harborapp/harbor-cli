@@ -11,7 +11,7 @@
   branch = "master"
   name = "github.com/golang/protobuf"
   packages = ["proto"]
-  revision = "11b8df160996e00fd4b55cbaafb3d84ec6d50fa8"
+  revision = "1643683e1b54a9e88ad26d98f81400c8c9d9f4f9"
 
 [[projects]]
   branch = "master"
@@ -22,26 +22,20 @@
 [[projects]]
   name = "github.com/joho/godotenv"
   packages = ["."]
-  revision = "726cc8b906e3d31c70a9671c90a13716a8d3f50d"
-  version = "v1.1"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/umschlag/umschlag-go"
-  packages = ["umschlag"]
-  revision = "d88e1adcded36ab4cd4e7dd0d8d089b54553a33a"
+  revision = "a79fa1e548e2c689c241d10173efd51e5d689d5b"
+  version = "v1.2.0"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context","context/ctxhttp"]
-  revision = "8351a756f30f1297fe94bbf4b767ec589c6ea6d0"
+  revision = "c73622c77280266305273cb545f54516ced95b93"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/oauth2"
   packages = [".","internal"]
-  revision = "13449ad91cb26cb47661c1b080790392170385fd"
+  revision = "bb50c06baba3d0c76f9d125c0719093e315b5b44"
 
 [[projects]]
   name = "google.golang.org/appengine"
@@ -53,11 +47,11 @@
   branch = "v2"
   name = "gopkg.in/urfave/cli.v2"
   packages = ["."]
-  revision = "50a0fdeea6330854c7b05371cce1fac8c7e636d2"
+  revision = "b2bf3c5abeb90da407891aecd1df2c5a1f6170c1"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d0e98ebafc62a4ffc6e881cf6398db6abfe3776ded48ee9478d99d5b95107cd9"
+  inputs-digest = "33030cfe49d84551ebc901ea49d28682a146561eb6a89eb85a3f94c6c7db11fa"
   solver-name = "gps-cdcl"
   solver-version = 1

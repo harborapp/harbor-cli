@@ -6,7 +6,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/umschlag/umschlag-go/umschlag"
+	"github.com/umschlag/umschlag-cli/pkg/sdk"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -18,7 +18,7 @@ var globalFuncMap = template.FuncMap{
 	"toLower":  strings.ToLower,
 	"contains": strings.Contains,
 	"replace":  strings.Replace,
-	"tagList": func(s []*umschlag.Tag) string {
+	"tagList": func(s []*sdk.Tag) string {
 		res := []string{}
 
 		for _, row := range s {
@@ -27,7 +27,7 @@ var globalFuncMap = template.FuncMap{
 
 		return strings.Join(res, ", ")
 	},
-	"orgList": func(s []*umschlag.Org) string {
+	"orgList": func(s []*sdk.Org) string {
 		res := []string{}
 
 		for _, row := range s {
@@ -36,7 +36,7 @@ var globalFuncMap = template.FuncMap{
 
 		return strings.Join(res, ", ")
 	},
-	"teamList": func(s []*umschlag.Team) string {
+	"teamList": func(s []*sdk.Team) string {
 		res := []string{}
 
 		for _, row := range s {
@@ -45,7 +45,7 @@ var globalFuncMap = template.FuncMap{
 
 		return strings.Join(res, ", ")
 	},
-	"userList": func(s []*umschlag.User) string {
+	"userList": func(s []*sdk.User) string {
 		res := []string{}
 
 		for _, row := range s {
@@ -54,7 +54,7 @@ var globalFuncMap = template.FuncMap{
 
 		return strings.Join(res, ", ")
 	},
-	"repoList": func(s []*umschlag.Repo) string {
+	"repoList": func(s []*sdk.Repo) string {
 		res := []string{}
 
 		for _, row := range s {

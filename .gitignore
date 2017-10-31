@@ -24,7 +24,7 @@ _testmain.go
 *.prof
 
 coverage.out
-
 .env
+
 /dist
 /umschlag-cli

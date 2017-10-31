@@ -7,7 +7,7 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/umschlag/umschlag-go/umschlag"
+	"github.com/umschlag/umschlag-cli/pkg/sdk"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -183,7 +183,7 @@ func Registry() *cli.Command {
 }
 
 // RegistryList provides the sub-command to list all registries.
-func RegistryList(c *cli.Context, client umschlag.ClientAPI) error {
+func RegistryList(c *cli.Context, client sdk.ClientAPI) error {
 	records, err := client.RegistryList()
 
 	if err != nil {
@@ -247,7 +247,7 @@ func RegistryList(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // RegistryShow provides the sub-command to show registry details.
-func RegistryShow(c *cli.Context, client umschlag.ClientAPI) error {
+func RegistryShow(c *cli.Context, client sdk.ClientAPI) error {
 	record, err := client.RegistryGet(
 		GetIdentifierParam(c),
 	)
@@ -300,7 +300,7 @@ func RegistryShow(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // RegistryDelete provides the sub-command to delete a registry.
-func RegistryDelete(c *cli.Context, client umschlag.ClientAPI) error {
+func RegistryDelete(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.RegistryDelete(
 		GetIdentifierParam(c),
 	)
@@ -314,7 +314,7 @@ func RegistryDelete(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // RegistrySync provides the sub-command to sync a registry.
-func RegistrySync(c *cli.Context, client umschlag.ClientAPI) error {
+func RegistrySync(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.RegistrySync(
 		GetIdentifierParam(c),
 	)
@@ -328,7 +328,7 @@ func RegistrySync(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // RegistryUpdate provides the sub-command to update a registry.
-func RegistryUpdate(c *cli.Context, client umschlag.ClientAPI) error {
+func RegistryUpdate(c *cli.Context, client sdk.ClientAPI) error {
 	record, err := client.RegistryGet(
 		GetIdentifierParam(c),
 	)
@@ -372,8 +372,8 @@ func RegistryUpdate(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // RegistryCreate provides the sub-command to create a registry.
-func RegistryCreate(c *cli.Context, client umschlag.ClientAPI) error {
-	record := &umschlag.Registry{}
+func RegistryCreate(c *cli.Context, client sdk.ClientAPI) error {
+	record := &sdk.Registry{}
 
 	if val := c.String("slug"); c.IsSet("slug") && val != "" {
 		record.Slug = val

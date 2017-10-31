@@ -7,7 +7,7 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/umschlag/umschlag-go/umschlag"
+	"github.com/umschlag/umschlag-cli/pkg/sdk"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -111,7 +111,7 @@ func Tag() *cli.Command {
 }
 
 // TagList provides the sub-command to list all tags.
-func TagList(c *cli.Context, client umschlag.ClientAPI) error {
+func TagList(c *cli.Context, client sdk.ClientAPI) error {
 	records, err := client.TagList()
 
 	if err != nil {
@@ -175,7 +175,7 @@ func TagList(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // TagShow provides the sub-command to show tag details.
-func TagShow(c *cli.Context, client umschlag.ClientAPI) error {
+func TagShow(c *cli.Context, client sdk.ClientAPI) error {
 	record, err := client.TagGet(
 		GetIdentifierParam(c),
 	)
@@ -228,7 +228,7 @@ func TagShow(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // TagDelete provides the sub-command to delete a tag.
-func TagDelete(c *cli.Context, client umschlag.ClientAPI) error {
+func TagDelete(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.TagDelete(
 		GetIdentifierParam(c),
 	)

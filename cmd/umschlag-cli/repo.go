@@ -7,7 +7,7 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/umschlag/umschlag-go/umschlag"
+	"github.com/umschlag/umschlag-cli/pkg/sdk"
 	"gopkg.in/urfave/cli.v2"
 )
 
@@ -112,7 +112,7 @@ func Repo() *cli.Command {
 }
 
 // RepoList provides the sub-command to list all repos.
-func RepoList(c *cli.Context, client umschlag.ClientAPI) error {
+func RepoList(c *cli.Context, client sdk.ClientAPI) error {
 	records, err := client.RepoList()
 
 	if err != nil {
@@ -176,7 +176,7 @@ func RepoList(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // RepoShow provides the sub-command to show repo details.
-func RepoShow(c *cli.Context, client umschlag.ClientAPI) error {
+func RepoShow(c *cli.Context, client sdk.ClientAPI) error {
 	record, err := client.RepoGet(
 		GetIdentifierParam(c),
 	)
@@ -229,7 +229,7 @@ func RepoShow(c *cli.Context, client umschlag.ClientAPI) error {
 }
 
 // RepoDelete provides the sub-command to delete a repo.
-func RepoDelete(c *cli.Context, client umschlag.ClientAPI) error {
+func RepoDelete(c *cli.Context, client sdk.ClientAPI) error {
 	err := client.RepoDelete(
 		GetIdentifierParam(c),
 	)

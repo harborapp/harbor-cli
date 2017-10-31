@@ -22,12 +22,20 @@
 
 
 [[constraint]]
-  name = "github.com/joho/godotenv"
-  version = "1.1.0"
+  name = "github.com/coreos/go-semver"
+  version = "0.2.0"
 
 [[constraint]]
   branch = "master"
-  name = "github.com/umschlag/umschlag-go"
+  name = "github.com/jackspirou/syscerts"
+
+[[constraint]]
+  name = "github.com/joho/godotenv"
+  version = "1.2.0"
+
+[[constraint]]
+  branch = "master"
+  name = "golang.org/x/oauth2"
 
 [[constraint]]
   branch = "v2"
