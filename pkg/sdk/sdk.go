@@ -1,6 +1,7 @@
 package sdk
 
 import (
+	"context"
 	"crypto/tls"
 	"fmt"
 	"net/http"
@@ -234,7 +235,7 @@ func NewClientToken(uri, token string) ClientAPI {
 	config := oauth2.Config{}
 
 	client := config.Client(
-		oauth2.NoContext,
+		context.Background(),
 		&oauth2.Token{
 			AccessToken: token,
 		},

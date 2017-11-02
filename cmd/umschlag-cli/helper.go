@@ -113,18 +113,6 @@ func GetOrgParam(c *cli.Context) string {
 	return val
 }
 
-// GetRegistryParam checks and returns the registry id/slug parameter.
-func GetRegistryParam(c *cli.Context) string {
-	val := c.String("registry")
-
-	if val == "" {
-		fmt.Println("Error: You must provide a registry ID or slug.")
-		os.Exit(1)
-	}
-
-	return val
-}
-
 // GetPermParam checks and returns the permission parameter.
 func GetPermParam(c *cli.Context) string {
 	val := c.String("perm")
