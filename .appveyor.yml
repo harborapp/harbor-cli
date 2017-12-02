@@ -19,9 +19,6 @@ install:
       set PATH=c:\go\bin;%PATH%
 build_script:
   - cmd: |
-      npm install
-      npm run build
-  - cmd: |
       make retool generate build
 
       docker pull microsoft/nanoserver:10.0.14393.1593
