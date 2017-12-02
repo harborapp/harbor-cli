@@ -1,24 +1,13 @@
-FROM alpine:edge
-MAINTAINER Thomas Boerger <thomas@webhippie.de>
+FROM webhippie/alpine:latest
 
-RUN apk update && \
-  apk add \
-    ca-certificates \
-    bash && \
-  rm -rf \
-    /var/cache/apk/* && \
-  addgroup \
-    -g 1000 \
-    umschlag && \
-  adduser -D \
-    -h /home/umschlag \
-    -s /bin/bash \
-    -G umschlag \
-    -u 1000 \
-    umschlag
+LABEL maintainer="Thomas Boerger <thomas@webhippie.de>" \
+  org.label-schema.name="Umschlag CLI" \
+  org.label-schema.vendor="Thomas Boerger" \
+  org.label-schema.schema-version="1.0"
 
-COPY umschlag-cli /usr/bin/
-
-USER umschlag
 ENTRYPOINT ["/usr/bin/umschlag-cli"]
 CMD ["help"]
+
+RUN apk add --no-cache ca-certificates mailcap bash
+
+COPY dist/binaries/umschlag-cli-*-linux-amd64 /usr/bin/

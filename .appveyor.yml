@@ -1,0 +1,40 @@
+version: '{build}'
+image: 'Visual Studio 2017'
+
+clone_folder: 'c:\go\src\github.com\umschlag\umschlag-cli'
+
+environment:
+  DOCKER_USERNAME:
+    secure: '4YzzahbEiMZQJpOCOd1LAw=='
+  DOCKER_PASSWORD:
+    secure: 'VqO/G3Zfslu6zSLdwHKO+Q=='
+
+install:
+  - cmd: |
+      choco install make
+  - cmd: |
+      docker version
+      go version
+  - cmd: |
+      set PATH=c:\go\bin;%PATH%
+build_script:
+  - cmd: |
+      npm install
+      npm run build
+  - cmd: |
+      make retool generate build
+
+      docker pull microsoft/nanoserver:10.0.14393.1593
+      docker build -f Dockerfile.windows -t umschlag/umschlag-cli:windows .
+test_script:
+  - cmd: |
+      docker run --rm umschlag/umschlag-cli:windows --help
+deploy_script:
+  - ps: |
+      $ErrorActionPreference = 'Stop';
+      if ( $env:APPVEYOR_PULL_REQUEST_NUMBER -Or ! $env:APPVEYOR_REPO_BRANCH.Equals("master")) {
+        Write-Host Nothing to deploy.
+      } else {
+        docker login --username $env:DOCKER_USERNAME --password $env:DOCKER_PASSWORD
+        docker push umschlag/umschlag-cli:windows
+      }

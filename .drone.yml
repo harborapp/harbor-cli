@@ -2,6 +2,9 @@ workspace:
   base: /srv/app
   path: src/github.com/umschlag/umschlag-cli
 
+branches:
+  - master
+
 pipeline:
   cache-restore:
     image: plugins/s3-cache:1
@@ -17,6 +20,7 @@ pipeline:
     environment:
       - CGO_ENABLED=0
       - GOPATH=/srv/app
+      - TAGS=
     commands:
       - make clean
       - make retool
@@ -29,6 +33,7 @@ pipeline:
     environment:
       - CGO_ENABLED=0
       - GOPATH=/srv/app
+      - TAGS=
     commands:
       - make vet
 
@@ -39,6 +44,7 @@ pipeline:
     environment:
       - CGO_ENABLED=0
       - GOPATH=/srv/app
+      - TAGS=
     commands:
       - make megacheck
 
@@ -49,6 +55,7 @@ pipeline:
     environment:
       - CGO_ENABLED=0
       - GOPATH=/srv/app
+      - TAGS=
     commands:
       - make lint
 
@@ -59,6 +66,7 @@ pipeline:
     environment:
       - CGO_ENABLED=0
       - GOPATH=/srv/app
+      - TAGS=
     commands:
       - make test
 
@@ -85,7 +93,7 @@ pipeline:
       - make release-dirs release-windows
     when:
       event: [ push, tag ]
-      branch: [ master, release/* ]
+      branch: master
 
   app-linux:
     image: karalabe/xgo-latest:latest
@@ -99,7 +107,7 @@ pipeline:
       - make release-dirs release-linux
     when:
       event: [ push, tag ]
-      branch: [ master, release/* ]
+      branch: master
 
   app-darwin:
     image: karalabe/xgo-latest:latest
@@ -113,7 +121,7 @@ pipeline:
       - make release-dirs release-darwin
     when:
       event: [ push, tag ]
-      branch: [ master, release/* ]
+      branch: master
 
   app-finish:
     image: webhippie/golang:edge
@@ -126,26 +134,57 @@ pipeline:
       - make release-copy release-check
     when:
       event: [ push, tag ]
-      branch: [ master, release/* ]
+      branch: master
 
-  docker-publish:
+  docker-amd64:
     image: plugins/docker:17.05
     pull: true
-    secrets: [ docker_username, docker_password ]
-    repo: umschlag/umschlag-cli
-    tags: [ 'latest' ]
-    when:
-      event: [ push ]
-      branch: [ master ]
-
-  docker-publish:
-    image: plugins/docker:17.05
-    pull: true
+    group: docker
     secrets: [ docker_username, docker_password ]
     repo: umschlag/umschlag-cli
     auto_tag: true
     when:
-      event: [ tag ]
+      event: [push, tag]
+      branch: master
+
+  docker-i386:
+    image: plugins/docker:17.05
+    pull: true
+    group: docker
+    secrets: [ docker_username, docker_password ]
+    repo: umschlag/umschlag-cli
+    dockerfile: Dockerfile.i386
+    auto_tag: true
+    auto_tag_suffix: i386
+    when:
+      event: [push, tag]
+      branch: master
+
+  docker-arm:
+    image: plugins/docker:17.05
+    pull: true
+    group: docker
+    secrets: [ docker_username, docker_password ]
+    repo: umschlag/umschlag-cli
+    dockerfile: Dockerfile.arm
+    auto_tag: true
+    auto_tag_suffix: arm
+    when:
+      event: [push, tag]
+      branch: master
+
+  docker-arm64:
+    image: plugins/docker:17.05
+    pull: true
+    group: docker
+    secrets: [ docker_username, docker_password ]
+    repo: umschlag/umschlag-cli
+    dockerfile: Dockerfile.arm64
+    auto_tag: true
+    auto_tag_suffix: arm64
+    when:
+      event: [push, tag]
+      branch: master
 
   docker-microbadger:
     image: plugins/webhook:1
@@ -155,7 +194,7 @@ pipeline:
         target: plugin_urls
     when:
       event: [ push, tag ]
-      branch: [ master, release/* ]
+      branch: master
 
   cache-rebuild:
     image: plugins/s3-cache:1
@@ -168,7 +207,7 @@ pipeline:
     when:
       local: false
       event: [ push ]
-      branch: [ master, release/* ]
+      branch: master
 
   cache-flush:
     image: plugins/s3-cache:1
@@ -179,7 +218,7 @@ pipeline:
     when:
       local: false
       event: [ push ]
-      branch: [ master, release/* ]
+      branch: master
 
   archive-release:
     image: plugins/s3:1
@@ -191,19 +230,7 @@ pipeline:
     path_style: true
     when:
       event: [ push ]
-      branch: [ master ]
-
-  archive-release:
-    image: plugins/s3:1
-    pull: true
-    secrets: [ s3_endpoint, aws_access_key_id, aws_secret_access_key, s3_bucket ]
-    source: dist/release/*
-    target: /umschlag/cli/${DRONE_BRANCH##release/v}
-    strip_prefix: dist/release/
-    path_style: true
-    when:
-      event: [ push ]
-      branch: [ release/* ]
+      branch: master
 
   archive-release:
     image: plugins/s3:1
@@ -215,8 +242,9 @@ pipeline:
     path_style: true
     when:
       event: [ tag ]
+      branch: master
 
-  github:
+  github-release:
     image: plugins/github-release:1
     pull: true
     secrets: [ github_token ]
@@ -224,8 +252,9 @@ pipeline:
       - dist/release/*
     when:
       event: [ tag ]
+      branch: master
 
-  gitter:
+  notify-gitter:
     image: plugins/gitter:1
     pull: true
     secrets: [ gitter_webhook ]

@@ -3,6 +3,7 @@
 [![Build Status](http://github.dronehippie.de/api/badges/umschlag/umschlag-cli/status.svg)](http://github.dronehippie.de/umschlag/umschlag-cli)
 [![Go Doc](https://godoc.org/github.com/umschlag/umschlag-cli?status.svg)](http://godoc.org/github.com/umschlag/umschlag-cli)
 [![Go Report](http://goreportcard.com/badge/github.com/umschlag/umschlag-cli)](http://goreportcard.com/report/github.com/umschlag/umschlag-cli)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a8a9dd7a2e0a4437a56db779e38b47ed)](https://www.codacy.com/app/tboerger/umschlag-cli?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=umschlag/umschlag-cli&amp;utm_campaign=Badge_Grade)
 [![](https://images.microbadger.com/badges/image/umschlag/umschlag-cli.svg)](http://microbadger.com/images/umschlag/umschlag-cli "Get your own image badge on microbadger.com")
 [![Join the chat at https://gitter.im/umschlag/umschlag](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/umschlag/umschlag)
 [![Stories in Ready](https://badge.waffle.io/umschlag/umschlag-api.svg?label=ready&title=Ready)](http://waffle.io/umschlag/umschlag-api)
