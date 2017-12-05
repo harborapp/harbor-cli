@@ -78,7 +78,7 @@ generate:
 
 .PHONY: test
 test:
-	for PKG in $(PACKAGES); do go test -cover -coverprofile $$GOPATH/src/$$PKG/coverage.out $$PKG || exit 1; done;
+	retool do goverage -v -coverprofile coverage.out $(PACKAGES)
 
 .PHONY: install
 install: $(SOURCES)

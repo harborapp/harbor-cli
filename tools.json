@@ -11,6 +11,10 @@
     {
       "Repository": "honnef.co/go/tools/cmd/megacheck",
       "Commit": "bf3d85daf373f9ad9fc6da6da7c010f9ee3e8e0c"
+    },
+    {
+      "Repository": "github.com/haya14busa/goverage",
+      "Commit": "ddedefafa9038af5a93779e375d0537bb489f38f"
     }
   ],
   "RetoolVersion": "1.3.5"

@@ -81,6 +81,11 @@ pipeline:
     commands:
       - make build
 
+  app-coverage:
+    image: plugins/codacy:1
+    pull: true
+    secrets: [ codacy_token ]
+
   app-windows:
     image: karalabe/xgo-latest:latest
     pull: true
