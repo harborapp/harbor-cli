@@ -9,7 +9,7 @@ LABEL maintainer="Thomas Boerger <thomas@webhippie.de>" \
   org.label-schema.schema-version="1.0"
 
 ENTRYPOINT ["/usr/bin/umschlag-cli"]
-CMD ["server"]
+CMD ["help"]
 
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build /etc/mime.types /etc/

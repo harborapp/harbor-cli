@@ -10,6 +10,11 @@ import (
 	"net/url"
 )
 
+const (
+	// UserAgent defines the user agent header sent with each request.
+	UserAgent = "Umschlag CLI"
+)
+
 // Helper function for making an GET request.
 func (c *Default) get(rawurl string, out interface{}) error {
 	return c.do(rawurl, "GET", nil, out)
@@ -79,7 +84,7 @@ func (c *Default) stream(rawurl, method string, in, out interface{}) (io.ReadClo
 
 	req.Header.Set(
 		"User-Agent",
-		"Umschlag CLI",
+		UserAgent,
 	)
 
 	if in != nil {

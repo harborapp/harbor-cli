@@ -1,11 +1,13 @@
 NAME := umschlag-cli
-DIST := dist
 IMPORT := github.com/umschlag/$(NAME)
+DIST := dist
 
 ifeq ($(OS), Windows_NT)
 	EXECUTABLE := $(NAME).exe
+	HAS_RETOOL := $(shell where retool)
 else
 	EXECUTABLE := $(NAME)
+	HAS_RETOOL := $(shell command -v retool)
 endif
 
 PACKAGES ?= $(shell go list ./... | grep -v /vendor/ | grep -v /_tools/)
@@ -19,7 +21,7 @@ ifndef VERSION
 		VERSION ?= $(subst v,,$(DRONE_TAG))
 	else
 		ifneq ($(DRONE_BRANCH),)
-			VERSION ?= $(subst release/v,,$(DRONE_BRANCH))
+			VERSION ?= $(DRONE_BRANCH)
 		else
 			VERSION ?= master
 		endif
@@ -45,6 +47,7 @@ update:
 
 .PHONY: sync
 sync:
+	retool sync
 	retool do dep ensure
 
 .PHONY: graph
@@ -74,7 +77,7 @@ lint:
 
 .PHONY: generate
 generate:
-	go generate $(GENERATE)
+	retool do go generate $(GENERATE)
 
 .PHONY: test
 test:
@@ -99,32 +102,29 @@ release-dirs:
 
 .PHONY: release-windows
 release-windows:
-	@hash xgo > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
-		go get -u github.com/karalabe/xgo; \
-	fi
-	xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '-linkmode external -extldflags "-static" $(LDFLAGS)' -targets 'windows/*' -out $(EXECUTABLE)-$(VERSION) ./cmd/$(NAME)
 ifeq ($(CI),drone)
+	xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '-linkmode external -extldflags "-static" $(LDFLAGS)' -targets 'windows/*' -out $(EXECUTABLE)-$(VERSION)  ./cmd/$(NAME)
 	mv /build/* $(DIST)/binaries
+else
+	retool do xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '-linkmode external -extldflags "-static" $(LDFLAGS)' -targets 'windows/*' -out $(EXECUTABLE)-$(VERSION)  ./cmd/$(NAME)
 endif
 
 .PHONY: release-linux
 release-linux:
-	@hash xgo > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
-		go get -u github.com/karalabe/xgo; \
-	fi
-	xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '-linkmode external -extldflags "-static" $(LDFLAGS)' -targets 'linux/*' -out $(EXECUTABLE)-$(VERSION) ./cmd/$(NAME)
 ifeq ($(CI),drone)
+	xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '-linkmode external -extldflags "-static" $(LDFLAGS)' -targets 'linux/*' -out $(EXECUTABLE)-$(VERSION)  ./cmd/$(NAME)
 	mv /build/* $(DIST)/binaries
+else
+	retool do xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '-linkmode external -extldflags "-static" $(LDFLAGS)' -targets 'linux/*' -out $(EXECUTABLE)-$(VERSION)  ./cmd/$(NAME)
 endif
 
 .PHONY: release-darwin
 release-darwin:
-	@hash xgo > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
-		go get -u github.com/karalabe/xgo; \
-	fi
-	xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '$(LDFLAGS)' -targets 'darwin/*' -out $(EXECUTABLE)-$(VERSION) ./cmd/$(NAME)
 ifeq ($(CI),drone)
+	xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '$(LDFLAGS)' -targets 'darwin/*' -out $(EXECUTABLE)-$(VERSION)  ./cmd/$(NAME)
 	mv /build/* $(DIST)/binaries
+else
+	retool do xgo -dest $(DIST)/binaries -tags 'netgo $(TAGS)' -ldflags '$(LDFLAGS)' -targets 'darwin/*' -out $(EXECUTABLE)-$(VERSION)  ./cmd/$(NAME)
 endif
 
 .PHONY: release-copy
@@ -138,12 +138,9 @@ release-check:
 .PHONY: publish
 publish: release
 
-HAS_RETOOL := $(shell command -v retool)
-
 .PHONY: retool
 retool:
 ifndef HAS_RETOOL
 	go get -u github.com/twitchtv/retool
 endif
-	retool sync
 	retool build

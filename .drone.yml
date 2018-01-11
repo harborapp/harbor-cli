@@ -148,6 +148,7 @@ pipeline:
     secrets: [ docker_username, docker_password ]
     repo: umschlag/umschlag-cli
     auto_tag: true
+    auto_tag_suffix: amd64
     when:
       event: [push, tag]
       branch: master
@@ -165,6 +166,19 @@ pipeline:
       event: [push, tag]
       branch: master
 
+  docker-arm64:
+    image: plugins/docker:17.05
+    pull: true
+    group: docker
+    secrets: [ docker_username, docker_password ]
+    repo: umschlag/umschlag-cli
+    dockerfile: Dockerfile.arm64
+    auto_tag: true
+    auto_tag_suffix: arm64
+    when:
+      event: [push, tag]
+      branch: master
+
   docker-arm:
     image: plugins/docker:17.05
     pull: true
@@ -178,17 +192,15 @@ pipeline:
       event: [push, tag]
       branch: master
 
-  docker-arm64:
-    image: plugins/docker:17.05
+  docker-manifests:
+    image: plugins/manifest:1
     pull: true
-    group: docker
     secrets: [ docker_username, docker_password ]
-    repo: umschlag/umschlag-cli
-    dockerfile: Dockerfile.arm64
+    spec: manifest.yml
     auto_tag: true
-    auto_tag_suffix: arm64
+    ignore_missing: true
     when:
-      event: [push, tag]
+      event: [ push, tag ]
       branch: master
 
   docker-microbadger:

@@ -40,7 +40,7 @@ const (
 type ClientAPI interface {
 	// SetClient sets the default http client. This should
 	// be used in conjunction with golang.org/x/oauth2 to
-	// authenticate requests to the Umschlag API.
+	// authenticate requests to the API.
 	SetClient(client *http.Client)
 
 	// IsAuthenticated checks if we already provided an authentication
@@ -279,7 +279,7 @@ func (c *Default) IsAuthenticated() bool {
 
 	req.Header.Set(
 		"User-Agent",
-		"Umschlag CLI",
+		UserAgent,
 	)
 
 	resp, err := c.client.Do(req)
@@ -295,7 +295,7 @@ func (c *Default) IsAuthenticated() bool {
 
 // SetClient sets the default http client. This should
 // be used in conjunction with golang.org/x/oauth2 to
-// authenticate requests to the Umschlag API.
+// authenticate requests to the API.
 func (c *Default) SetClient(client *http.Client) {
 	c.client = client
 }

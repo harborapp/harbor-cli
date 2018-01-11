@@ -1,37 +1,62 @@
 version: '{build}'
 image: 'Visual Studio 2017'
 
-clone_folder: 'c:\go\src\github.com\umschlag\umschlag-cli'
+clone_folder: 'c:\gopath\src\github.com\umschlag\umschlag-cli'
 
 environment:
+  GOPATH: c:\gopath
   DOCKER_USERNAME:
     secure: '4YzzahbEiMZQJpOCOd1LAw=='
   DOCKER_PASSWORD:
     secure: 'VqO/G3Zfslu6zSLdwHKO+Q=='
 
 install:
-  - cmd: |
+  - ps: |
       choco install make
-  - cmd: |
+  - ps: |
       docker version
       go version
-  - cmd: |
-      set PATH=c:\go\bin;%PATH%
+  - ps: |
+      $env:Path = "c:\gopath\bin;$env:Path"
+
 build_script:
   - cmd: |
-      make retool generate build
-
+      make retool
+  - cmd: |
+      make generate
+  - cmd: |
+      make build
+  - cmd: |
       docker pull microsoft/nanoserver:10.0.14393.1593
       docker build -f Dockerfile.windows -t umschlag/umschlag-cli:windows .
+
 test_script:
   - cmd: |
       docker run --rm umschlag/umschlag-cli:windows --help
+
 deploy_script:
   - ps: |
-      $ErrorActionPreference = 'Stop';
-      if ( $env:APPVEYOR_PULL_REQUEST_NUMBER -Or ! $env:APPVEYOR_REPO_BRANCH.Equals("master")) {
+      if ( $env:APPVEYOR_PULL_REQUEST_NUMBER ) {
         Write-Host Nothing to deploy.
       } else {
         docker login --username $env:DOCKER_USERNAME --password $env:DOCKER_PASSWORD
-        docker push umschlag/umschlag-cli:windows
+
+        if ( $env:APPVEYOR_REPO_TAG -eq 'true' ) {
+          $major,$minor,$patch = $env:APPVEYOR_REPO_TAG_NAME.substring(1).split('.')
+
+          docker push umschlag/umschlag-cli:windows
+
+          docker tag umschlag/umschlag-cli:windows umschlag/umschlag-cli:$major.$minor.$patch-windows
+          docker push umschlag/umschlag-cli:$major.$minor.$patch-windows
+
+          docker tag umschlag/umschlag-cli:windows umschlag/umschlag-cli:$major.$minor-windows
+          docker push umschlag/umschlag-cli:$major.$minor-windows
+
+          docker tag umschlag/umschlag-cli:windows umschlag/umschlag-cli:$major-windows
+          docker push umschlag/umschlag-cli:$major-windows
+        } else {
+          if ( $env:APPVEYOR_REPO_BRANCH -eq 'master' ) {
+            docker push umschlag/umschlag-cli:windows
+          }
+        }
       }

@@ -6,7 +6,7 @@ LABEL maintainer="Thomas Boerger <thomas@webhippie.de>" `
   org.label-schema.vendor="Thomas Boerger" `
   org.label-schema.schema-version="1.0"
 
-ENTRYPOINT ["\\umschlag-cli.exe"]
+ENTRYPOINT ["c:\\umschlag-cli.exe"]
 CMD ["help"]
 
-COPY umschlag-cli.exe /umschlag-cli.exe
+COPY umschlag-cli.exe c:\umschlag-cli.exe
