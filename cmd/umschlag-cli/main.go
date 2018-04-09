@@ -2,7 +2,6 @@ package main
 
 import (
 	"os"
-	"runtime"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -11,8 +10,6 @@ import (
 )
 
 func main() {
-	runtime.GOMAXPROCS(runtime.NumCPU())
-
 	if env := os.Getenv("UMSCHLAG_ENV_FILE"); env != "" {
 		godotenv.Load(env)
 	}
@@ -20,7 +17,7 @@ func main() {
 	app := &cli.App{
 		Name:     "umschlag-cli",
 		Version:  version.Version.String(),
-		Usage:    "Docker distribution management system",
+		Usage:    "docker distribution management system",
 		Compiled: time.Now(),
 
 		Authors: []*cli.Author{
@@ -34,13 +31,13 @@ func main() {
 			&cli.StringFlag{
 				Name:    "server, s",
 				Value:   "http://localhost:8080",
-				Usage:   "Umschlag API server",
+				Usage:   "api server",
 				EnvVars: []string{"UMSCHLAG_SERVER"},
 			},
 			&cli.StringFlag{
 				Name:    "token, t",
 				Value:   "",
-				Usage:   "Umschlag API token",
+				Usage:   "api token",
 				EnvVars: []string{"UMSCHLAG_TOKEN"},
 			},
 		},
@@ -59,13 +56,13 @@ func main() {
 	cli.HelpFlag = &cli.BoolFlag{
 		Name:    "help",
 		Aliases: []string{"h"},
-		Usage:   "Show the help, so what you see now",
+		Usage:   "show the help, so what you see now",
 	}
 
 	cli.VersionFlag = &cli.BoolFlag{
 		Name:    "version",
 		Aliases: []string{"v"},
-		Usage:   "Print the current version of that tool",
+		Usage:   "print the current version of that tool",
 	}
 
 	if err := app.Run(os.Args); err != nil {

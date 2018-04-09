@@ -7,12 +7,9 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/umschlag/umschlag-cli/pkg/sdk"
+	"github.com/umschlag/umschlag-go/umschlag"
 	"gopkg.in/urfave/cli.v2"
 )
-
-// repoFuncMap provides template helper functions.
-var repoFuncMap = template.FuncMap{}
 
 // tmplRepoList represents a row within repo listing.
 var tmplRepoList = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
@@ -24,7 +21,7 @@ Name: {{ .FullName }}
 var tmplRepoShow = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
 ID: {{ .ID }}
 Name: {{ .FullName }}{{with .Tags}}
-Tags: {{ tagList . }}{{end}}
+Tags: {{ taglist . }}{{end}}
 Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `
@@ -112,7 +109,7 @@ func Repo() *cli.Command {
 }
 
 // RepoList provides the sub-command to list all repos.
-func RepoList(c *cli.Context, client sdk.ClientAPI) error {
+func RepoList(c *cli.Context, client umschlag.ClientAPI) error {
 	records, err := client.RepoList()
 
 	if err != nil {
@@ -155,7 +152,7 @@ func RepoList(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		repoFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -176,7 +173,7 @@ func RepoList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // RepoShow provides the sub-command to show repo details.
-func RepoShow(c *cli.Context, client sdk.ClientAPI) error {
+func RepoShow(c *cli.Context, client umschlag.ClientAPI) error {
 	record, err := client.RepoGet(
 		GetIdentifierParam(c),
 	)
@@ -216,7 +213,7 @@ func RepoShow(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		repoFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -229,7 +226,7 @@ func RepoShow(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // RepoDelete provides the sub-command to delete a repo.
-func RepoDelete(c *cli.Context, client sdk.ClientAPI) error {
+func RepoDelete(c *cli.Context, client umschlag.ClientAPI) error {
 	err := client.RepoDelete(
 		GetIdentifierParam(c),
 	)

@@ -6,19 +6,17 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/umschlag/umschlag-cli/pkg/sdk"
+	"github.com/Masterminds/sprig"
+	"github.com/umschlag/umschlag-go/umschlag"
 	"gopkg.in/urfave/cli.v2"
 )
 
+// sprigFuncMap provides template helpers provided by sprig.
+var sprigFuncMap = sprig.TxtFuncMap()
+
 // globalFuncMap provides global template helper functions.
 var globalFuncMap = template.FuncMap{
-	"split":    strings.Split,
-	"join":     strings.Join,
-	"toUpper":  strings.ToUpper,
-	"toLower":  strings.ToLower,
-	"contains": strings.Contains,
-	"replace":  strings.Replace,
-	"tagList": func(s []*sdk.Tag) string {
+	"taglist": func(s []*umschlag.Tag) string {
 		res := []string{}
 
 		for _, row := range s {
@@ -27,7 +25,7 @@ var globalFuncMap = template.FuncMap{
 
 		return strings.Join(res, ", ")
 	},
-	"orgList": func(s []*sdk.Org) string {
+	"orglist": func(s []*umschlag.Org) string {
 		res := []string{}
 
 		for _, row := range s {
@@ -36,7 +34,7 @@ var globalFuncMap = template.FuncMap{
 
 		return strings.Join(res, ", ")
 	},
-	"teamList": func(s []*sdk.Team) string {
+	"teamlist": func(s []*umschlag.Team) string {
 		res := []string{}
 
 		for _, row := range s {
@@ -45,7 +43,7 @@ var globalFuncMap = template.FuncMap{
 
 		return strings.Join(res, ", ")
 	},
-	"userList": func(s []*sdk.User) string {
+	"userlist": func(s []*umschlag.User) string {
 		res := []string{}
 
 		for _, row := range s {
@@ -54,7 +52,7 @@ var globalFuncMap = template.FuncMap{
 
 		return strings.Join(res, ", ")
 	},
-	"repoList": func(s []*sdk.Repo) string {
+	"repolist": func(s []*umschlag.Repo) string {
 		res := []string{}
 
 		for _, row := range s {
@@ -70,7 +68,7 @@ func GetIdentifierParam(c *cli.Context) string {
 	val := c.String("id")
 
 	if val == "" {
-		fmt.Println("Error: You must provide an ID or a slug.")
+		fmt.Println("error: you must provide an id or a slug.")
 		os.Exit(1)
 	}
 
@@ -82,7 +80,7 @@ func GetUserParam(c *cli.Context) string {
 	val := c.String("user")
 
 	if val == "" {
-		fmt.Println("Error: You must provide a user ID or slug.")
+		fmt.Println("error: you must provide a user id or slug.")
 		os.Exit(1)
 	}
 
@@ -94,7 +92,7 @@ func GetTeamParam(c *cli.Context) string {
 	val := c.String("team")
 
 	if val == "" {
-		fmt.Println("Error: You must provide a team ID or slug.")
+		fmt.Println("error: you must provide a team id or slug.")
 		os.Exit(1)
 	}
 
@@ -106,7 +104,7 @@ func GetOrgParam(c *cli.Context) string {
 	val := c.String("org")
 
 	if val == "" {
-		fmt.Println("Error: You must provide a org ID or slug.")
+		fmt.Println("error: <ou must provide a org id or slug.")
 		os.Exit(1)
 	}
 
@@ -118,7 +116,7 @@ func GetPermParam(c *cli.Context) string {
 	val := c.String("perm")
 
 	if val == "" {
-		fmt.Println("Error: You must provide a permission.")
+		fmt.Println("error: you must provide a permission.")
 		os.Exit(1)
 	}
 
@@ -128,7 +126,7 @@ func GetPermParam(c *cli.Context) string {
 		}
 	}
 
-	fmt.Println("Error: Invalid permission, can be user, admin or owner.")
+	fmt.Println("error: invalid permission, can be user, admin or owner.")
 	os.Exit(1)
 
 	return ""

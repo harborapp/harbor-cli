@@ -7,12 +7,9 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/umschlag/umschlag-cli/pkg/sdk"
+	"github.com/umschlag/umschlag-go/umschlag"
 	"gopkg.in/urfave/cli.v2"
 )
-
-// userFuncMap provides template helper functions.
-var userFuncMap = template.FuncMap{}
 
 // tmplUserList represents a row within user listing.
 var tmplUserList = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
@@ -27,8 +24,8 @@ Username: {{ .Username }}
 Email: {{ .Email }}
 Active: {{ .Active }}
 Admin: {{ .Admin }}{{with .Teams}}
-Teams: {{ teamList . }}{{end}}{{with .Orgs}}
-Orgs: {{ orgList . }}{{end}}
+Teams: {{ teamlist . }}{{end}}{{with .Orgs}}
+Orgs: {{ orglist . }}{{end}}
 Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `
@@ -443,7 +440,7 @@ func User() *cli.Command {
 }
 
 // UserList provides the sub-command to list all users.
-func UserList(c *cli.Context, client sdk.ClientAPI) error {
+func UserList(c *cli.Context, client umschlag.ClientAPI) error {
 	records, err := client.UserList()
 
 	if err != nil {
@@ -486,7 +483,7 @@ func UserList(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		userFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -507,7 +504,7 @@ func UserList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserShow provides the sub-command to show user details.
-func UserShow(c *cli.Context, client sdk.ClientAPI) error {
+func UserShow(c *cli.Context, client umschlag.ClientAPI) error {
 	record, err := client.UserGet(
 		GetIdentifierParam(c),
 	)
@@ -547,7 +544,7 @@ func UserShow(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		userFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -560,7 +557,7 @@ func UserShow(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserDelete provides the sub-command to delete a user.
-func UserDelete(c *cli.Context, client sdk.ClientAPI) error {
+func UserDelete(c *cli.Context, client umschlag.ClientAPI) error {
 	err := client.UserDelete(
 		GetIdentifierParam(c),
 	)
@@ -574,7 +571,7 @@ func UserDelete(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserUpdate provides the sub-command to update a user.
-func UserUpdate(c *cli.Context, client sdk.ClientAPI) error {
+func UserUpdate(c *cli.Context, client umschlag.ClientAPI) error {
 	record, err := client.UserGet(
 		GetIdentifierParam(c),
 	)
@@ -651,8 +648,8 @@ func UserUpdate(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserCreate provides the sub-command to create a user.
-func UserCreate(c *cli.Context, client sdk.ClientAPI) error {
-	record := &sdk.User{}
+func UserCreate(c *cli.Context, client umschlag.ClientAPI) error {
+	record := &umschlag.User{}
 
 	if val := c.String("slug"); c.IsSet("slug") && val != "" {
 		record.Slug = val
@@ -713,9 +710,9 @@ func UserCreate(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserTeamList provides the sub-command to list teams of the user.
-func UserTeamList(c *cli.Context, client sdk.ClientAPI) error {
+func UserTeamList(c *cli.Context, client umschlag.ClientAPI) error {
 	records, err := client.UserTeamList(
-		sdk.UserTeamParams{
+		umschlag.UserTeamParams{
 			User: GetIdentifierParam(c),
 		},
 	)
@@ -760,7 +757,7 @@ func UserTeamList(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		userFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -781,9 +778,9 @@ func UserTeamList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserTeamAppend provides the sub-command to append a team to the user.
-func UserTeamAppend(c *cli.Context, client sdk.ClientAPI) error {
+func UserTeamAppend(c *cli.Context, client umschlag.ClientAPI) error {
 	err := client.UserTeamAppend(
-		sdk.UserTeamParams{
+		umschlag.UserTeamParams{
 			User: GetIdentifierParam(c),
 			Team: GetTeamParam(c),
 			Perm: GetPermParam(c),
@@ -799,9 +796,9 @@ func UserTeamAppend(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserTeamPerm provides the sub-command to update user team permissions.
-func UserTeamPerm(c *cli.Context, client sdk.ClientAPI) error {
+func UserTeamPerm(c *cli.Context, client umschlag.ClientAPI) error {
 	err := client.UserTeamPerm(
-		sdk.UserTeamParams{
+		umschlag.UserTeamParams{
 			User: GetIdentifierParam(c),
 			Team: GetTeamParam(c),
 			Perm: GetPermParam(c),
@@ -817,9 +814,9 @@ func UserTeamPerm(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserTeamRemove provides the sub-command to remove a team from the user.
-func UserTeamRemove(c *cli.Context, client sdk.ClientAPI) error {
+func UserTeamRemove(c *cli.Context, client umschlag.ClientAPI) error {
 	err := client.UserTeamDelete(
-		sdk.UserTeamParams{
+		umschlag.UserTeamParams{
 			User: GetIdentifierParam(c),
 			Team: GetTeamParam(c),
 		},
@@ -834,9 +831,9 @@ func UserTeamRemove(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserOrgList provides the sub-command to list orgs of the user.
-func UserOrgList(c *cli.Context, client sdk.ClientAPI) error {
+func UserOrgList(c *cli.Context, client umschlag.ClientAPI) error {
 	records, err := client.UserOrgList(
-		sdk.UserOrgParams{
+		umschlag.UserOrgParams{
 			User: GetIdentifierParam(c),
 		},
 	)
@@ -881,7 +878,7 @@ func UserOrgList(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		userFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -902,9 +899,9 @@ func UserOrgList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserOrgAppend provides the sub-command to append a org to the user.
-func UserOrgAppend(c *cli.Context, client sdk.ClientAPI) error {
+func UserOrgAppend(c *cli.Context, client umschlag.ClientAPI) error {
 	err := client.UserOrgAppend(
-		sdk.UserOrgParams{
+		umschlag.UserOrgParams{
 			User: GetIdentifierParam(c),
 			Org:  GetOrgParam(c),
 			Perm: GetPermParam(c),
@@ -920,9 +917,9 @@ func UserOrgAppend(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserOrgPerm provides the sub-command to update user org permissions.
-func UserOrgPerm(c *cli.Context, client sdk.ClientAPI) error {
+func UserOrgPerm(c *cli.Context, client umschlag.ClientAPI) error {
 	err := client.UserOrgPerm(
-		sdk.UserOrgParams{
+		umschlag.UserOrgParams{
 			User: GetIdentifierParam(c),
 			Org:  GetOrgParam(c),
 			Perm: GetPermParam(c),
@@ -938,9 +935,9 @@ func UserOrgPerm(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // UserOrgRemove provides the sub-command to remove a org from the user.
-func UserOrgRemove(c *cli.Context, client sdk.ClientAPI) error {
+func UserOrgRemove(c *cli.Context, client umschlag.ClientAPI) error {
 	err := client.UserOrgDelete(
-		sdk.UserOrgParams{
+		umschlag.UserOrgParams{
 			User: GetIdentifierParam(c),
 			Org:  GetOrgParam(c),
 		},

@@ -7,12 +7,9 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/umschlag/umschlag-cli/pkg/sdk"
+	"github.com/umschlag/umschlag-go/umschlag"
 	"gopkg.in/urfave/cli.v2"
 )
-
-// registryFuncMap provides template helper functions.
-var registryFuncMap = template.FuncMap{}
 
 // tmplRegistryList represents a row within registry listing.
 var tmplRegistryList = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
@@ -25,7 +22,7 @@ var tmplRegistryShow = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
 ID: {{ .ID }}
 Name: {{ .Name }}
 Host: {{ .Host }}{{with .Orgs}}
-Orgs: {{ orgList . }}{{end}}
+Orgs: {{ orglist . }}{{end}}
 Created: {{ .CreatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 Updated: {{ .UpdatedAt.Format "Mon Jan _2 15:04:05 MST 2006" }}
 `
@@ -183,7 +180,7 @@ func Registry() *cli.Command {
 }
 
 // RegistryList provides the sub-command to list all registries.
-func RegistryList(c *cli.Context, client sdk.ClientAPI) error {
+func RegistryList(c *cli.Context, client umschlag.ClientAPI) error {
 	records, err := client.RegistryList()
 
 	if err != nil {
@@ -226,7 +223,7 @@ func RegistryList(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		registryFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -247,7 +244,7 @@ func RegistryList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // RegistryShow provides the sub-command to show registry details.
-func RegistryShow(c *cli.Context, client sdk.ClientAPI) error {
+func RegistryShow(c *cli.Context, client umschlag.ClientAPI) error {
 	record, err := client.RegistryGet(
 		GetIdentifierParam(c),
 	)
@@ -287,7 +284,7 @@ func RegistryShow(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		registryFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -300,7 +297,7 @@ func RegistryShow(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // RegistryDelete provides the sub-command to delete a registry.
-func RegistryDelete(c *cli.Context, client sdk.ClientAPI) error {
+func RegistryDelete(c *cli.Context, client umschlag.ClientAPI) error {
 	err := client.RegistryDelete(
 		GetIdentifierParam(c),
 	)
@@ -314,7 +311,7 @@ func RegistryDelete(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // RegistrySync provides the sub-command to sync a registry.
-func RegistrySync(c *cli.Context, client sdk.ClientAPI) error {
+func RegistrySync(c *cli.Context, client umschlag.ClientAPI) error {
 	err := client.RegistrySync(
 		GetIdentifierParam(c),
 	)
@@ -328,7 +325,7 @@ func RegistrySync(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // RegistryUpdate provides the sub-command to update a registry.
-func RegistryUpdate(c *cli.Context, client sdk.ClientAPI) error {
+func RegistryUpdate(c *cli.Context, client umschlag.ClientAPI) error {
 	record, err := client.RegistryGet(
 		GetIdentifierParam(c),
 	)
@@ -372,8 +369,8 @@ func RegistryUpdate(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // RegistryCreate provides the sub-command to create a registry.
-func RegistryCreate(c *cli.Context, client sdk.ClientAPI) error {
-	record := &sdk.Registry{}
+func RegistryCreate(c *cli.Context, client umschlag.ClientAPI) error {
+	record := &umschlag.Registry{}
 
 	if val := c.String("slug"); c.IsSet("slug") && val != "" {
 		record.Slug = val

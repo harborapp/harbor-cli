@@ -7,12 +7,9 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/umschlag/umschlag-cli/pkg/sdk"
+	"github.com/umschlag/umschlag-go/umschlag"
 	"gopkg.in/urfave/cli.v2"
 )
-
-// tagFuncMap provides template helper functions.
-var tagFuncMap = template.FuncMap{}
 
 // tmplTagList represents a row within tag listing.
 var tmplTagList = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
@@ -111,7 +108,7 @@ func Tag() *cli.Command {
 }
 
 // TagList provides the sub-command to list all tags.
-func TagList(c *cli.Context, client sdk.ClientAPI) error {
+func TagList(c *cli.Context, client umschlag.ClientAPI) error {
 	records, err := client.TagList()
 
 	if err != nil {
@@ -154,7 +151,7 @@ func TagList(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		tagFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -175,7 +172,7 @@ func TagList(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // TagShow provides the sub-command to show tag details.
-func TagShow(c *cli.Context, client sdk.ClientAPI) error {
+func TagShow(c *cli.Context, client umschlag.ClientAPI) error {
 	record, err := client.TagGet(
 		GetIdentifierParam(c),
 	)
@@ -215,7 +212,7 @@ func TagShow(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		tagFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -228,7 +225,7 @@ func TagShow(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // TagDelete provides the sub-command to delete a tag.
-func TagDelete(c *cli.Context, client sdk.ClientAPI) error {
+func TagDelete(c *cli.Context, client umschlag.ClientAPI) error {
 	err := client.TagDelete(
 		GetIdentifierParam(c),
 	)

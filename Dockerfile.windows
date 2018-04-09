@@ -9,4 +9,4 @@ LABEL maintainer="Thomas Boerger <thomas@webhippie.de>" `
 ENTRYPOINT ["c:\\umschlag-cli.exe"]
 CMD ["help"]
 
-COPY umschlag-cli.exe c:\umschlag-cli.exe
+COPY bin/umschlag-cli.exe c:\umschlag-cli.exe

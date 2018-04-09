@@ -7,12 +7,9 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/umschlag/umschlag-cli/pkg/sdk"
+	"github.com/umschlag/umschlag-go/umschlag"
 	"gopkg.in/urfave/cli.v2"
 )
-
-// profileFuncMap provides template helper functions.
-var profileFuncMap = template.FuncMap{}
 
 // tmplProfileShow represents a profile within details view.
 var tmplProfileShow = "Slug: \x1b[33m{{ .Slug }} \x1b[0m" + `
@@ -108,7 +105,7 @@ func Profile() *cli.Command {
 }
 
 // ProfileShow provides the sub-command to show profile details.
-func ProfileShow(c *cli.Context, client sdk.ClientAPI) error {
+func ProfileShow(c *cli.Context, client umschlag.ClientAPI) error {
 	record, err := client.ProfileGet()
 
 	if err != nil {
@@ -146,7 +143,7 @@ func ProfileShow(c *cli.Context, client sdk.ClientAPI) error {
 	).Funcs(
 		globalFuncMap,
 	).Funcs(
-		profileFuncMap,
+		sprigFuncMap,
 	).Parse(
 		fmt.Sprintf("%s\n", c.String("format")),
 	)
@@ -159,7 +156,7 @@ func ProfileShow(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ProfileToken provides the sub-command to show your token.
-func ProfileToken(c *cli.Context, client sdk.ClientAPI) error {
+func ProfileToken(c *cli.Context, client umschlag.ClientAPI) error {
 	if !client.IsAuthenticated() {
 		if !c.IsSet("username") {
 			return fmt.Errorf("Please provide a username")
@@ -178,7 +175,7 @@ func ProfileToken(c *cli.Context, client sdk.ClientAPI) error {
 			return err
 		}
 
-		client = sdk.NewClientToken(
+		client = umschlag.NewClientToken(
 			c.String("server"),
 			login.Token,
 		)
@@ -195,7 +192,7 @@ func ProfileToken(c *cli.Context, client sdk.ClientAPI) error {
 }
 
 // ProfileUpdate provides the sub-command to update the profile.
-func ProfileUpdate(c *cli.Context, client sdk.ClientAPI) error {
+func ProfileUpdate(c *cli.Context, client umschlag.ClientAPI) error {
 	record, err := client.ProfileGet()
 
 	if err != nil {
