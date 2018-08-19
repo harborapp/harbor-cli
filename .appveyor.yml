@@ -6,9 +6,9 @@ clone_folder: 'c:\gopath\src\github.com\umschlag\umschlag-cli'
 environment:
   GOPATH: c:\gopath
   DOCKER_USERNAME:
-    secure: '4YzzahbEiMZQJpOCOd1LAw=='
+    secure: 'ABSRAzKzyo1SWljn1w/Anw=='
   DOCKER_PASSWORD:
-    secure: 'VqO/G3Zfslu6zSLdwHKO+Q=='
+    secure: 'Gl17SnkcFR47nH9lWeHevd+g2J2jkDCYPwMcZGGCKvk='
 
 install:
   - ps: |
@@ -29,11 +29,11 @@ build_script:
   - cmd: |
       make build
   - cmd: |
-      docker build -f Dockerfile.windows -t umschlag/umschlag-cli:windows .
+      docker build -f docker/Dockerfile.windows.amd64 -t umschlag/umschlag-cli:windows-amd64 .
 
 test_script:
   - cmd: |
-      docker run --rm umschlag/umschlag-cli:windows --help
+      docker run --rm umschlag/umschlag-cli:windows-amd64 --help
 
 deploy_script:
   - ps: |
@@ -45,19 +45,19 @@ deploy_script:
         if ( $env:APPVEYOR_REPO_TAG -eq 'true' ) {
           $major,$minor,$patch = $env:APPVEYOR_REPO_TAG_NAME.substring(1).split('.')
 
-          docker push umschlag/umschlag-cli:windows
+          docker push umschlag/umschlag-cli:windows-amd64
 
-          docker tag umschlag/umschlag-cli:windows umschlag/umschlag-cli:$major.$minor.$patch-windows
-          docker push umschlag/umschlag-cli:$major.$minor.$patch-windows
+          docker tag umschlag/umschlag-cli:windows-amd64 umschlag/umschlag-cli:$major.$minor.$patch-windows-amd64
+          docker push umschlag/umschlag-cli:$major.$minor.$patch-windows-amd64
 
-          docker tag umschlag/umschlag-cli:windows umschlag/umschlag-cli:$major.$minor-windows
-          docker push umschlag/umschlag-cli:$major.$minor-windows
+          docker tag umschlag/umschlag-cli:windows-amd64 umschlag/umschlag-cli:$major.$minor-windows-amd64
+          docker push umschlag/umschlag-cli:$major.$minor-windows-amd64
 
-          docker tag umschlag/umschlag-cli:windows umschlag/umschlag-cli:$major-windows
-          docker push umschlag/umschlag-cli:$major-windows
+          docker tag umschlag/umschlag-cli:windows-amd64 umschlag/umschlag-cli:$major-windows-amd64
+          docker push umschlag/umschlag-cli:$major-windows-amd64
         } else {
           if ( $env:APPVEYOR_REPO_BRANCH -eq 'master' ) {
-            docker push umschlag/umschlag-cli:windows
+            docker push umschlag/umschlag-cli:windows-amd64
           } else {
             Write-Host Ignoring feature branch.
           }
