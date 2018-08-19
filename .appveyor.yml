@@ -6,9 +6,9 @@ clone_folder: 'c:\gopath\src\github.com\umschlag\umschlag-cli'
 environment:
   GOPATH: c:\gopath
   DOCKER_USERNAME:
-    secure: 'ABSRAzKzyo1SWljn1w/Anw=='
+    secure: '8gyBD0TkSiV6gzh8TTeXcw=='
   DOCKER_PASSWORD:
-    secure: 'Gl17SnkcFR47nH9lWeHevd+g2J2jkDCYPwMcZGGCKvk='
+    secure: '4jP1kWFjyKIaKp7JcHsVuZY1tolMbCKvHCVF3aUTF6w='
 
 install:
   - ps: |
