@@ -264,25 +264,6 @@ steps:
   depends_on:
   - finish
 
-- name: arm32v7
-  pull: always
-  image: plugins/docker:18.09
-  settings:
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-    auto_tag: true
-    auto_tag_suffix: linux-arm32v7
-    dockerfile: docker/Dockerfile.linux.arm32v7
-    repo: umschlag/umschlag-cli
-  when:
-    event:
-      exclude:
-      - pull_request
-  depends_on:
-  - finish
-
 - name: arm32v6
   pull: always
   image: plugins/docker:18.09
@@ -321,7 +302,6 @@ steps:
   - amd64
   - i386
   - arm64v8
-  - arm32v7
   - arm32v6
 
 - name: microbadger
@@ -377,6 +357,8 @@ steps:
   volumes:
   - name: gopath
     path: /srv/app
+  depends_on:
+  - generate
 
 - name: finish
   image: webhippie/golang:1.12
@@ -388,6 +370,8 @@ steps:
   volumes:
   - name: gopath
     path: /srv/app
+  depends_on:
+  - build
 
 - name: gpgsign
   image: plugins/gpgsign:1
@@ -466,6 +450,10 @@ steps:
     - tag
   depends_on:
   - gpgsign
+
+volumes:
+- name: gopath
+  temp: {}
 
 trigger:
   ref:
@@ -503,6 +491,8 @@ steps:
   volumes:
   - name: gopath
     path: /srv/app
+  depends_on:
+  - generate
 
 - name: finish
   image: webhippie/golang:1.12
@@ -514,6 +504,8 @@ steps:
   volumes:
   - name: gopath
     path: /srv/app
+  depends_on:
+  - build
 
 - name: gpgsign
   image: plugins/gpgsign:1
@@ -592,6 +584,10 @@ steps:
     - tag
   depends_on:
   - gpgsign
+
+volumes:
+- name: gopath
+  temp: {}
 
 trigger:
   ref:
