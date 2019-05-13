@@ -1,7 +1,6 @@
 # Umschlag: CLI client
 
 [![Build Status](http://drone.umschlag.tech/api/badges/umschlag/umschlag-cli/status.svg)](http://drone.umschlag.tech/umschlag/umschlag-cli)
-[![Build Status](https://ci.appveyor.com/api/projects/status/bqy7swd1sn32k6vq?svg=true)](https://ci.appveyor.com/project/umschlagz/umschlag-cli)
 [![Stories in Ready](https://badge.waffle.io/umschlag/umschlag-api.svg?label=ready&title=Ready)](http://waffle.io/umschlag/umschlag-api)
 [![Join the Matrix chat at https://matrix.to/#/#umschlag:matrix.org](https://img.shields.io/badge/matrix-%23umschlag-7bc9a4.svg)](https://matrix.to/#/#umschlag:matrix.org)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a8a9dd7a2e0a4437a56db779e38b47ed)](https://www.codacy.com/app/umschlag/umschlag-cli?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=umschlag/umschlag-cli&amp;utm_campaign=Badge_Grade)
@@ -23,23 +22,13 @@ You can download prebuilt binaries from the GitHub releases or from our [downloa
 
 ## Development
 
-Make sure you have a working Go environment, for further reference or a guide take a look at the [install instructions](http://golang.org/doc/install.html). This project requires Go >= v1.8.
+Make sure you have a working Go environment, for further reference or a guide take a look at the [install instructions](http://golang.org/doc/install.html). This project requires Go >= v1.11.
 
 ```bash
-go get -d github.com/umschlag/umschlag-cli
-cd $GOPATH/src/github.com/umschlag/umschlag-cli
+git clone https://github.com/umschlag/umschlag-cli.git
+cd umschlag-cli
 
-# install retool
-make retool
-
-# sync dependencies
-make sync
-
-# generate code
-make generate
-
-# build binary
-make build
+make sync generate build
 
 ./bin/umschlag-cli -h
 ```
