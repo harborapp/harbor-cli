@@ -113,7 +113,7 @@ func ProfileShow(c *cli.Context, client umschlag.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
+		return fmt.Errorf("conflict, you can only use json or xml at once")
 	}
 
 	if c.Bool("xml") {
@@ -159,11 +159,11 @@ func ProfileShow(c *cli.Context, client umschlag.ClientAPI) error {
 func ProfileToken(c *cli.Context, client umschlag.ClientAPI) error {
 	if !client.IsAuthenticated() {
 		if !c.IsSet("username") {
-			return fmt.Errorf("Please provide a username")
+			return fmt.Errorf("please provide a username")
 		}
 
 		if !c.IsSet("password") {
-			return fmt.Errorf("Please provide a password")
+			return fmt.Errorf("please provide a password")
 		}
 
 		login, err := client.AuthLogin(

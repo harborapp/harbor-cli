@@ -448,7 +448,7 @@ func UserList(c *cli.Context, client umschlag.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
+		return fmt.Errorf("conflict, you can only use json or xml at once")
 	}
 
 	if c.Bool("xml") {
@@ -514,7 +514,7 @@ func UserShow(c *cli.Context, client umschlag.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
+		return fmt.Errorf("conflict, you can only use json or xml at once")
 	}
 
 	if c.Bool("xml") {
@@ -603,7 +603,7 @@ func UserUpdate(c *cli.Context, client umschlag.ClientAPI) error {
 	}
 
 	if c.IsSet("active") && c.IsSet("blocked") {
-		return fmt.Errorf("Conflict, you can mark it only active OR blocked")
+		return fmt.Errorf("conflict, you can mark it only active or blocked")
 	}
 
 	if c.IsSet("active") {
@@ -617,7 +617,7 @@ func UserUpdate(c *cli.Context, client umschlag.ClientAPI) error {
 	}
 
 	if c.IsSet("admin") && c.IsSet("user") {
-		return fmt.Errorf("Conflict, you can mark it only admin OR user")
+		return fmt.Errorf("conflict, you can mark it only admin or user")
 	}
 
 	if c.IsSet("admin") {
@@ -658,23 +658,23 @@ func UserCreate(c *cli.Context, client umschlag.ClientAPI) error {
 	if val := c.String("username"); c.IsSet("username") && val != "" {
 		record.Username = val
 	} else {
-		return fmt.Errorf("You must provide an username")
+		return fmt.Errorf("you must provide an username")
 	}
 
 	if val := c.String("email"); c.IsSet("email") && val != "" {
 		record.Email = val
 	} else {
-		return fmt.Errorf("You must provide an email")
+		return fmt.Errorf("you must provide an email")
 	}
 
 	if val := c.String("password"); c.IsSet("password") && val != "" {
 		record.Password = val
 	} else {
-		return fmt.Errorf("You must provide a password")
+		return fmt.Errorf("you must provide a password")
 	}
 
 	if c.IsSet("active") && c.IsSet("blocked") {
-		return fmt.Errorf("Conflict, you can mark it only active OR blocked")
+		return fmt.Errorf("conflict, you can mark it only active or blocked")
 	}
 
 	if c.IsSet("active") {
@@ -686,7 +686,7 @@ func UserCreate(c *cli.Context, client umschlag.ClientAPI) error {
 	}
 
 	if c.IsSet("admin") && c.IsSet("user") {
-		return fmt.Errorf("Conflict, you can mark it only admin OR user")
+		return fmt.Errorf("conflict, you can mark it only admin or user")
 	}
 
 	if c.IsSet("admin") {
@@ -722,7 +722,7 @@ func UserTeamList(c *cli.Context, client umschlag.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
+		return fmt.Errorf("conflict, you can only use json or xml at once")
 	}
 
 	if c.Bool("xml") {
@@ -843,7 +843,7 @@ func UserOrgList(c *cli.Context, client umschlag.ClientAPI) error {
 	}
 
 	if c.IsSet("json") && c.IsSet("xml") {
-		return fmt.Errorf("Conflict, you can only use JSON or XML at once")
+		return fmt.Errorf("conflict, you can only use json or xml at once")
 	}
 
 	if c.Bool("xml") {
