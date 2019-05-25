@@ -1,6 +1,6 @@
 # Umschlag: CLI client
 
-[![Build Status](http://drone.umschlag.tech/api/badges/umschlag/umschlag-cli/status.svg)](http://drone.umschlag.tech/umschlag/umschlag-cli)
+[![Build Status](https://cloud.drone.io/api/badges/umschlag/umschlag-cli/status.svg)](https://cloud.drone.io/umschlag/umschlag-cli)
 [![Stories in Ready](https://badge.waffle.io/umschlag/umschlag-api.svg?label=ready&title=Ready)](http://waffle.io/umschlag/umschlag-api)
 [![Join the Matrix chat at https://matrix.to/#/#umschlag:matrix.org](https://img.shields.io/badge/matrix-%23umschlag-7bc9a4.svg)](https://matrix.to/#/#umschlag:matrix.org)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/a8a9dd7a2e0a4437a56db779e38b47ed)](https://www.codacy.com/app/umschlag/umschlag-cli?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=umschlag/umschlag-cli&amp;utm_campaign=Badge_Grade)
